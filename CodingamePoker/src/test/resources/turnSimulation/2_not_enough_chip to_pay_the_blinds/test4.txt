@@ -1,0 +1,36 @@
+4 PLAYERS-not enough to pay big blind and small blind (but SB wins)
+
+KS KH KC TD AD
+
+player 4
+
+AH AC
+1000
+1020
+
+2H 3S
+1000
+980
+
+AS 9D
+15
+0
+
+KD TC
+5
+20
+
+dealer 0
+
+0:CALL
+1:CALL
+
+1:CHECK
+0:CHECK
+
+1:CHECK
+0:CHECK
+
+1:CHECK
+0:CHECK
+

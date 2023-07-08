@@ -1,0 +1,28 @@
+-- 3 WINNERS
+
+KS KH KC TD AD
+
+player 4
+
+AC 2C
+1000
+1666
+
+AS 9D
+500
+668
+
+AH 9S
+500
+666
+
+2H 3S
+1200
+200
+
+dealer 0
+
+3:ALL-IN
+0:ALL-IN
+1:ALL-IN
+2:ALL-IN

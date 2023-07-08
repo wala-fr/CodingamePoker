@@ -1,0 +1,29 @@
+case from real bug
+
+7D 6D QD 2D AH
+
+player 4
+
+QH KS
+1000
+0
+
+7S QC
+1000
+3020
+
+8S 2H
+1000
+0
+
+JH AC
+1000
+980
+
+dealer 1
+
+0:ALL-IN
+1:ALL-IN
+2:ALL-IN
+3:FOLD
+

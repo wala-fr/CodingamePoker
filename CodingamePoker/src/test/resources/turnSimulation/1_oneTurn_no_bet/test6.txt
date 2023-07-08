@@ -1,0 +1,28 @@
+4 PLAYERS
+
+KS KH KC TD AD
+
+player 4
+
+KD TC
+500
+2000
+
+AS 9D
+1000
+750
+
+AH 9S
+1000
+750
+
+2H 3S
+1200
+200
+
+dealer 0
+
+3:ALL-IN
+0:ALL-IN
+1:ALL-IN
+2:ALL-IN

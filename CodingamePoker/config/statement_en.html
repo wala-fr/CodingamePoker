@@ -1,0 +1,120 @@
+<div
+	style="color: #000000; background-color: rgba(255, 255, 255, 0.5); padding: 20px; margin-bottom: 10px; text-align: left">
+	This is a port of <a
+		href="https://fr.wikipedia.org/wiki/Isola_(jeu)">Isola</a> :
+	<br /> <br />
+	<p>
+		The source code of this game is available <a rel="nofollow"
+			target="_blank" href="https://github.com/wala-fr/CodingameIsola">on
+			this GitHub repo</a>. <br />
+</div>
+
+<div id="statement_back" class="statement_back" style="display: none"></div>
+<div class="statement-body">
+	<!-- GOAL -->
+	<div class="statement-section statement-goal">
+		<h1>
+			<span class="icon icon-goal">&nbsp;</span> <span>The Goal</span>
+		</h1>
+		<div class="statement-goal-content">The goal of the game is to gain all the chips.</div>
+	</div>
+	<!-- RULES -->
+	<div class="statement-section statement-rules">
+		<h1>
+			<span class="icon icon-rules">&nbsp;</span> <span>Rules</span>
+		</h1>
+		<div class="statement-rules-content">
+			The rules of Texas hold 'em can be found here <a href="https://en.wikipedia.org/wiki/Texas_hold_%27em">wikipedia Texas hold 'em</a>
+		</div>
+	</div>
+
+	<!-- Victory conditions -->
+	<div class="statement-victory-conditions">
+		<div class="icon victory"></div>
+		<div class="blk">
+			<div class="title">Victory Conditions</div>
+			<div class="text">
+				<ul style="padding-bottom: 0;">
+					<li>You own all the chips.</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<!-- Lose conditions -->
+	<div class="statement-lose-conditions">
+		<div class="icon lose"></div>
+		<div class="blk">
+			<div class="title">Loss Conditions</div>
+			<div class="text">
+				<ul style="padding-bottom: 0;">
+					<li>You've lost all your chips.</li>
+					<li>You do not respond in time or output an invalid action.</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<!-- PROTOCOL -->
+	<div class="statement-section statement-protocol">
+		<h1>
+			<span class="icon icon-protocol">&nbsp;</span> <span>Game
+				Input</span>
+		</h1>
+
+		<!-- Protocol block -->
+		<div class="blk">
+			<div class="title">Initialization input</div>
+			<div class="text">
+				<span class="statement-lineno">Line 1</span>:
+				<var>playerPositionX</var>
+				<br> <span class="statement-lineno">Line 2</span>:
+				<var>playerPositionY</var>
+				the coordinates of your pawn.
+			</div>
+			<br>
+			<div class="title">Input for one game turn</div>
+			<div class="text">
+				<span class="statement-lineno">Line 1</span>:
+				<var>opponentPositionX</var>
+				<br> <span class="statement-lineno">Line 2</span>:
+				<var>opponentPositionY</var>
+				the coordinates of the opponent's pawn. <br> <span
+					class="statement-lineno">Line 3</span>:
+				<var>opponentLastRemovedTileX</var>
+				<br> <span class="statement-lineno">Line 4</span>:
+				<var>opponentLastRemovedTileY</var>
+				the coordinates of the last tile removed by the opponent (
+				<const>-1 -1</const>
+				if no tile has been removed (first round)). <br>
+			</div>
+		</div>
+
+		<!-- Protocol block -->
+		<div class="blk">
+			<div class="title">Output</div>
+			<div class="text">
+				<span class="statement-lineno">A single line</span> containing the
+				coordinates where you want to move your pawn, followed by the
+				coordinates of the tile you want to remove.<br>Example:
+				<action>1 4 7 4</action>
+				<br> You can also add a message :<br> Example:
+				<action>1 4 7 4;MESSAGE</action>
+				<br> NB : You can print
+				<action>RANDOM</action>
+				instead of the 4 coordinates. Then a random possible move and tile
+				will be chosen.
+			</div>
+		</div>
+
+		<!-- Protocol block -->
+		<div class="blk">
+			<div class="title">Constraints</div>
+			Response time first turn is &le;
+			<const>1000</const>
+			ms. <br>Response time per turn is &le;
+			<const>100</const>
+			ms.
+		</div>
+	</div>
+</div>

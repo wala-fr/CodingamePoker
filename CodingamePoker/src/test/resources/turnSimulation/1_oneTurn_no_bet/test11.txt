@@ -1,0 +1,29 @@
+-- one eliminated + first call then all in
+
+KS KH 3C 4D 7D
+
+player 4
+
+QC 2C
+1000
+1000
+
+X X
+0
+0
+
+QH 9S
+500
+1500
+
+2H 5S
+1200
+200
+
+dealer 0
+
+0:CALL
+2:CALL
+3:ALL-IN
+0:ALL-IN
+2:ALL-IN

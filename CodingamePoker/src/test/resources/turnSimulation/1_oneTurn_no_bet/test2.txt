@@ -1,0 +1,27 @@
+:::4 PLAYERS
+
+KS KH KC TD AD
+
+player 4
+
+KD TC
+1000
+990
+
+AS 9D
+1000
+990
+
+AH 9S
+1000
+1030
+
+2H 3S
+1000
+990
+
+dealer 0
+
+3:FOLD
+0:RAISE
+1:TOTO

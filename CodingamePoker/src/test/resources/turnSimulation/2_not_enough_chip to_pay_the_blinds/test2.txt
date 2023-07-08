@@ -1,0 +1,39 @@
+4 PLAYERS-not enough to pay big blind (but BB wins)
+
+KS KH KC TD AD
+
+player 4
+
+AH AC
+1000
+995
+
+AS 9D
+1000
+980
+
+KD TC
+15
+60
+
+2H 3S
+1000
+980
+
+dealer 0
+
+3:CALL
+0:CALL
+1:CALL
+
+1:CHECK
+3:CHECK
+0:CHECK
+
+1:CHECK
+3:CHECK
+0:CHECK
+
+1:CHECK
+3:CHECK
+0:CHECK

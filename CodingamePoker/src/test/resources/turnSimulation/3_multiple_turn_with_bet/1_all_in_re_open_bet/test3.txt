@@ -1,0 +1,45 @@
+one all in which re-open the bets then ckeck
+
+KS KH KC TD AD
+
+player 4
+
+KD TC
+1000
+3020
+
+AS 9D
+1000
+190
+
+AH 9S
+400
+0
+
+2H 3S
+1000
+190
+
+dealer 0
+
+3:CALL
+0:CALL
+1:BET 200
+2:ALL-IN
+3:CALL
+0:CALL
+1:BET 600
+3:CALL
+0:CALL
+
+1:CHECK
+3:CHECK
+0:CHECK
+
+1:CHECK
+3:CHECK
+0:CHECK
+
+1:CHECK
+3:CHECK
+0:CHECK

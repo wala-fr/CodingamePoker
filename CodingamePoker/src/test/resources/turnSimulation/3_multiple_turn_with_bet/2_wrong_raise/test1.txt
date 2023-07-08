@@ -1,0 +1,35 @@
+raise less than twice the last raise
+
+KS KH KC TD AD
+
+player 4
+
+KD TC
+1000
+3270
+
+AS 9D
+1000
+0
+
+AH 9S
+270
+0
+
+2H 3S
+1000
+0
+
+dealer 0
+
+3:CALL
+0:BET 20:CALL
+1:BET 200
+2:ALL-IN
+3:BET 300:CALL
+0:CALL
+1:CALL
+
+1:ALL-IN
+3:ALL-IN
+0:ALL-IN

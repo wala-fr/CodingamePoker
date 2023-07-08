@@ -1,0 +1,35 @@
+4 PLAYERS-if player has less than big blind is considered all-in except for small blind
+
+KS KH KC TD AD
+
+player 4
+
+AH AC
+1000
+1020
+
+KD TC
+5
+20
+
+AS 9D
+1000
+980
+
+2H 3S
+15
+0
+
+dealer 0
+
+0:CALL
+2:CHECK
+
+2:CHECK
+0:CHECK
+
+2:CHECK
+0:CHECK
+
+2:CHECK
+0:CHECK
