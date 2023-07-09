@@ -25,6 +25,7 @@ public class Player extends AbstractMultiplayerPlayer {
   // }
 
   public void sendInputLine(int line) {
+//    System.err.println(line);
     sendInputLine(Integer.toString(line));
   }
   

@@ -21,7 +21,7 @@ public class Viewer {
   @Inject
   private BoardUI boardUI;
 
-  public void init(Board board) {
+  public void init() {
     int viewerWidth = graphic.getGraphics().getWorld().getWidth();
     int viewerHeight = graphic.getGraphics().getWorld().getHeight();
     graphic.getGraphics()
@@ -38,7 +38,7 @@ public class Viewer {
     // .setWidth(viewerWidth)
     // .setHeight(viewerHeight)
     // .setFillColor(ViewConstant.BACK_GROUND_COLOR);
-    boardUI.init(board);
+    boardUI.init();
   }
 
   public void resetTurn(int turn) {
@@ -50,10 +50,10 @@ public class Viewer {
     boardUI.resetHand();
   }
 
-  public void update(Board board) {
-    boardUI.update(board);
+  public void update() {
+    boardUI.update();
     if (graphic.isEnd()) {
-      System.err.println(board.toPlayerStatesString());
+      System.err.println(graphic.getBoard().toPlayerStatesString());
     }
   }
 

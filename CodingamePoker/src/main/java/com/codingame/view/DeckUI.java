@@ -80,6 +80,7 @@ public class DeckUI {
     card.setZIndex(i);
     card.setAlpha(1);
     card.setTint(0xFFFFFF);
+    graphics.getTooltips().setTooltipText(card, "");
   }
 
   public void foldPlayerId(Board board, int playerId) {
@@ -111,7 +112,7 @@ public class DeckUI {
 
     for (; nextCardIndex < dealPositions.size(); nextCardIndex++) {
       DealPosition dealPosition = dealPositions.get(nextCardIndex);
-      Point position = ViewUtils.getCardPosition(dealPosition);
+      Point position = ViewUtils.getCardPosition(graphics, dealPosition);
       // System.err.println(dealPosition + " " + position);
       Card card = board.getCard(dealPosition);
       move(position, !dealPosition.isBurned(), card, nextCardIndex, nextCardIndex);
@@ -142,7 +143,6 @@ public class DeckUI {
       cardToIndex.remove(card);
       graphics.getTooltips().setTooltipText(sprite, "");
     }
-    System.err.println(graphics.getTooltips().getTooltipText(sprite));
     // TODO test change ???
     if (visible) {
       sprite.setImage(ViewUtils.getCardUrl(card));
@@ -155,7 +155,7 @@ public class DeckUI {
     int index = cardToIndex.get(card);
     Sprite sprite = cards[index];
 //    sprite.setImage(ViewUtils.getCardHighlightUrl(card, win));
-    sprite.setTint(win ? 0x82fc4c : 0xfa6f6f, Curve.IMMEDIATE);
+    sprite.setTint(win ? 0x82fc4c : 0xfa6f6f, Curve.LINEAR);
   }
 
 

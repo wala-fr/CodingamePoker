@@ -13,9 +13,9 @@ public class PrintAllCard {
 //        + "}"
 //        + "td, th {align:center}"
 //        + "</style>");
-    System.out.println("<h1>cards</h1>");
+    System.out.println("<h1>CARDS</h1>");
     System.out.println("<table>");
-    System.out.println("<tr><th>" + "small name" + "</th><th>" + "full name"  + "</th><th>"
+    System.out.println("<tr><th align=\"center\">" + "small name" + "</th><th align=\"center\">" + "full name"  + "</th><th align=\"center\">"
         + "image" +"</th></tr>");
     for (Card card : Constant.ALL_CARDS) {
       System.out.println("<tr><th align=\"center\">" + card.toString() + "</th><td align=\"center\">" + card.getLabel() + "</td><td  align=\"center\">"

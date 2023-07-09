@@ -1,4 +1,4 @@
-<h1>cards</h1>
+<h1>CARDS</h1>
 <table>
 <tr><th>small name</th><th>full name</th><th>image</th></tr>
 <tr><th align="center">2C</th><td align="center">two of clubs</td><td  align="center"><img src="../../../../../../resources/view/assets/cards4/2C.png" width="50"/></td></tr>

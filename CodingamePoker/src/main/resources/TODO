@@ -1,9 +1,5 @@
 
-raise small blind and big blind
-give smallBlind and bigBlind in game input
 
-
-if bet less than call => consider calling (won't be a problem if bet is RAISE)
 
 Modern poker rules require that raises must be at least equal to the amount of the previous bet or raise.
 the minimum bet allowed at any given time is equivalent to the amount of the big blind. 
@@ -37,12 +33,7 @@ RAiSE To 110
 BB CALL 70
 
 
-input 
-4 lines :
-all player stack + last action (playerId + real action) or status (fold, all-in, eliminated)
-pot
-board
-blindes
+
 
 
 output action
@@ -80,8 +71,27 @@ add text message
 
 md particular cases list
 
-removed tinted cards
-
 logo POKER
 
 percent win
+
+clean code
+
+2-bet, 3-bet....
+
+consider 2 to 4 player
+
+show message as info not error wala Player 3 cant call. Considered as a check 
+
+
+bug deck card name appear
+
+desactvate / remove assertion
+
+discard and burned card slightly shifted
+
+graphics vs game in springChallenge
+
+pair of king, high card ace...
+
+clean sizePoint...

@@ -5,7 +5,7 @@
 	<br /> <br />
 	<p>
 		The source code of this game is available <a rel="nofollow"
-			target="_blank" href="https://github.com/wala-fr/CodingameIsola">on
+			target="_blank" href="https://github.com/wala-fr/CodingamePoker">on
 			this GitHub repo</a>. <br />
 </div>
 
@@ -26,6 +26,24 @@
 		<div class="statement-rules-content">
 			The rules of Texas hold 'em can be found here <a href="https://en.wikipedia.org/wiki/Texas_hold_%27em">wikipedia Texas hold 'em</a>
 		</div>
+		the last hand if not finished is cancelled. scores are the ones at the start<br/>
+
+        If the player's stack is larger than the small blind but smaller than the big blind,
+        they will be considered all-in in any position other than the small blind, assuming
+        they fold for their option.
+    <h3>Action</h3>
+    <action>FOLD</action><br/>
+    <action>CHECK</action><br/>
+    <action>ALL-IN</action><br/>
+    <action>CALL</action><br/>
+    <action>BET amount</action><br/>
+	<h3>Action replacement</h3>           
+ 	In some cases if you give an "invalid" action, it will be replace by a legal one : 
+ 	for example RAISE with an amount strictly superior to the player stack => ALL-IN...
+ 	The complete list can be found <a rel="nofollow" target="_blank" href="https://github.com/wala-fr/CodingamePoker">hereo</a>.
+ 	The replacement informations are given in the console.
+ 	<h3>Blinds</h3>
+ 	the <var>small blind<\var> and <var>big blind</var> initital values are given in the inputs. Then the level is increased every <var> </var> hands and the blinds (small and big) are multiplied by a <var>coefficient</var> also given in the inputs.
 	</div>
 
 	<!-- Victory conditions -->
@@ -110,11 +128,9 @@
 		<!-- Protocol block -->
 		<div class="blk">
 			<div class="title">Constraints</div>
-			Response time first turn is &le;
-			<const>1000</const>
-			ms. <br>Response time per turn is &le;
-			<const>100</const>
-			ms.
+			<const>2</const>&le;player number&le;<const>4</const>
+			Response time first turn is &le;<const>1000</const>ms. <br/>
+			Response time per turn is &le;<const>50</const>ms.
 		</div>
 	</div>
 </div>

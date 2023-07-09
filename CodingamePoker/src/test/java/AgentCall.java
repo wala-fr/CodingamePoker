@@ -15,6 +15,7 @@ public class AgentCall {
     while (true) {
         for (int i = 0; i < playerNb; i++) {
             int stack = in.nextInt();
+            System.err.println(stack);
         }
         int pot = in.nextInt();
         int boardCardNb = in.nextInt();
@@ -36,7 +37,7 @@ public class AgentCall {
         // Write an action using System.out.println()
         // To debug: System.err.println("Debug messages...");
 
-        System.out.println("CALL;MESSAGE");
+        System.out.println("ALL-IN;MESSAGE");
     }
   }
 }

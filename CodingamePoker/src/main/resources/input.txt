@@ -1,5 +1,0 @@
-smallBlind
-bigBlind
-gameNb???
-player's stacks + pot
-last action by player

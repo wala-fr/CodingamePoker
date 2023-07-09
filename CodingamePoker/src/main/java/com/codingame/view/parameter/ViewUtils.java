@@ -1,12 +1,11 @@
 package com.codingame.view.parameter;
 
-import com.codingame.gameengine.module.entities.GraphicEntityModule;
 import com.codingame.gameengine.module.entities.Group;
 import com.codingame.gameengine.module.entities.Rectangle;
 import com.codingame.gameengine.module.entities.Text;
 import com.codingame.gameengine.module.entities.Text.FontWeight;
 import com.codingame.gameengine.module.entities.TextBasedEntity.TextAlign;
-import com.codingame.gameengine.module.tooltip.TooltipModule;
+import com.codingame.model.object.Board;
 import com.codingame.model.object.Card;
 import com.codingame.model.object.DealPosition;
 import com.codingame.view.PlayerUICoordinates;
@@ -33,9 +32,9 @@ public class ViewUtils {
     return ViewConstant.CARD_URL + card.toString() + ".png";
   }
 
-//  public static String getCardHighlightUrl(Card card, boolean win) {
-//    return ViewConstant.CARD_URL + card.toString() + (win ? "_G.png" : "_R.png");
-//  }
+  // public static String getCardHighlightUrl(Card card, boolean win) {
+  // return ViewConstant.CARD_URL + card.toString() + (win ? "_G.png" : "_R.png");
+  // }
 
   // public static String getCardHighlightUrl() {
   // return ViewConstant.ASSET_URL + "highlight_card.png";
@@ -58,18 +57,18 @@ public class ViewUtils {
   // return card.replace(".png", "_R.png");
   // }
 
-  public static Point getCardPosition(DealPosition dealPosition) {
+  public static Point getCardPosition(Graphic graphics, DealPosition dealPosition) {
     if (dealPosition.isBurned()) {
       return getBurnedCardPosition(dealPosition.getIndex());
     }
     if (dealPosition.isBoard()) {
       return getBoardCardPosition(dealPosition.getIndex());
     }
-    return getPlayerCardPosition(dealPosition.getId(), dealPosition.getIndex());
+    return getPlayerCardPosition(graphics, dealPosition.getId(), dealPosition.getIndex());
   }
 
-  private static Point getPlayerCardPosition(int playerId, int index) {
-    return getPlayerUICoordinates(playerId).getCard(index).getPoint();
+  private static Point getPlayerCardPosition(Graphic graphics, int playerId, int index) {
+    return getPlayerUICoordinates(graphics, playerId).getCard(index).getPoint();
   }
 
   private static Point getBurnedCardPosition(int index) {
@@ -103,9 +102,10 @@ public class ViewUtils {
   // return new TextPoint(getX(ViewConstant.GAME_NB_X, label), ViewConstant.GAME_NB_Y);
   // }
 
-  public static TextPoint getPotTextPoint() {
-    return new TextPoint(ViewConstant.POT_X + 10, ViewConstant.POT_Y + 5, ViewConstant.POT_WIDTH - ViewConstant.DELTA_RECTANGLE_TEXT_WIDTH);
-  }
+//  public static TextPoint getPotTextPoint() {
+//    return new TextPoint(ViewConstant.POT_X, ViewConstant.POT_Y,
+//        ViewConstant.POT_WIDTH);
+//  }
 
   public static void clearText(Graphic graphics, Text text) {
     updateText(graphics, text, "");
@@ -123,12 +123,29 @@ public class ViewUtils {
     if (!str.equals(old)) {
       text.setText(str);
       graphics.getTooltips().setTooltipText(text, strMouseHover != null ? strMouseHover : str);
-      graphics.getGraphics().commitEntityState(graphics.getTime(), text);
+//      graphics.getGraphics().commitEntityState(graphics.getTime(), text);
     }
   }
 
-  public static PlayerUICoordinates getPlayerUICoordinates(int id) {
-    return ViewConstant.COORDINATES[id];
+  public static PlayerUICoordinates getPlayerUICoordinates(Graphic graphics, int id) {
+    return getPlayerUICoordinates(graphics.getBoard(), id);
+  }
+
+  public static PlayerUICoordinates getPlayerUICoordinates(Board board, int id) {
+    int playerNb = board.getPlayerNb();
+    int index = id;
+    if (playerNb == 3) {
+      if (id == 2) {
+        index = 3;
+      }
+    } else if (playerNb == 2) {
+      if (id == 0) {
+        index = 3;
+      } else {
+        index = 1;
+      }
+    }
+    return ViewConstant.COORDINATES[index];
   }
 
 

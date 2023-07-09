@@ -41,10 +41,9 @@ public class BoardUI {
   private Group levelGroup;
   private Group potGroup;
 
-  public void init(Board board) {
+  public void init() {
+    Board board = graphics.getBoard();
     if (playerUIS == null) {
-      graphics.setBoard(board);
-
       playerUIS = new PlayerUI[board.getPlayerNb()];
       for (int i = 0; i < playerUIS.length; ++i) {
         playerUIS[i] = new PlayerUI(graphics.getGameManager().getPlayer(i), graphics);
@@ -61,21 +60,9 @@ public class BoardUI {
       createLabelAndText(gameNb, ViewConstant.GAME_NB_X, ViewConstant.GAME_NB_Y, "HAND");
 
       potGroup = graphics.getGraphics().createGroup();
-      pot = ViewUtils.getPotTextPoint().create(graphics);
+      pot = graphics.createText();
       createPot(pot, ViewConstant.POT_X, ViewConstant.POT_Y);
       pot.setTextAlign(TextAlign.CENTER);
-
-//      RoundedRectangle potBg = graphics.getGraphics()
-//        .createRoundedRectangle()
-//        .setX(ViewConstant.POT_X)
-//        .setY(ViewConstant.POT_Y)
-//        .setRadius(ViewConstant.POT_HEIGHT / 2 - 2)
-//        .setWidth(ViewConstant.POT_WIDTH)
-//        .setHeight(ViewConstant.POT_HEIGHT)
-//        .setLineWidth(8)
-//        .setLineColor(ViewConstant.POT_TEXT_COLOR)
-//        .setFillColor(ViewConstant.POT_FILL_COLOR)
-//        .setZIndex(-10);
 
       button = graphics.getGraphics().createGroup();
       Circle buttonCircle = graphics.getGraphics()
@@ -94,6 +81,7 @@ public class BoardUI {
         .setFontFamily(ViewConstant.FONT)
         .setTextAlign(TextAlign.RIGHT)
         .setFillColor(ViewConstant.BUTTON_WRITE_COLOR);
+      graphics.getTooltips().setTooltipText(button, "DEALER");
       button.add(buttonText);
       updateButton(board);
     }
@@ -107,18 +95,20 @@ public class BoardUI {
     ViewUtils.createTextRectangle(text, x + ViewConstant.LABEL_WIDTH, y,
         ViewConstant.LABEL_TEXT_WIDTH, false, graphics, levelGroup);
   }
-  
+
   private void createPot(Text text, int x, int y) {
     Text labeltext = graphics.createText();
     ViewUtils.createTextRectangle(labeltext, x, y, ViewConstant.POT_LABEL_WIDTH, true, graphics,
         potGroup);
     labeltext.setText("POT");
-    ViewUtils.createTextRectangle(text, x + ViewConstant.POT_LABEL_WIDTH, y,
-        ViewConstant.POT_WIDTH, false, graphics, potGroup);
+    ViewUtils.createTextRectangle(text, x + ViewConstant.POT_LABEL_WIDTH, y, ViewConstant.POT_WIDTH,
+        false, graphics, potGroup);
   }
 
 
-  public void update(Board board) {
+  public void update() {
+    Board board = graphics.getBoard();
+
     ViewUtils.updateText(graphics, level, Integer.toString(board.getLevel()));
     ViewUtils.updateText(graphics, blinds,
         "$ " + board.getSmallBlind() + " / " + board.getBigBlind());
@@ -144,7 +134,9 @@ public class BoardUI {
       }
       playerUI.update(graphics);
     }
-    highlightWinningCards();
+    if (graphics.isEnd()) {
+      highlightWinningCards();
+    }
 
     String potOver = "";
     for (int id = 0; id < playerUIS.length; id++) {
@@ -154,6 +146,7 @@ public class BoardUI {
         potOver += player.getId() + " : $ " + player.getTotalBetAmount() + "\n";
       }
     }
+    // System.err.println(potOver);
     ViewUtils.updateText(graphics, pot, "$ " + board.getPot(),
         potOver.substring(0, potOver.length() - 1));
 
@@ -167,7 +160,7 @@ public class BoardUI {
   }
 
   private void updateButton(Board board) {
-    Point point = ViewUtils.getPlayerUICoordinates(board.getDealerId()).getButton();
+    Point point = ViewUtils.getPlayerUICoordinates(board, board.getDealerId()).getButton();
     button.setX(point.getX()).setY(point.getY());
   }
 
@@ -201,7 +194,7 @@ public class BoardUI {
       for (Card card : board.getBoardCards()) {
         deckUI.highlightCard(graphics, card, winCards.contains(card));
       }
-      graphics.commitWorldState(0);
+      graphics.commitWorldState();
     }
   }
 }

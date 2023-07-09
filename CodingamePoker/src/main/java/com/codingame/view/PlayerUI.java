@@ -38,7 +38,7 @@ public class PlayerUI {
   public PlayerUI(Player player, Graphic graphics) {
     id = player.getIndex();
     this.player = player;
-    PlayerUICoordinates coordinates = ViewConstant.COORDINATES[id];
+    PlayerUICoordinates coordinates = ViewUtils.getPlayerUICoordinates(graphics, id);
     createAvatar(player, graphics, coordinates);
     createLabel(graphics, coordinates);
   }

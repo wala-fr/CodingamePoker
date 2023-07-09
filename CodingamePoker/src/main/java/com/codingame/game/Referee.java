@@ -48,10 +48,11 @@ public class Referee extends AbstractReferee {
 
     RandomUtils.init(gameManager.getRandom());
 
-    int playerNb = Constant.PLAYER_NB;
+    int playerNb = gameManager.getPlayerCount();
 
     int dealerId = RandomUtils.nextInt(playerNb);
     board = new Board(playerNb, dealerId);
+    graphic.setBoard(board);
 
     // board.init(Constant.PLAYER_NB);
     gameManager.setMaxTurns(Constant.MAX_TURN);
@@ -60,7 +61,7 @@ public class Referee extends AbstractReferee {
     gameManager.setFrameDuration(ViewConstant.FRAME_DURATION);
 
     // ActionUtils.initBoard(board);
-    viewer.init(board);
+    viewer.init();
     // viewer.resetTurn(turn);
     //
     // graphic.setPhase(Phase.INIT_DECK);
@@ -102,15 +103,15 @@ public class Referee extends AbstractReferee {
       ActionInfo actionInfo = ActionInfo.create(playerId, outputs[0]);
       ActionUtils.doAction(board, actionInfo);
       graphic.setPhase(Phase.ACTION);
-      viewer.update(board);
+      viewer.update();
 
       board.endTurn();
       graphic.setPhase(Phase.END);
-      viewer.update(board);
+      viewer.update();
 
       if (actionInfo.hasError()) {
         gameManager
-          .addToGameSummary(GameManager.formatErrorMessage(nickName + " " + actionInfo.getError()));
+          .addToGameSummary((nickName + " :" + actionInfo.getError()));
         System.err.println("actionInfo " + actionInfo.getError());
 
       }
@@ -126,13 +127,14 @@ public class Referee extends AbstractReferee {
     eliminatePlayers();
     if (board.isGameOver()) {
       System.err.println("GameOver " + board.getPot());
+      board.calculateFinalScores();
       gameManager.endGame();
       return;
     }
     if (graphic.isEndRound() ) {
       board.cancelCurrentHand();
       board.calculateFinalScores();
-      viewer.update(board);
+      viewer.update();
     }
 
   }
@@ -143,17 +145,17 @@ public class Referee extends AbstractReferee {
       graphic.setPhase(Phase.INIT_DECK);
       board.resetHand();
       board.initDeck();
-      viewer.update(board);
+      viewer.update();
 
       board.initBlind();
       board.calculateNextPlayer();
-      viewer.update(board);
+      viewer.update();
 
       // viewer.update(board);
 
       graphic.setPhase(Phase.DEAL);
       board.dealFirst();
-      viewer.update(board);
+      viewer.update();
 
 
 
@@ -164,7 +166,7 @@ public class Referee extends AbstractReferee {
     } else {
       graphic.setPhase(Phase.DEAL);
       board.calculateNextPlayer();
-      viewer.update(board);
+      viewer.update();
     }
 
   }
@@ -235,22 +237,29 @@ public class Referee extends AbstractReferee {
     }
     int actionNb = playerNb;
     int index = id + 1;
+    currentPlayer.sendInputLine(actionNb);
     for (int i = 0; i < actionNb; i++) {
       index++;
       index %= playerNb;
       Action lastAction = board.getPlayer(index).getLastAction();
-      currentPlayer.sendInputLine(lastAction == null ? "" : lastAction.toString());
+      System.err.println(lastAction);
+      currentPlayer.sendInputLine(index);
+      currentPlayer.sendInputLine(lastAction == null ? "null" : lastAction.toString());
     }
   }
 
   @Override
   public void onEnd() {
-    int[] scores = new int[4];
-    String[] text = new String[4];
+    int playerNb = board.getPlayerNb();
 
-    for (int i = 0; i < scores.length; i++) {
-      scores[i] = board.getPlayer(i).getScore();
-      text[i] = scores[i] > 0 ? "" + scores[i] : "";
+    int[] scores = new int[playerNb];
+    String[] text = new String[playerNb];
+
+    for (int i = 0; i < playerNb; i++) {
+      int score = board.getPlayer(i).getScore();
+      scores[i] = score;
+      text[i] = score > 0 ? "" + scores[i] : "";
+      gameManager.getPlayer(i).setScore(score);
       System.err.println(i + " " + scores[i]);
     }
     // int winId = scores[0] > scores[1] ? 0 : 1;

@@ -144,7 +144,7 @@ public class ViewConstant {
     GAME_NB_X = LEVEL_X;
     GAME_NB_Y = BLIND_Y + LABEL_HEIGHT;
 
-    POT_X = middleX - (POT_LABEL_WIDTH +  POT_WIDTH) / 2;
+    POT_X = middleX - POT_LABEL_WIDTH;//(POT_LABEL_WIDTH +  POT_WIDTH) / 2;
     POT_Y = BOARD_CARD_Y - 100;
 
 //    int sideWidth = 2 * CARD_WIDTH + CARD_DELTA;
