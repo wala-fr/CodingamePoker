@@ -19,7 +19,7 @@ public class PrintAllCard {
         + "image" +"</th></tr>");
     for (Card card : Constant.ALL_CARDS) {
       System.out.println("<tr><th align=\"center\">" + card.toString() + "</th><td align=\"center\">" + card.getLabel() + "</td><td  align=\"center\">"
-          + "<img src=\"../../../../../../resources/view/assets/cards4/"
+          + "<img src=\"../../src/main/resources/view/assets/cards4/"
           + card + ".png\" width=\"50\"/></td></tr>");
     }
     System.out.println("</table>");
