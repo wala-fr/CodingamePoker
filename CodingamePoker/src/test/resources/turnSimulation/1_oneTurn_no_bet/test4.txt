@@ -20,7 +20,7 @@ AH 9S
 1000
 1030
 
-dealer 1
+bb 3
 
 0:FOLD
 1:FOLD

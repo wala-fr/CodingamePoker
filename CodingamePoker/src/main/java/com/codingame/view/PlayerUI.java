@@ -11,7 +11,7 @@ import com.codingame.model.object.FiveCardHand;
 import com.codingame.model.object.PlayerModel;
 import com.codingame.model.object.enumeration.Position;
 import com.codingame.model.utils.AssertUtils;
-import com.codingame.view.object.Graphic;
+import com.codingame.view.object.Game;
 import com.codingame.view.parameter.ViewConstant;
 import com.codingame.view.parameter.ViewUtils;
 
@@ -35,7 +35,7 @@ public class PlayerUI {
   private Text name;
   private Sprite avatar;
 
-  public PlayerUI(Player player, Graphic graphics) {
+  public PlayerUI(Player player, Game graphics) {
     id = player.getIndex();
     this.player = player;
     PlayerUICoordinates coordinates = ViewUtils.getPlayerUICoordinates(graphics, id);
@@ -43,7 +43,7 @@ public class PlayerUI {
     createLabel(graphics, coordinates);
   }
 
-  private void createAvatar(Player player, Graphic graphics, PlayerUICoordinates coordinates) {
+  private void createAvatar(Player player, Game graphics, PlayerUICoordinates coordinates) {
     avatarGroup = graphics.getGraphics().createGroup();
 
     playerRectangle = coordinates.getAvatarFrame()
@@ -66,7 +66,7 @@ public class PlayerUI {
     graphics.getTooltips().setTooltipText(avatarGroup, " " + id + " ");// space otherwise id 0 bugs
   }
 
-  private void createLabel(Graphic graphics, PlayerUICoordinates coordinates) {
+  private void createLabel(Game graphics, PlayerUICoordinates coordinates) {
     labelGroup = graphics.createGroup();
     action = graphics.createText();
     ViewUtils.createTextRectangle(action, coordinates.getAction(), false, graphics, labelGroup);
@@ -78,7 +78,7 @@ public class PlayerUI {
     ViewUtils.createTextRectangle(message, coordinates.getMessage(), false, graphics, labelGroup);
   }
 
-  void update(Graphic graphics) {
+  void update(Game graphics) {
     Board board = graphics.getBoard();
     PlayerModel player = board.getPlayers().get(id);
     if (!eliminated) {
@@ -102,7 +102,7 @@ public class PlayerUI {
     }
   }
 
-  private void updatePosition(Graphic graphics) {
+  private void updatePosition(Game graphics) {
     Position pos = graphics.getBoard().getPosition(id);
     ViewUtils.updateText(graphics, position, pos.getSmallLabel(), pos.getLabel());
   }
@@ -118,7 +118,7 @@ public class PlayerUI {
     }
   }
 
-  public void setEliminated(Graphic graphics) {
+  public void setEliminated(Game graphics) {
     if (graphics.isEnd()) {
       return;
     }
@@ -139,7 +139,7 @@ public class PlayerUI {
     }
   }
 
-  public void setWinOrLose(Graphic graphics, boolean win) {
+  public void setWinOrLose(Game graphics, boolean win) {
     // String message = win ? "WIN" : "LOSE";
     PlayerModel player = getPlayer(graphics);
     if (!eliminated) {
@@ -150,7 +150,7 @@ public class PlayerUI {
     }
   }
 
-  public PlayerModel getPlayer(Graphic graphics) {
+  public PlayerModel getPlayer(Game graphics) {
     Board board = graphics.getBoard();
     PlayerModel player = board.getPlayers().get(id);
     return player;

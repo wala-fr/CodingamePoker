@@ -14,7 +14,7 @@ import com.codingame.model.object.Board;
 import com.codingame.model.object.Card;
 import com.codingame.model.object.FiveCardHand;
 import com.codingame.model.object.PlayerModel;
-import com.codingame.view.object.Graphic;
+import com.codingame.view.object.Game;
 import com.codingame.view.object.Point;
 import com.codingame.view.parameter.ViewConstant;
 import com.codingame.view.parameter.ViewUtils;
@@ -25,7 +25,7 @@ import com.google.inject.Singleton;
 public class BoardUI {
 
   @Inject
-  private Graphic graphics;
+  private Game graphics;
   @Inject
   private DeckUI deckUI;
 

@@ -13,7 +13,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class Graphic {
+public class Game {
 
   @Inject
   private MultiplayerGameManager<Player> gameManager;

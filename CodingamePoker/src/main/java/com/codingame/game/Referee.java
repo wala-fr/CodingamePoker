@@ -1,6 +1,7 @@
 package com.codingame.game;
 
-import java.lang.reflect.Field;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.codingame.gameengine.core.AbstractPlayer.TimeoutException;
 import com.codingame.gameengine.core.AbstractReferee;
 import com.codingame.gameengine.core.GameManager;
@@ -17,12 +18,15 @@ import com.codingame.model.utils.ActionUtils;
 import com.codingame.model.utils.RandomUtils;
 import com.codingame.model.variable.Parameter;
 import com.codingame.view.Viewer;
-import com.codingame.view.object.Graphic;
+import com.codingame.view.object.Game;
 import com.codingame.view.object.Phase;
 import com.codingame.view.parameter.ViewConstant;
 import com.google.inject.Inject;
 
 public class Referee extends AbstractReferee {
+  
+  private static final Logger logger = LoggerFactory.getLogger(Referee.class);
+
   @Inject
   private MultiplayerGameManager<Player> gameManager;
   @Inject
@@ -37,7 +41,7 @@ public class Referee extends AbstractReferee {
   private Viewer viewer;
 
   @Inject
-  private Graphic graphic;
+  private Game graphic;
 
   private Board board;
   private int playerEliminatedNb;
@@ -50,8 +54,8 @@ public class Referee extends AbstractReferee {
 
     int playerNb = gameManager.getPlayerCount();
 
-    int dealerId = RandomUtils.nextInt(playerNb);
-    board = new Board(playerNb, dealerId);
+    int bbId = RandomUtils.nextInt(playerNb);
+    board = new Board(playerNb, bbId);
     graphic.setBoard(board);
 
     // board.init(Constant.PLAYER_NB);
@@ -77,8 +81,8 @@ public class Referee extends AbstractReferee {
 
   @Override
   public void gameTurn(int turn) {
-    System.err.println("TTTTTTTTTTTTTTTTTT " + turn);
-    System.err.println(board.toPlayerStatesString());
+    logger.info("########################### {}", turn);
+    logger.info("{}", board.toPlayerStatesString());
     viewer.resetTurn(turn);
     initBoard();
 
@@ -89,8 +93,9 @@ public class Referee extends AbstractReferee {
     System.err.println("turn " + turn + " playerId " + playerId + " gameNb " + board.getGameNb()
         + " LastPlayerId " + board.getLastPlayerId() + " dealer " + board.getDealerId());
     System.err.println(board);
+
+    sendInputs(turn, currentPlayer);
     try {
-      sendInputs(turn, currentPlayer);
       currentPlayer.execute();
       System.err.println("currentPlayer.getOutputs() " + currentPlayer.getOutputs());
 
@@ -102,28 +107,26 @@ public class Referee extends AbstractReferee {
       outputs[0] = outputs[0].toUpperCase().trim();
       ActionInfo actionInfo = ActionInfo.create(playerId, outputs[0]);
       ActionUtils.doAction(board, actionInfo);
-      graphic.setPhase(Phase.ACTION);
-      viewer.update();
-
-      board.endTurn();
-      graphic.setPhase(Phase.END);
-      viewer.update();
-
       if (actionInfo.hasError()) {
-        gameManager
-          .addToGameSummary((nickName + " :" + actionInfo.getError()));
-        System.err.println("actionInfo " + actionInfo.getError());
-
+        gameManager.addToGameSummary((nickName + " :" + actionInfo.getError()));
+//        System.err.println("actionInfo " + actionInfo.getError());
       }
     } catch (TimeoutException e) {
       // TODO considered as fold ????
+      System.err.println("TimeoutException " + playerId);
       gameManager
         .addToGameSummary(GameManager.formatErrorMessage(nickName + " did not output in time!"));
       currentPlayer.deactivate(nickName + " timeout.");
-      currentPlayer.setScore(-1);
-      gameManager.endGame();
-      return;
+//      currentPlayer.setScore(-1);
+      board.eliminatePlayer(playerId);
     }
+    graphic.setPhase(Phase.ACTION);
+    viewer.update();
+
+    board.endTurn();
+    graphic.setPhase(Phase.END);
+    viewer.update();
+
     eliminatePlayers();
     if (board.isGameOver()) {
       System.err.println("GameOver " + board.getPot());
@@ -131,12 +134,11 @@ public class Referee extends AbstractReferee {
       gameManager.endGame();
       return;
     }
-    if (graphic.isEndRound() ) {
+    if (graphic.isEndRound()) {
       board.cancelCurrentHand();
       board.calculateFinalScores();
       viewer.update();
     }
-
   }
 
   private void initBoard() {
@@ -172,9 +174,6 @@ public class Referee extends AbstractReferee {
   }
 
   private void eliminatePlayers() {
-    // int playerEliminatedNb = board.getPlayerEliminatedNb();
-    // while (playerEliminatedNb != board.getPlayerEliminatedNb()) {
-    // System.err.println(playerEliminatedNb + " " + board.getPlayerEliminatedNb());
     int nb = 0;
     do {
       int nextRank = playerEliminatedNb + 1;
@@ -183,33 +182,20 @@ public class Referee extends AbstractReferee {
       for (int i = 0; i < board.getPlayerNb(); i++) {
         PlayerModel playerModel = board.getPlayer(i);
         System.err.println(i + " getEliminationRank " + playerModel.getEliminationRank());
-
         if (playerModel.getEliminationRank() == nextRank) {
           System.err.println(i + " is eliminated " + playerModel.getScore());
           Player player = gameManager.getPlayer(i);
           player.setScore(playerModel.getScore());
-          String nickName = gameManager.getPlayer(i).getNicknameToken();
-          player.deactivate(nickName + " has no more chips.");
+          if (player.isActive()) {
+            String nickName = gameManager.getPlayer(i).getNicknameToken();
+            player.deactivate(nickName + " has no more chips.");
+          }
           nb++;
         }
       }
       playerEliminatedNb += nb;
     } while (nb > 0);
   }
-
-  // private void findWinner() {
-  // // there's a winner
-  // for (int i = 0; i < board.getPlayerNb(); i++) {
-  // PlayerModel player = board.getPlayer(i);
-  // int eliminationRank = player.getEliminationRank();
-  // if (eliminationRank == -1) {
-  // player.setEliminationRank(lastEliminationRank++);
-  // Player playerCG = gameManager.getPlayer(i);
-  // playerCG.setScore(player.getStack());
-  // }
-  // }
-  // gameManager.endGame();
-  // }
 
   public void sendInputs(int turn, Player currentPlayer) {
     int id = currentPlayer.getIndex();
@@ -223,6 +209,7 @@ public class Referee extends AbstractReferee {
       currentPlayer.sendInputLine(playerNb);
       currentPlayer.sendInputLine(id);
     }
+    currentPlayer.sendInputLine(turn);
     for (int i = 0; i < playerNb; i++) {
       currentPlayer.sendInputLine(board.getPlayer(i).getStack());
     }

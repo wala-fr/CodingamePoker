@@ -26,7 +26,7 @@ public class SizePoint implements ISizePoint {
     return new SizePoint(point, width, height);
   }
   
-  public Sprite create(Graphic graphics) {
+  public Sprite create(Game graphics) {
     return create(graphics.getGraphics());
   }
 
@@ -40,7 +40,7 @@ public class SizePoint implements ISizePoint {
     return ret;
   }
   
-  public RoundedRectangle createRoundedRectangle(Graphic graphics) {
+  public RoundedRectangle createRoundedRectangle(Game graphics) {
     return createRoundedRectangle(graphics.getGraphics());
   }
   

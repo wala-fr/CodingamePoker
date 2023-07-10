@@ -8,7 +8,7 @@ import com.codingame.gameengine.module.entities.Sprite;
 import com.codingame.model.object.Board;
 import com.codingame.model.object.Card;
 import com.codingame.model.object.DealPosition;
-import com.codingame.view.object.Graphic;
+import com.codingame.view.object.Game;
 import com.codingame.view.object.Phase;
 import com.codingame.view.object.Point;
 import com.codingame.view.parameter.ViewConstant;
@@ -20,7 +20,7 @@ import com.google.inject.Singleton;
 public class DeckUI {
 
   @Inject
-  private Graphic graphics;
+  private Game graphics;
 
   private Sprite[] cards;
 
@@ -30,7 +30,7 @@ public class DeckUI {
   private Map<Card, Integer> cardToIndex = new HashMap<>();
   // private int gameNb = -1;
 
-  private void init(Graphic graphics) {
+  private void init(Game graphics) {
     if (cards == null) {
       cards = new Sprite[52];
       for (int i = 0; i < cards.length; i++) {
@@ -56,7 +56,7 @@ public class DeckUI {
     }
   }
 
-  public void reset(Graphic graphic) {
+  public void reset(Game graphic) {
     init(graphic);
     Board board = graphic.getBoard();
     if (board.getDealPositions().isEmpty()) {
@@ -102,7 +102,7 @@ public class DeckUI {
     }
   }
 
-  public void deal(Graphic graphics) {
+  public void deal(Game graphics) {
     Board board = graphics.getBoard();
     List<DealPosition> dealPositions = board.getDealPositions();
 
@@ -151,7 +151,7 @@ public class DeckUI {
     }
   }
 
-  public void highlightCard(Graphic graphics, Card card, boolean win) {
+  public void highlightCard(Game graphics, Card card, boolean win) {
     int index = cardToIndex.get(card);
     Sprite sprite = cards[index];
 //    sprite.setImage(ViewUtils.getCardHighlightUrl(card, win));

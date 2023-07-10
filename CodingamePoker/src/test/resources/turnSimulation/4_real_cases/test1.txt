@@ -6,7 +6,7 @@ player 4
 
 3H 7C
 3020
-3040
+3030
 
 X X
 0
@@ -18,10 +18,9 @@ X X
 
 8H 5C
 980
-960
+970
 
-dealer 3
+bb 0
 
-0:ALL-IN
 3:FOLD
 

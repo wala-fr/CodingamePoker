@@ -5,6 +5,7 @@ read levelBlindMultiplicator:int
 read playerNb:int
 read playerId:int
 gameloop
+read round:int
 loop playerNb read stack:int
 read pot:int
 read boardCardNb:int

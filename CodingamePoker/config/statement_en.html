@@ -1,50 +1,71 @@
-<div
-	style="color: #000000; background-color: rgba(255, 255, 255, 0.5); padding: 20px; margin-bottom: 10px; text-align: left">
-	This is a port of <a
-		href="https://fr.wikipedia.org/wiki/Isola_(jeu)">Isola</a> :
-	<br /> <br />
-	<p>
-		The source code of this game is available <a rel="nofollow"
-			target="_blank" href="https://github.com/wala-fr/CodingamePoker">on
-			this GitHub repo</a>. <br />
-</div>
-
 <div id="statement_back" class="statement_back" style="display: none"></div>
 <div class="statement-body">
-	<!-- GOAL -->
-	<div class="statement-section statement-goal">
-		<h1>
-			<span class="icon icon-goal">&nbsp;</span> <span>The Goal</span>
-		</h1>
-		<div class="statement-goal-content">The goal of the game is to gain all the chips.</div>
-	</div>
 	<!-- RULES -->
+	Let's play poker! This is a port of the <b>Texas hold'em</b> version.<br /> The
+	source code of this game is available <a target="_blank"
+		href="https://github.com/wala-fr/CodingamePoker">on this GitHub
+		repo</a>. <br />
 	<div class="statement-section statement-rules">
-		<h1>
+		<h1 style="font-size: 20px;">
 			<span class="icon icon-rules">&nbsp;</span> <span>Rules</span>
 		</h1>
 		<div class="statement-rules-content">
-			The rules of Texas hold 'em can be found here <a href="https://en.wikipedia.org/wiki/Texas_hold_%27em">wikipedia Texas hold 'em</a>
+			The rules of Texas hold 'em can be found <a target="_blank"
+				href="https://en.wikipedia.org/wiki/Texas_hold_%27em">here</a>.<br />
+			The number of player varies from
+			<const>2</const>
+			to
+			<const>4</const>
+			.<br /> The action moves clockwise around the table.<br /> If only
+			one player has still chips or after
+			<const>600</const>
+			rounds, the game is over. If the last hand is not over, it's
+			cancelled.<br /> The players are ranked by stack.<br /> The card's
+			abbreviations are <a target="_blank"
+				href="https://github.com/wala-fr/CodingamePoker/blob/main/CodingamePoker/config/md/CARDS.md">here</a>.<br />
+			A list of how some special cases are dealt with is <a target="_blank"
+				href="https://github.com/wala-fr/CodingamePoker/blob/main/CodingamePoker/config/md/SPECIAL_CASES.md">here</a>.
 		</div>
-		the last hand if not finished is cancelled. scores are the ones at the start<br/>
+		<h2 style="font-size: 16px;">ACTIONS</h2>
+		<h3 style="font-size: 13px;">Possible actions</h3>
+		There are
+		<const>5</const>
+		possible actions :<br />
+		<ul>
+			<li><action>CALL</action></li>
+			<li><action>CHECK</action></li>
+			<li><action>BET amount</action> The <var>amount</var>
+				corresponds to the number of chips that the player adds to the pot.</li>
+			<li><action>ALL-IN</action></li>
+			<li><action>FOLD</action></li>
+		</ul>
+		<br />
+		<h3 style="font-size: 13px;">Action replacement</h3>
+		In some cases if you give an "invalid" action, it will be replaced by
+		a "legal" one :<br /> For example :
+		<action>BET 500</action>
+		with a stack of $400 will be considered as an
+		<action>ALL-IN</action>
+		...<br /> The complete list can be found <a target="_blank"
+			href="https://github.com/wala-fr/CodingamePoker/blob/main/CodingamePoker/config/md/ACTION_REPLACEMENT.md">here</a>.<br />
+		The replacement informations are given in the console.
+		<h2 style="font-size: 16px;">BLINDS</h2>
+		The
+		<var>small blind</var>
+		and
+		<var>big blind</var>
+		initial values are given in the inputs.<br /> Then the level is
+		increased every
+		<var>fixed number of hands</var>
+		and the blinds (small and big) are multiplied by a
+		<var>coefficient</var>
+		(those values are also given in the inputs).<br />
+		<h1>
+			<span>Others</span>
+		</h1>
 
-        If the player's stack is larger than the small blind but smaller than the big blind,
-        they will be considered all-in in any position other than the small blind, assuming
-        they fold for their option.
-    <h3>Action</h3>
-    <action>FOLD</action><br/>
-    <action>CHECK</action><br/>
-    <action>ALL-IN</action><br/>
-    <action>CALL</action><br/>
-    <action>BET amount</action><br/>
-	<h3>Action replacement</h3>           
- 	In some cases if you give an "invalid" action, it will be replace by a legal one : 
- 	for example RAISE with an amount strictly superior to the player stack => ALL-IN...
- 	The complete list can be found <a rel="nofollow" target="_blank" href="https://github.com/wala-fr/CodingamePoker/blob/main/CodingamePoker/config/md/ACTION_REPLACEMENT.md">hereo</a>.
- 	The replacement informations are given in the console.
- 	<h3>Blinds</h3>
- 	the <var>small blind<\var> and <var>big blind</var> initital values are given in the inputs. Then the level is increased every <var> </var> hands and the blinds (small and big) are multiplied by a <var>coefficient</var> also given in the inputs.
 	</div>
+
 
 	<!-- Victory conditions -->
 	<div class="statement-victory-conditions">
@@ -54,6 +75,7 @@
 			<div class="text">
 				<ul style="padding-bottom: 0;">
 					<li>You own all the chips.</li>
+					<li>After 600 round you've got the biggest stack.</li>
 				</ul>
 			</div>
 		</div>
@@ -67,7 +89,7 @@
 			<div class="text">
 				<ul style="padding-bottom: 0;">
 					<li>You've lost all your chips.</li>
-					<li>You do not respond in time or output an invalid action.</li>
+					<li>You do not respond in time.</li>
 				</ul>
 			</div>
 		</div>
@@ -128,9 +150,15 @@
 		<!-- Protocol block -->
 		<div class="blk">
 			<div class="title">Constraints</div>
-			<const>2</const>&le;player number&le;<const>4</const>
-			Response time first turn is &le;<const>1000</const>ms. <br/>
-			Response time per turn is &le;<const>50</const>ms.
+			<const>2</const>
+			&le;player number&le;
+			<const>4</const>
+			<br /> Response time first turn is &le;
+			<const>1000</const>
+			ms.<br /> Response time per turn is &le;
+			<const>50</const>
+			ms.<br /> round&le;
+			<const>600</const>
 		</div>
 	</div>
 </div>

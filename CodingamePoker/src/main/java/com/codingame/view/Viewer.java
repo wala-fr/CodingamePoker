@@ -7,7 +7,7 @@ import com.codingame.gameengine.module.entities.GraphicEntityModule;
 import com.codingame.gameengine.module.entities.RoundedRectangle;
 import com.codingame.gameengine.module.tooltip.TooltipModule;
 import com.codingame.model.object.Board;
-import com.codingame.view.object.Graphic;
+import com.codingame.view.object.Game;
 import com.codingame.view.parameter.ViewConstant;
 import com.codingame.view.parameter.ViewUtils;
 import com.google.inject.Inject;
@@ -17,7 +17,7 @@ import com.google.inject.Singleton;
 public class Viewer {
 
   @Inject
-  private Graphic graphic;
+  private Game graphic;
   @Inject
   private BoardUI boardUI;
 

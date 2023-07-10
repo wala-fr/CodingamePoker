@@ -74,8 +74,13 @@ public class BoardInput {
     List<Card> cards = TestUtils.createDeckCards(dealerId, playerNb, boardCards, playerCards);
     logger.debug("cards {}", cards);
     logger.debug("playerNb {}", playerNb);
+    int bbId = playerNb == 2 ? 0 : 1;
+    board = new Board(playerNb, bbId);
+    board.resetHand(false);
+    logger.debug("dealerId {}", board.getDealerId());
+    logger.debug("bbId {}", board.getBbId());
+    logger.debug("sbId {}", board.getSbId());
 
-    board = new Board(playerNb, dealerId);
     board.getDeck().initCards(cards);
 
 //    // so the small blind is player 0

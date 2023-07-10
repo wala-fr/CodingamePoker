@@ -20,7 +20,7 @@ AH 9S
 1000
 0
 
-dealer 0
+bb 2
 
 3:CALL
 0:CALL

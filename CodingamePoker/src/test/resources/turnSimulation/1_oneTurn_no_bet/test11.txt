@@ -20,7 +20,7 @@ QH 9S
 1200
 200
 
-dealer 0
+bb 3
 
 0:CALL
 2:CALL

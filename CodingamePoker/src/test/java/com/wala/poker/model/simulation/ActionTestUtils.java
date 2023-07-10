@@ -11,7 +11,6 @@ import com.codingame.model.object.enumeration.ActionType;
 public class ActionTestUtils {
   
   public static void initBoardTest(Board board, List<Card> cards) {
-    board.resetHand();
     board.getDeck().initCards(cards);
     board.dealFirst();
     board.initBlind();

@@ -9,7 +9,7 @@ import com.codingame.model.object.Board;
 import com.codingame.model.object.Card;
 import com.codingame.model.object.DealPosition;
 import com.codingame.view.PlayerUICoordinates;
-import com.codingame.view.object.Graphic;
+import com.codingame.view.object.Game;
 import com.codingame.view.object.Point;
 import com.codingame.view.object.SizePoint;
 import com.codingame.view.object.TextPoint;
@@ -57,7 +57,7 @@ public class ViewUtils {
   // return card.replace(".png", "_R.png");
   // }
 
-  public static Point getCardPosition(Graphic graphics, DealPosition dealPosition) {
+  public static Point getCardPosition(Game graphics, DealPosition dealPosition) {
     if (dealPosition.isBurned()) {
       return getBurnedCardPosition(dealPosition.getIndex());
     }
@@ -67,7 +67,7 @@ public class ViewUtils {
     return getPlayerCardPosition(graphics, dealPosition.getId(), dealPosition.getIndex());
   }
 
-  private static Point getPlayerCardPosition(Graphic graphics, int playerId, int index) {
+  private static Point getPlayerCardPosition(Game graphics, int playerId, int index) {
     return getPlayerUICoordinates(graphics, playerId).getCard(index).getPoint();
   }
 
@@ -107,15 +107,15 @@ public class ViewUtils {
 //        ViewConstant.POT_WIDTH);
 //  }
 
-  public static void clearText(Graphic graphics, Text text) {
+  public static void clearText(Game graphics, Text text) {
     updateText(graphics, text, "");
   }
 
-  public static void updateText(Graphic graphics, Text text, String str) {
+  public static void updateText(Game graphics, Text text, String str) {
     updateText(graphics, text, str, null);
   }
 
-  public static void updateText(Graphic graphics, Text text, String str, String strMouseHover) {
+  public static void updateText(Game graphics, Text text, String str, String strMouseHover) {
     if (str == null) {
       str = "";
     }
@@ -127,7 +127,7 @@ public class ViewUtils {
     }
   }
 
-  public static PlayerUICoordinates getPlayerUICoordinates(Graphic graphics, int id) {
+  public static PlayerUICoordinates getPlayerUICoordinates(Game graphics, int id) {
     return getPlayerUICoordinates(graphics.getBoard(), id);
   }
 
@@ -154,17 +154,17 @@ public class ViewUtils {
         ViewConstant.CARD_WIDTH, ViewConstant.CARD_HEIGHT);
   }
 
-  public static void createTextRectangle(Text text, TextPoint point, boolean label, Graphic graphic,
+  public static void createTextRectangle(Text text, TextPoint point, boolean label, Game graphic,
       Group group) {
     createTextRectangle(text, point.getX(), point.getY(), point.getWidth(), label, graphic, group);
   }
 
   public static void createTextRectangle(Text text, int x, int y, int width, boolean label,
-      Graphic graphic, Group group) {
+      Game graphic, Group group) {
     text.setX(x + 10)
       .setY(y + 5)
       .setFontSize(ViewConstant.LABEL_FONT_SIZE)
-      .setFontWeight(label ? FontWeight.BOLD : ViewConstant.LABEL_FONT_WEIGHT)
+      .setFontWeight(label ? FontWeight.BOLD : FontWeight.BOLD)
       .setFontFamily(ViewConstant.FONT)
       .setTextAlign(TextAlign.RIGHT)
       .setMaxWidth(width - ViewConstant.DELTA_RECTANGLE_TEXT_WIDTH)

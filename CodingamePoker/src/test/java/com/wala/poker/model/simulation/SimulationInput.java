@@ -31,7 +31,7 @@ public class SimulationInput {
 
   private List<Card> boardCards;
   private int playerNb;
-  private int dealerId;
+  private int bbId;
 
   private List<SimulationPlayer> players = new ArrayList<>();
   private List<ActionInput> actions = new ArrayList<>();
@@ -57,7 +57,7 @@ public class SimulationInput {
         player.setEndStack(nextLine());
         players.add(player);
       }
-      dealerId = nextNumLast();
+      bbId = nextNumLast();
       while (hasNext()) {
         String actionStr = nextLine();
         actions.add(new ActionInput(actionStr));
@@ -126,16 +126,15 @@ public class SimulationInput {
 
   private void createBoard() {
     logger.debug("playerNb {}", playerNb);
-
-    board = new Board(playerNb, dealerId);
+    board = new Board(playerNb, bbId);
     board.getPlayers().forEach(p -> p.setStack(players.get(p.getId()).getStartStack()));
-
   }
 
   private List<Card> createDeckCards() {
+    board.resetHand();
     List<List<Card>> playerCards = new ArrayList<>();
     players.forEach(p -> playerCards.add(p.getCards()));
-    List<Card> cards = TestUtils.createDeckCards(dealerId, playerNb, boardCards, playerCards);
+    List<Card> cards = TestUtils.createDeckCards(board.getDealerId(), playerNb, boardCards, playerCards);
     return cards;
   }
 }

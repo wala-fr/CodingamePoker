@@ -16,14 +16,14 @@ public class Board {
 
   private Deck deck = new Deck();
 
-  private int gameNb;
+  private int handNb;
   private int level;
 
   private int smallBlind;
   private int bigBlind;
 
   private int pot;
-  private int totalBetAmount;
+//  private int totalBetAmount;
   private int lastRoundRaise;
   private int lastRoundRaisePlayerId;
   private int raiseNb;
@@ -56,7 +56,7 @@ public class Board {
 
   // private int playerEliminatedNb;
 
-  public Board(int playerNb, int dealerId) {
+  public Board(int playerNb, int bbId) {
     players = new ArrayList<>(playerNb);
     this.playerNb = playerNb;
     winnings = new int[playerNb];
@@ -69,13 +69,15 @@ public class Board {
 
     over = true;
 
-    this.dealerId = dealerId;
+    handNb = -1;
+
+    this.bbId = bbId;
   }
 
   public void resetHand() {
     resetHand(false);
   }
-  
+
   public void resetHand(boolean end) {
     deck.reset();
     boardCards.clear();
@@ -83,37 +85,28 @@ public class Board {
     burnedCards.clear();
     actions.clear();
     over = false;
-    sbId = -1;
-    bbId = -1;
+//    sbId = -1;
+//    bbId = -1;
     pot = 0;
 
     dealPositions.clear();
     bestPlayers.clear();
 
+    resetRound();
     if (!end) {
-      gameNb++;
+      handNb++;
       increaseLevel();
-      if (gameNb > 1) {
-        calculateNextDealerId();
-      }
       initPositions();
     }
   }
 
   private void resetRound() {
     players.forEach(p -> p.resetRound());
-    totalBetAmount = 0;
+//    totalBetAmount = 0;
     lastRoundRaise = 0;
     lastTotalRoundBet = 0;
     lastRoundRaisePlayerId = -1;
     raiseNb = 0;
-  }
-
-  public void calculateNextDealerId() {
-    do {
-      dealerId++;
-      dealerId %= playerNb;
-    } while (players.get(dealerId).getStack() == 0);
   }
 
   public void initDeck() {
@@ -139,27 +132,30 @@ public class Board {
 
   private void initPositions() {
     initAssertStacks();
-    for (int i = 0; i < players.size(); i++) {
-      int playerIndex = (dealerId + 1 + i) % players.size();
+    calculateNextBigBlindId();
+    int startIndex = bbId;
+    sbId = -1;
+    dealerId = -1;
+    int nb = 0;
+    for (int i = 0; i < playerNb; i++) {
+      int playerIndex = (startIndex - 1 - i) % playerNb;
+      if (playerIndex < 0) {
+        playerIndex += playerNb;
+      }
+      System.err.println(playerIndex +" " + playerNb +" " + sbId);
       PlayerModel player = players.get(playerIndex);
       if (!player.isFolded()) {
-        if (sbId != -1 && bbId == -1) {
-          // betChips(player, bigBlind);
-          bbId = playerIndex;
-        } else {
-          // int bet = smallBlind;
-          if (sbId == -1) {
-            sbId = playerIndex;
-          } else {
-
-            // if (player.getStack() < bigBlind) {
-            // bet = player.getStack();
-            // }
-          }
-          // betChips(player, bet);
-
+        nb++;
+        if (sbId == -1) {
+          sbId = playerIndex;
+        } else  if (dealerId == -1) {
+          dealerId = playerIndex;
         }
       }
+    }
+    // if only two player the smallBlind is the dealer
+    if (nb == 2) {
+      dealerId = sbId;
     }
     lastPlayerId = -1;
     nextPlayerId = bbId;
@@ -168,6 +164,19 @@ public class Board {
     lastRoundRaisePlayerId = -1;
     raiseNb = 1;
   }
+
+
+  private void calculateNextBigBlindId() {
+    if (handNb <= 0) {
+      return;
+    } else {
+      do {
+        bbId++;
+        bbId %= playerNb;
+      } while (players.get(bbId).getStack() == 0);
+    }
+  }
+
 
   public void initBlind() {
     for (int i = 0; i < players.size(); i++) {
@@ -187,7 +196,7 @@ public class Board {
   }
 
   public void increaseLevel() {
-    if (gameNb % Parameter.HAND_NB_BY_LEVEL == 0) {
+    if (handNb > 0 && handNb % Parameter.HAND_NB_BY_LEVEL == 0) {
       level++;
       smallBlind *= Parameter.LEVEL_BLIND_MULTIPLICATOR;
       bigBlind *= Parameter.LEVEL_BLIND_MULTIPLICATOR;
@@ -211,6 +220,7 @@ public class Board {
 
   public void betChips(PlayerModel player, int value) {
     // AssertUtils.test(value <= player.getStack());
+    System.err.println("BETCHIPS " + player.getId() + " " + value);
     if (player.getStack() < value) {
       // ALL IN
       value = player.getStack();
@@ -218,7 +228,7 @@ public class Board {
     player.bet(value);
     int raise = player.getRoundBetAmount() - lastTotalRoundBet;
     player.setRoundLastRaise(raise);
-    // System.err.println("raise " + raise + " " + player.getRoundBetAmount() + " " + value);
+    System.err.println("lastTotalRoundBet " + lastTotalRoundBet + " raise " + raise + " " + player.getRoundBetAmount() + " " + value +" lastRoundRaisePlayerId "+lastRoundRaisePlayerId);
 
     if (raise >= lastRoundRaise) {
       // in case one all-in is not enough to be considered as as a raise
@@ -227,13 +237,14 @@ public class Board {
       lastTotalRoundBet += raise;
       raiseNb++;
     }
+    System.err.println("raise " + raise + " " + player.getRoundBetAmount() + " " + value +" lastRoundRaisePlayerId "+lastRoundRaisePlayerId +" lastRoundRaise "+lastRoundRaise);
+
     pot += value;
   }
 
   public void dealFirst() {
     dealPlayerCard();
     dealPlayerCard();
-    resetRound();
   }
 
   private void dealPlayerCard() {
@@ -522,6 +533,14 @@ public class Board {
     }
   }
 
+  public void eliminatePlayer(int id) {
+    PlayerModel player = getPlayer(id);
+    fold(player);
+    assertStacks -= player.getStack();
+    player.setStack(0);
+    int nextRank = getNextRank();
+    player.setEliminationRank(nextRank);
+  }
 
   private int getNextRank() {
     return ((int) players.stream()
@@ -659,6 +678,14 @@ public class Board {
     return dealerId;
   }
 
+  public int getSbId() {
+    return sbId;
+  }
+
+  public int getBbId() {
+    return bbId;
+  }
+
   public List<PlayerModel> getPlayers() {
     return players;
   }
@@ -716,7 +743,7 @@ public class Board {
   }
 
   public int getGameNb() {
-    return gameNb;
+    return handNb;
   }
 
   @Override
@@ -746,14 +773,14 @@ public class Board {
     if (players.get(id).isEliminated()) {
       return Position.ELIMINATED;
     }
-    if (id == dealerId) {
-      return Position.DEALER;
-    }
     if (id == sbId) {
       return Position.SMALL_BLIND;
     }
     if (id == bbId) {
       return Position.BIG_BLIND;
+    }
+    if (id == dealerId) {
+      return Position.DEALER;
     }
     return Position.UTG;
   }

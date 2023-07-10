@@ -14,6 +14,7 @@ class Player {
 
     // game loop
     while (true) {
+        int round = in.nextInt();
         for (int i = 0; i < playerNb; i++) {
             int stack = in.nextInt();
         }

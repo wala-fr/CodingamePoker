@@ -1,87 +1,19 @@
 
-
-
-Modern poker rules require that raises must be at least equal to the amount of the previous bet or raise.
-the minimum bet allowed at any given time is equivalent to the amount of the big blind. 
-
-the action moves clockwise around the table
-
-//Bet must meet the minimum of twice the previous bet.  Call bet amount and raise exactly that amount or more
-//Alternatively, if there is no previous bet, the first bet must be at least the big blind
-
-Board
-private int pot;
-private int totalBetAmount;
-private int lastBetAmount;
-
-Player
-private int betAmount;
-private int roundBetAmount;
-
-
-bet
-if (betAmount < board.lastBetAmount || betAmount < board.bigBlind)
-
-int toCall = hand.totalBetAmount - player.roundBetAmount
-if(total > player.stack){
-	total = player.stack
-	betAmount = total - toCall;
-}
-
-20/40
-RAiSE To 110
-BB CALL 70
-
-
-
-
-
-output action
-
-
-
-800
-1600
-
-3200 (2400 to call)
-
-9000
-
-wala bet 200
-toto 200 to call
-
-toto raise 500
-
 stack in bigblind 37 bb
-
-in heads up dealer is small blind and first to act
-
-blindes 40/80 (level 1
-pot 200
-
-
-If the player's stack is larger than the small blind but smaller than the big blind, they will be considered all-in in any position other than the small blind, assuming they fold for their option.
-
-
-centralize all particular cases
-
-if only two players who oppened ???
-
-add text message
-
-md particular cases list
 
 logo POKER
 
 percent win
 
-clean code
+clean code-graphics vs game in springChallenge
+clean sizePoint...
+
 
 2-bet, 3-bet....
 
 consider 2 to 4 player
 
-show message as info not error wala Player 3 cant call. Considered as a check 
+show message as info and some as error???
 
 
 bug deck card name appear
@@ -90,8 +22,18 @@ desactvate / remove assertion
 
 discard and burned card slightly shifted
 
-graphics vs game in springChallenge
 
 pair of king, high card ace...
 
-clean sizePoint...
+
+add tests 2 player 3 player
+
+
+//////////
+use logger see springChallenge
+see animation springChallenge
+statement input
+improve input
+finish special cases
+logo poker
+code a basic AI

@@ -20,7 +20,7 @@ AS 9D
 20
 10
 
-dealer 0
+bb 2
 
 3:FOLD
 0:CALL

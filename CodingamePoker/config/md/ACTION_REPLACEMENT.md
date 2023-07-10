@@ -12,4 +12,4 @@
 <tr><td align="center">malformed action</td><td align="center">FOLD</td><td  align="left">malformed action</td></tr>
 
 </table>
-*'proper' raise :
+*'proper' raise : if an all-in is not enough to be considered as a raise it doesn't reopen the raises. It's not a 'proper' raise. (TODO)

@@ -20,7 +20,7 @@ JH AC
 1000
 980
 
-dealer 1
+bb 3
 
 0:ALL-IN
 1:ALL-IN

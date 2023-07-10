@@ -12,7 +12,7 @@ public class AgentAllIn {
       for (int i = 0; i < playerNb; i++) {
         in.nextInt();
       }
-      System.out.println("ALL-IN;abcdefghijklmnopqrstuvwxyz");
+      System.out.println("CALL;abcdefghijklmnopqrstuvwxyz");
     }
   }
 }

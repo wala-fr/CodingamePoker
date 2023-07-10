@@ -151,14 +151,18 @@ public class FiveCardHand {
     return handType;
   }
 
-
-
   public int getValue() {
     return value;
   }
 
   public List<Card> getCards() {
     return cards;
+  }
+  
+  public String getLabel() {
+    String ret = handType.toString();
+    // TODO
+    return ret;
   }
 
   @Override

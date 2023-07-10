@@ -51,44 +51,41 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>${junit-jupiter.version}</version>
-            <scope>test</scope>
-        </dependency>
-        
-                <dependency>
-            <groupId>com.codingame.gameengine</groupId>
-            <artifactId>core</artifactId>
-            <version>${gamengine.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.codingame.gameengine</groupId>
-            <artifactId>module-entities</artifactId>
-            <version>${gamengine.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.codingame.gameengine</groupId>
-            <artifactId>runner</artifactId>
-            <version>${gamengine.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codingame.gameengine</groupId>
-            <artifactId>module-toggle</artifactId>
-            <version>${gamengine.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codingame.gameengine</groupId>
-            <artifactId>module-endscreen</artifactId>
-            <version>${gamengine.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codingame.gameengine</groupId>
-            <artifactId>module-tooltip</artifactId>
-            <version>${gamengine.version}</version>
-        </dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>${junit-jupiter.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.codingame.gameengine</groupId>
+			<artifactId>core</artifactId>
+			<version>${gamengine.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.codingame.gameengine</groupId>
+			<artifactId>module-entities</artifactId>
+			<version>${gamengine.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.codingame.gameengine</groupId>
+			<artifactId>runner</artifactId>
+			<version>${gamengine.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.codingame.gameengine</groupId>
+			<artifactId>module-toggle</artifactId>
+			<version>${gamengine.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.codingame.gameengine</groupId>
+			<artifactId>module-endscreen</artifactId>
+			<version>${gamengine.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.codingame.gameengine</groupId>
+			<artifactId>module-tooltip</artifactId>
+			<version>${gamengine.version}</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

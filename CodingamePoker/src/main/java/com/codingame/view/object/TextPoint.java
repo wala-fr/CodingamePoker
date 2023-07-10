@@ -32,7 +32,7 @@ public class TextPoint implements ISizePoint {
     this(x, y, ViewConstant.DEFAULT_FONT_SIZE, FontWeight.BOLD, width, 0);
   }
 
-  public Text create(Graphic graphics) {
+  public Text create(Game graphics) {
     Text text = graphics.getGraphics()
       .createText("")
       .setX(getX())
