@@ -1,0 +1,28 @@
+pot split with all-in
+
+KS KH KC TD AD
+
+player 4
+
+5D TC
+1000
+0
+
+AS 9D
+1000
+2000
+
+AH 9S
+1000
+2000
+
+2H TS
+1000
+0
+
+bb 2
+
+3:ALL-IN
+0:ALL-IN
+1:ALL-IN
+2:ALL-IN

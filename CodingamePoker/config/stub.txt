@@ -6,13 +6,13 @@ read playerNb:int
 read playerId:int
 gameloop
 read round:int
-loop playerNb read stack:int
 read pot:int
+loop playerNb read stack:int
 read boardCardNb:int
-loop boardCardNb read boardCard:string(2)
-loop 2 read playerCard:string(2)
+loop boardCardNb read boardCard:word(2)
+loop 2 read playerCard:word(2)
 read actionNb:int
-loop actionNb read actionPlayerId:int action:word(15) 
+loop actionNb read actionPlayerId:int action:word(6) amount:int
 
 write CALL;MESSAGE
 

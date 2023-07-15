@@ -1,0 +1,30 @@
+bet are in fact a call
+
+KS KH KC TD AD
+
+player 4
+
+KD TC
+1000
+1670
+
+AS 9D
+1000
+700
+
+AH 9S
+360
+0
+
+2H 3S
+1000
+990
+
+bb 2
+
+3:CHECK:FOLD
+0:BET 290
+1:BET 290:CALL
+2:BET 320:ALL-IN
+0:CALL
+1:FOLD

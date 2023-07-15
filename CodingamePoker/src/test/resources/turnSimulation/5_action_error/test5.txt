@@ -1,0 +1,21 @@
+bet are in fact a all-in
+
+KS KH KC TD AD
+
+player 2
+
+KD TC
+1000
+1200
+
+AS 9D
+200
+0
+
+bb 1
+
+0:CALL
+1:CHECK
+
+1:BET 200:ALL-IN
+0:BET 150:CALL

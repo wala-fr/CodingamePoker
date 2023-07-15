@@ -1,6 +1,7 @@
 package com.codingame.model.utils;
 
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 

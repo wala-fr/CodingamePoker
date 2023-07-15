@@ -1,0 +1,39 @@
+4 PLAYERS-if player has less than big blind ost flop
+
+KS KH KC TD AD
+
+player 4
+
+AH AC
+1000
+980
+
+KD TC
+30
+100
+
+AS 9D
+1000
+960
+
+2H 3S
+20
+10
+
+bb 2
+
+3:FOLD
+0:CALL
+1:CALL
+2:CHECK
+
+1:ALL-IN
+2:CALL
+0:BET 20
+2:CALL
+
+2:CHECK
+0:CHECK
+
+2:CHECK
+0:CHECK

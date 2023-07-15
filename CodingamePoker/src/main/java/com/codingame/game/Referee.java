@@ -1,5 +1,7 @@
 package com.codingame.game;
 
+import java.text.MessageFormat;
+import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.codingame.gameengine.core.AbstractPlayer.TimeoutException;
@@ -12,9 +14,10 @@ import com.codingame.gameengine.module.toggle.ToggleModule;
 import com.codingame.gameengine.module.tooltip.TooltipModule;
 import com.codingame.model.object.Action;
 import com.codingame.model.object.ActionInfo;
-import com.codingame.model.object.Board;
 import com.codingame.model.object.PlayerModel;
+import com.codingame.model.object.board.Board;
 import com.codingame.model.utils.ActionUtils;
+import com.codingame.model.utils.AssertUtils;
 import com.codingame.model.utils.RandomUtils;
 import com.codingame.model.variable.Parameter;
 import com.codingame.view.Viewer;
@@ -24,7 +27,7 @@ import com.codingame.view.parameter.ViewConstant;
 import com.google.inject.Inject;
 
 public class Referee extends AbstractReferee {
-  
+
   private static final Logger logger = LoggerFactory.getLogger(Referee.class);
 
   @Inject
@@ -75,8 +78,6 @@ public class Referee extends AbstractReferee {
     // viewer.update(board);
 
     playerEliminatedNb = -1;
-
-
   }
 
   @Override
@@ -86,40 +87,44 @@ public class Referee extends AbstractReferee {
     viewer.resetTurn(turn);
     initBoard();
 
-    System.err.println("nextPlayerId " + board.getNextPlayerId());
-    Player currentPlayer = gameManager.getPlayer(board.getNextPlayerId());
-    String nickName = currentPlayer.getNicknameToken();
-    int playerId = currentPlayer.getIndex();
-    System.err.println("turn " + turn + " playerId " + playerId + " gameNb " + board.getGameNb()
-        + " LastPlayerId " + board.getLastPlayerId() + " dealer " + board.getDealerId());
-    System.err.println(board);
+    logger.info("nextPlayerId {}", board.getNextPlayerId());
+    
+    int playerId = board.getNextPlayerId();
+    if (playerId == -1) {
+      logger.info("all players are all-in");
+    } else {
+      Player currentPlayer = gameManager.getPlayer(playerId);
+      String nickName = currentPlayer.getNicknameToken();
+      AssertUtils.test(playerId ==currentPlayer.getIndex());
+      sendInputs(turn, currentPlayer);
+      try {
+        currentPlayer.execute();
+        System.err.println("currentPlayer.getOutputs() " + currentPlayer.getOutputs());
 
-    sendInputs(turn, currentPlayer);
-    try {
-      currentPlayer.execute();
-      System.err.println("currentPlayer.getOutputs() " + currentPlayer.getOutputs());
-
-      String[] outputs = currentPlayer.getOutputs().get(0).split(";", -1);
-      if (outputs.length > 1) {
-        String message = outputs[1];
-        currentPlayer.setMessage(message);
+        String[] outputs = currentPlayer.getOutputs().get(0).split(";", -1);
+        if (outputs.length > 1) {
+          String message = outputs[1];
+          currentPlayer.setMessage(message);
+        }
+        logger.error("outputs {}", Arrays.toString(outputs));
+        outputs[0] = outputs[0].toUpperCase().trim();
+        ActionInfo actionInfo = ActionInfo.create(playerId, outputs[0]);
+        ActionUtils.doAction(board, actionInfo);
+        if (actionInfo.hasError()) {
+          gameManager.addToGameSummary((nickName + " :" + actionInfo.getError()));
+          logger.info("actionInfo {}", actionInfo.getError());
+        }
+      } catch (TimeoutException e) {
+        // TODO considered as fold ????
+        logger.info("TimeoutException {}", playerId);
+        gameManager
+          .addToGameSummary(GameManager.formatErrorMessage(nickName + " did not output in time!"));
+        currentPlayer.deactivate(nickName + " timeout.");
+        // currentPlayer.setScore(-1);
+        board.eliminatePlayer(playerId);
       }
-      outputs[0] = outputs[0].toUpperCase().trim();
-      ActionInfo actionInfo = ActionInfo.create(playerId, outputs[0]);
-      ActionUtils.doAction(board, actionInfo);
-      if (actionInfo.hasError()) {
-        gameManager.addToGameSummary((nickName + " :" + actionInfo.getError()));
-//        System.err.println("actionInfo " + actionInfo.getError());
-      }
-    } catch (TimeoutException e) {
-      // TODO considered as fold ????
-      System.err.println("TimeoutException " + playerId);
-      gameManager
-        .addToGameSummary(GameManager.formatErrorMessage(nickName + " did not output in time!"));
-      currentPlayer.deactivate(nickName + " timeout.");
-//      currentPlayer.setScore(-1);
-      board.eliminatePlayer(playerId);
     }
+ 
     graphic.setPhase(Phase.ACTION);
     viewer.update();
 
@@ -143,34 +148,25 @@ public class Referee extends AbstractReferee {
 
   private void initBoard() {
     if (board.isOver()) {
-      System.err.println("############################");
       graphic.setPhase(Phase.INIT_DECK);
       board.resetHand();
       board.initDeck();
       viewer.update();
-
+      
       board.initBlind();
       board.calculateNextPlayer();
       viewer.update();
-
-      // viewer.update(board);
 
       graphic.setPhase(Phase.DEAL);
       board.dealFirst();
       viewer.update();
 
-
-
-      // if (board.getGameNb() > 1) {
-      // // AVOID IF
-      // ActionUtils.nextDealer(board);
-      // }
     } else {
       graphic.setPhase(Phase.DEAL);
       board.calculateNextPlayer();
       viewer.update();
     }
-
+    
   }
 
   private void eliminatePlayers() {
@@ -229,9 +225,10 @@ public class Referee extends AbstractReferee {
       index++;
       index %= playerNb;
       Action lastAction = board.getPlayer(index).getLastAction();
-      System.err.println(lastAction);
+      logger.debug("{}", lastAction);
       currentPlayer.sendInputLine(index);
-      currentPlayer.sendInputLine(lastAction == null ? "null" : lastAction.toString());
+      currentPlayer.sendInputLine(lastAction == null ? "null" : lastAction.getType().toString());
+      currentPlayer.sendInputLine(lastAction == null ? 0 : lastAction.getAmount());
     }
   }
 
@@ -247,14 +244,7 @@ public class Referee extends AbstractReferee {
       scores[i] = score;
       text[i] = score > 0 ? "" + scores[i] : "";
       gameManager.getPlayer(i).setScore(score);
-      System.err.println(i + " " + scores[i]);
     }
-    // int winId = scores[0] > scores[1] ? 0 : 1;
-    // String nickName = gameManager.getPlayer(winId).getNicknameToken();
-    // gameManager.addToGameSummary(GameManager.formatSuccessMessage(nickName + " won"));
-    // gameManager.addTooltip(gameManager.getPlayer(winId), nickName + " won");
-    // text[1 - winId] = "Lost";
-    // text[winId] = "Won";
     endScreenModule.setScores(scores, text);
   }
 }

@@ -1,0 +1,22 @@
+bb is directly all in
+
+7D 6D QD 2D AH
+
+player 3
+
+QH KS
+200
+180
+
+7S QC
+20
+50
+
+3S JC
+200
+190
+
+bb 1
+
+2:FOLD
+0:CALL

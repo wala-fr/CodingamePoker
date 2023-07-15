@@ -1,0 +1,27 @@
+pot split with all-in + odd chip count
+
+KS KH KC TD AD
+
+player 4
+
+QD TC
+500
+0
+
+AS 9D
+1000
+1255
+
+AH TS
+1000
+1254
+
+2H 3S
+9
+0
+
+bb 2
+
+0:ALL-IN
+1:ALL-IN
+2:ALL-IN

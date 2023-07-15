@@ -1,0 +1,23 @@
+sb is all in
+
+7D 6D QD 2D AH
+
+player 3
+
+QH KS
+30
+0
+
+7S QC
+120
+160
+
+3S JC
+200
+190
+
+bb 1
+
+2:FOLD
+0:BET 40:ALL-IN
+1:ALL-IN

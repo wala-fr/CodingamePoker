@@ -2,6 +2,7 @@ package com.codingame.model.object;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.codingame.model.object.board.Board;
 import com.codingame.model.object.enumeration.ActionType;
 import com.codingame.model.object.enumeration.PlayerStatus;
 import com.codingame.model.utils.AssertUtils;
@@ -16,7 +17,7 @@ public class PlayerModel {
   private int roundBetAmount;
   private int lastRoundBetAmount;
 
-  private int roundLastRaise;
+  // private int roundLastRaise;
 
   private Hand hand = new Hand();
   private boolean folded;
@@ -41,7 +42,7 @@ public class PlayerModel {
     elimated = stack == 0;
     resetEndTurn();
   }
-  
+
   public void resetEndTurn() {
     folded = stack == 0;
     totalBetAmount = 0;
@@ -52,7 +53,7 @@ public class PlayerModel {
   public void resetRound() {
     roundBetAmount = 0;
     lastRoundBetAmount = 0;
-    roundLastRaise = 0;
+    // roundLastRaise = 0;
     spoken = false;
     lastAction = null;
   }
@@ -77,7 +78,11 @@ public class PlayerModel {
   }
 
   public void calculateBestFiveCardhand(List<Card> commoneCards) {
-    bestPossibleHand = hand.calculateBestFiveCardhand(commoneCards);
+    if (commoneCards.size() == 5 && !isFolded()) {
+      bestPossibleHand = hand.calculateBestFiveCardhand(commoneCards);
+    } else {
+      bestPossibleHand = null;
+    }
   }
 
   public boolean isAllIn() {
@@ -108,10 +113,10 @@ public class PlayerModel {
   public int getStack() {
     return stack;
   }
-  
-//  public int getTotalStack() {
-//    return stack + totalBetAmount;
-//  }
+
+  // public int getTotalStack() {
+  // return stack + totalBetAmount;
+  // }
   public void setStack(int stack) {
     this.stack = stack;
   }
@@ -127,9 +132,17 @@ public class PlayerModel {
   public FiveCardHand getBestPossibleHand() {
     return bestPossibleHand;
   }
+  
+  public int getBestPossibleHandValue() {
+    return bestPossibleHand == null ? Integer.MIN_VALUE + 1 : bestPossibleHand.getValue();
+  }
 
   public boolean isFolded() {
     return folded;
+  }
+  
+  public boolean canSpeak() {
+    return !folded && !isAllIn();
   }
 
   public void setFolded(boolean folded) {
@@ -144,13 +157,23 @@ public class PlayerModel {
     this.spoken = spoken;
   }
 
-  public int getRoundLastRaise() {
-    return roundLastRaise;
+//  public void updateSpoken() {
+//    if (!isCheck()) {
+//      setSpoken(true);
+//    }
+//  }
+  
+  public boolean isCheck() {
+    return lastAction != null && lastAction.getType() == ActionType.CHECK;
   }
 
-  public void setRoundLastRaise(int roundLastRaiseAmount) {
-    this.roundLastRaise = roundLastRaiseAmount;
-  }
+  // public int getRoundLastRaise() {
+  // return roundLastRaise;
+  // }
+  //
+  // public void setRoundLastRaise(int roundLastRaiseAmount) {
+  // this.roundLastRaise = roundLastRaiseAmount;
+  // }
 
   public Action getLastAction() {
     return lastAction;

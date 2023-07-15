@@ -1,0 +1,37 @@
+one all in which doesn't re-open the bets
+
+KS KH KC TD AD
+
+player 4
+
+KD TC
+1000
+2610
+
+AS 9D
+1000
+990
+
+AH 9S
+600
+0
+
+2H 3S
+1000
+0
+
+bb 2
+
+3:BET 5:CALL
+0:BET 10:CALL
+1:CHECK:FOLD
+2:CALL:CHECK
+
+2:CHECK
+3:CHECK
+0:CHECK
+
+2:CHECK
+3:ALL-IN
+0:ALL-IN
+2:CALL:ALL-IN

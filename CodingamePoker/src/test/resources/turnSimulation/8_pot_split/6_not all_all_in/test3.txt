@@ -1,0 +1,40 @@
+pot split with all-in
+
+KS KH KC TD AD
+
+player 4
+
+KD TC
+10
+40
+
+AS 9D
+1000
+995
+
+AH TS
+1000
+995
+
+2H 3S
+500
+480
+
+bb 2
+
+3:CALL
+1:CALL
+2:CALL
+
+1:CALL:CHECK
+2:CHECK
+3:CHECK
+
+1:CHECK
+2:CHECK
+3:CHECK
+
+1:CHECK
+2:CHECK
+3:CHECK
+

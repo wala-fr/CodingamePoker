@@ -13,9 +13,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.codingame.model.object.Board;
 import com.codingame.model.object.Card;
 import com.codingame.model.object.PlayerModel;
+import com.codingame.model.object.board.Board;
 import com.codingame.model.object.enumeration.HandType;
 import com.codingame.model.utils.CardUtils;
 import com.wala.poker.model.TestUtils;
@@ -57,6 +57,7 @@ public class BoardInput {
 
   public void doAssertions() {
     logger.debug("{} {}", name, board);
+    board.initPlayerBestHands();
     List<Integer> playerIds = board.findWinner();
     for (PlayerModel player : board.getPlayers()) {
       logger.info("{}, bestHand :{}", player.getId(), player.getBestPossibleHand());

@@ -14,9 +14,9 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.codingame.model.object.ActionInfo;
-import com.codingame.model.object.Board;
 import com.codingame.model.object.Card;
 import com.codingame.model.object.PlayerModel;
+import com.codingame.model.object.board.Board;
 import com.codingame.model.object.enumeration.HandType;
 import com.codingame.model.utils.ActionUtils;
 import com.codingame.model.utils.CardUtils;
@@ -101,21 +101,24 @@ public class SimulationInput {
     logger.debug("dealerId {}", board.getDealerId());
     logger.debug("nextPlayerId {}", board.getNextPlayerId());
     logger.debug("{}", board.toPlayerStatesString());
-
-    for (ActionInput actionInput : actions) {
-      logger.debug("ACTION:::: {}", actionInput);
-      assertFalse(board.isOver());
-      assertEquals(actionInput.getPlayerId(), board.getNextPlayerId());
-      ActionInfo actionInfo = actionInput.getActionInfo();
-      ActionUtils.doAction(board, actionInfo);
-      assertEquals(actionInput.getRealAction(), actionInfo.getAction());
-
-      if (actionInfo.hasError()) {
-        logger.debug("{}", actionInfo.getError());
-        logger.debug("REAL ACTION:::: {}", actionInfo.getAction());
-      }
-      logger.debug("{}", board.toPlayerStatesString());
+    if (actions.isEmpty()) {
       ActionTestUtils.endTurn(board);
+    } else {
+      for (ActionInput actionInput : actions) {
+        logger.debug("ACTION:::: {}", actionInput);
+        assertFalse(board.isOver());
+        assertEquals(actionInput.getPlayerId(), board.getNextPlayerId());
+        ActionInfo actionInfo = actionInput.getActionInfo();
+        ActionUtils.doAction(board, actionInfo);
+        if (actionInfo.hasError()) {
+          logger.debug("ERRRRRRRRRRRRRRRROR : {}", actionInfo.getError());
+          logger.debug("REAL ACTION:::: {}", actionInfo.getAction());
+        }
+        logger.debug("{}", board.toPlayerStatesString());
+        assertEquals(actionInput.getRealAction(), actionInfo.getAction());
+
+        ActionTestUtils.endTurn(board);
+      }
     }
     assertTrue(board.isOver());
     logger.debug("{}", board.toPlayerStatesString());
@@ -134,7 +137,8 @@ public class SimulationInput {
     board.resetHand();
     List<List<Card>> playerCards = new ArrayList<>();
     players.forEach(p -> playerCards.add(p.getCards()));
-    List<Card> cards = TestUtils.createDeckCards(board.getDealerId(), playerNb, boardCards, playerCards);
+    List<Card> cards =
+        TestUtils.createDeckCards(board.getDealerId(), playerNb, boardCards, playerCards);
     return cards;
   }
 }

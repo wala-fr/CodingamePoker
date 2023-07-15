@@ -1,69 +1,106 @@
 <div id="statement_back" class="statement_back" style="display: none"></div>
 <div class="statement-body">
 	<!-- RULES -->
-	Let's play poker! This is a port of the <b>Texas hold'em</b> version.<br /> The
-	source code of this game is available <a target="_blank"
-		href="https://github.com/wala-fr/CodingamePoker">on this GitHub
-		repo</a>. <br />
+
 	<div class="statement-section statement-rules">
-		<h1 style="font-size: 20px;">
-			<span class="icon icon-rules">&nbsp;</span> <span>Rules</span>
+		<br />
+		<div class="statement-rules-content">
+			Let's play <b>poker</b>!<br />This is a port of the <b>Texas
+				hold'em</b> version.<br /> The source code of this game is available <a
+				target="_blank" href="https://github.com/wala-fr/CodingamePoker">on
+				this GitHub repository</a>.
+		</div>
+		<br />
+		<h1>
+			<span class="icon icon-rules">&nbsp;</span> <span>RULES</span>
 		</h1>
 		<div class="statement-rules-content">
-			The rules of Texas hold 'em can be found <a target="_blank"
-				href="https://en.wikipedia.org/wiki/Texas_hold_%27em">here</a>.<br />
-			The number of player varies from
+			The rules of <b>Texas hold 'em</b> can be found all over the <a
+				target="_blank"
+				href="https://www.google.com/search?q=texas+hold'em+rules">web</a>.
+			For example : <a target="_blank"
+				href="https://en.wikipedia.org/wiki/Texas_hold_'em#Rules">wikipedia</a>
+			with the <a target="_blank"
+				href="https://en.wikipedia.org/wiki/Texas_hold_'em#Hand_values">hand
+				ranking</a>.<br /> The number of player varies from
 			<const>2</const>
 			to
 			<const>4</const>
-			.<br /> The action moves clockwise around the table.<br /> If only
-			one player has still chips or after
-			<const>600</const>
-			rounds, the game is over. If the last hand is not over, it's
-			cancelled.<br /> The players are ranked by stack.<br /> The card's
-			abbreviations are <a target="_blank"
-				href="https://github.com/wala-fr/CodingamePoker/blob/main/CodingamePoker/config/md/CARDS.md">here</a>.<br />
-			A list of how some special cases are dealt with is <a target="_blank"
+			.<br /> The action moves <b>clockwise</b> around the table. The
+			<const>player 0</const>
+			is at the
+			<const>top</const>
+			(in heads up he's on the
+			<const>left</const>
+			).<br />The game ends when :
+			<ul>
+				<li>one player owns all the chips.</li>
+				<li>after <const>600</const> rounds (if the <b>last hand</b> is
+					not over, it's <b>cancelled</b>).
+				</li>
+			</ul>
+			The players are ranked by elimination round and stack.<br /> The
+			card's abbreviations are
+			<const>2D</const>
+			,
+			<const>KH</const>
+			... (<a target="_blank"
+				href="https://github.com/wala-fr/CodingamePoker/blob/main/CodingamePoker/config/md/CARDS.md">complete
+				list</a>).<br /> A list of how some special cases are handled is <a
+				target="_blank"
 				href="https://github.com/wala-fr/CodingamePoker/blob/main/CodingamePoker/config/md/SPECIAL_CASES.md">here</a>.
 		</div>
-		<h2 style="font-size: 16px;">ACTIONS</h2>
-		<h3 style="font-size: 13px;">Possible actions</h3>
-		There are
-		<const>5</const>
-		possible actions :<br />
-		<ul>
-			<li><action>CALL</action></li>
-			<li><action>CHECK</action></li>
-			<li><action>BET amount</action> The <var>amount</var>
-				corresponds to the number of chips that the player adds to the pot.</li>
-			<li><action>ALL-IN</action></li>
-			<li><action>FOLD</action></li>
-		</ul>
 		<br />
-		<h3 style="font-size: 13px;">Action replacement</h3>
-		In some cases if you give an "invalid" action, it will be replaced by
-		a "legal" one :<br /> For example :
-		<action>BET 500</action>
-		with a stack of $400 will be considered as an
-		<action>ALL-IN</action>
-		...<br /> The complete list can be found <a target="_blank"
-			href="https://github.com/wala-fr/CodingamePoker/blob/main/CodingamePoker/config/md/ACTION_REPLACEMENT.md">here</a>.<br />
-		The replacement informations are given in the console.
-		<h2 style="font-size: 16px;">BLINDS</h2>
-		The
-		<var>small blind</var>
-		and
-		<var>big blind</var>
-		initial values are given in the inputs.<br /> Then the level is
-		increased every
-		<var>fixed number of hands</var>
-		and the blinds (small and big) are multiplied by a
-		<var>coefficient</var>
-		(those values are also given in the inputs).<br />
-		<h1>
-			<span>Others</span>
-		</h1>
-
+		<h2>
+			<span class="icon icon-example">&nbsp;</span> <span>ACTIONS</span>
+		</h2>
+		<strong>Possible actions</strong><br />
+		<br />
+		<div class="statement-rules-content">
+			There are
+			<const>5</const>
+			possible actions :<br />
+			<ul>
+				<li><action>CALL</action></li>
+				<li><action>CHECK</action></li>
+				<li><action>BET <var>amount</var></action>, the <var>amount</var>
+					is the number of chips that the player adds to the pot.</li>
+				<li><action>ALL-IN</action></li>
+				<li><action>FOLD</action></li>
+			</ul>
+		</div>
+		<br /> <strong>Action replacement</strong><br />
+		<br />
+		<div class="statement-rules-content">
+			In some cases, if you give an "invalid" action, it will be automatically replaced
+			by a "legal" one.<br /> For example :
+			<ul>
+				<li><action>BET 500</action> with a stack of $400 will be
+					considered as an <action>ALL-IN</action>.</li>
+				<li><action>TOTO</action> or other invalid action will be
+					considered as a <action>FOLD</action>.</li>
+			</ul>
+			The complete list can be found <a target="_blank"
+				href="https://github.com/wala-fr/CodingamePoker/blob/main/CodingamePoker/config/md/ACTION_REPLACEMENT.md">here</a>.<br />
+			However if you <action>FOLD</action> when you could just <action>CHECK</action>, it won't be replaced.<br />
+			The replacement informations are written in the output console.<br />
+		</div>
+		<br />
+		<h2>
+			<span class="icon icon-example">&nbsp;</span> <span>BLINDS</span>
+		</h2>
+		<div class="statement-rules-content">
+			The
+			<var>small blind</var>
+			and
+			<var>big blind</var>
+			initial values are given in the initial inputs.<br /> Then every "
+			<var>number of hands by level</var>
+			" the level is increased and the blinds (small and big) are
+			multiplied by a
+			<var>coefficient</var>
+			(those values are also given in the initial inputs).<br />
+		</div>
 	</div>
 
 
@@ -75,7 +112,7 @@
 			<div class="text">
 				<ul style="padding-bottom: 0;">
 					<li>You own all the chips.</li>
-					<li>After 600 round you've got the biggest stack.</li>
+					<li>After 600 rounds you own the biggest stack.</li>
 				</ul>
 			</div>
 		</div>
@@ -107,43 +144,57 @@
 			<div class="title">Initialization input</div>
 			<div class="text">
 				<span class="statement-lineno">Line 1</span>:
-				<var>playerPositionX</var>
-				<br> <span class="statement-lineno">Line 2</span>:
-				<var>playerPositionY</var>
-				the coordinates of your pawn.
+				<var>startSmallBlind</var>
+				<br /> <span class="statement-lineno">Line 2</span>:
+				<var>startBigBlind</var>
+				the initial values of the blinds.<br /> <span
+					class="statement-lineno">Line 3</span>:
+				<var>handlNbByLevel</var>
+				the number of hands before the level increases.<br /> <span
+					class="statement-lineno">Line 4</span>:
+				<var>levelBlindMultiplicator</var>
+				the blinds are multiplied by this coefficient when the level
+				changes.<br /> <span class="statement-lineno">Line 5</span>:
+				<var>playerNb</var>
+				the initial number of players.<br /> <span class="statement-lineno">Line
+					6</span>:
+				<var>playerId</var>
+				your id.<br />
 			</div>
 			<br>
 			<div class="title">Input for one game turn</div>
 			<div class="text">
 				<span class="statement-lineno">Line 1</span>:
-				<var>opponentPositionX</var>
-				<br> <span class="statement-lineno">Line 2</span>:
-				<var>opponentPositionY</var>
-				the coordinates of the opponent's pawn. <br> <span
-					class="statement-lineno">Line 3</span>:
-				<var>opponentLastRemovedTileX</var>
-				<br> <span class="statement-lineno">Line 4</span>:
-				<var>opponentLastRemovedTileY</var>
-				the coordinates of the last tile removed by the opponent (
-				<const>-1 -1</const>
-				if no tile has been removed (first round)). <br>
+				<var>round</var>
+				referee round (game will end when it reaches
+				<const>600</const>
+				). <br /> <span class="statement-lineno">Line 2</span>:
+				<var>pot</var>
+				number of chips in the pot.<br> <span class="statement-lineno">Next
+					<var>playerNb</var> lines
+				</span>:
+				<var>stack</var>
+				stack of each player.<br /> <span class="statement-lineno">Next
+					line</span>:
+				<var>boardCardNb</var>
+				number of board cards already dealt.<br> <span
+					class="statement-lineno">Next <var>boardCardNb</var> lines
+				</span>:
+				<var>boardCard</var>
+				board card abbreviation (2H, KD... see <a target="_blank"
+					href="https://github.com/wala-fr/CodingamePoker/blob/main/CodingamePoker/config/md/CARDS.md">abreviations</a>).
+				<br />
 			</div>
 		</div>
-
-		<!-- Protocol block -->
 		<div class="blk">
+			<br>
 			<div class="title">Output</div>
 			<div class="text">
 				<span class="statement-lineno">A single line</span> containing the
-				coordinates where you want to move your pawn, followed by the
-				coordinates of the tile you want to remove.<br>Example:
-				<action>1 4 7 4</action>
+				player action.<br>Example:
+				<action>BET 200</action>
 				<br> You can also add a message :<br> Example:
-				<action>1 4 7 4;MESSAGE</action>
-				<br> NB : You can print
-				<action>RANDOM</action>
-				instead of the 4 coordinates. Then a random possible move and tile
-				will be chosen.
+				<action>FOLD;MESSAGE</action>
 			</div>
 		</div>
 
@@ -151,13 +202,13 @@
 		<div class="blk">
 			<div class="title">Constraints</div>
 			<const>2</const>
-			&le;player number&le;
+			&le; number of players &le;
 			<const>4</const>
 			<br /> Response time first turn is &le;
 			<const>1000</const>
 			ms.<br /> Response time per turn is &le;
 			<const>50</const>
-			ms.<br /> round&le;
+			ms.<br /> round &le;
 			<const>600</const>
 		</div>
 	</div>

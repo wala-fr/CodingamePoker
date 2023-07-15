@@ -8,7 +8,7 @@ import com.codingame.gameengine.module.entities.GraphicEntityModule;
 import com.codingame.gameengine.module.entities.Group;
 import com.codingame.gameengine.module.entities.Text;
 import com.codingame.gameengine.module.tooltip.TooltipModule;
-import com.codingame.model.object.Board;
+import com.codingame.model.object.board.Board;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 

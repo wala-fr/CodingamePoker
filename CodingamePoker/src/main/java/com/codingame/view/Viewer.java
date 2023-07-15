@@ -6,7 +6,7 @@ import com.codingame.gameengine.core.MultiplayerGameManager;
 import com.codingame.gameengine.module.entities.GraphicEntityModule;
 import com.codingame.gameengine.module.entities.RoundedRectangle;
 import com.codingame.gameengine.module.tooltip.TooltipModule;
-import com.codingame.model.object.Board;
+import com.codingame.model.object.board.Board;
 import com.codingame.view.object.Game;
 import com.codingame.view.parameter.ViewConstant;
 import com.codingame.view.parameter.ViewUtils;

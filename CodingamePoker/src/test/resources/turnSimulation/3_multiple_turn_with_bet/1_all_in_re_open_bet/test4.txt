@@ -6,14 +6,14 @@ player 4
 
 KD TC
 1000
-3399
+3349
 
 AS 9D
 1000
 0
 
 AH 9S
-399
+349
 0
 
 2H 3S
@@ -28,7 +28,7 @@ bb 2
 2:ALL-IN
 3:CALL
 0:CALL
-1:CALL
+1:BET 300:CALL
 
 1:ALL-IN
 3:ALL-IN

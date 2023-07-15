@@ -1,0 +1,22 @@
+call in fact a check or all-in
+
+KS KH KC TD AD
+
+player 2
+
+KD TC
+1000
+1200
+
+AS 9D
+200
+0
+
+bb 1
+
+0:CALL
+1:CALL:CHECK
+
+1:CHECK
+0:ALL-IN
+1:CALL:ALL-IN

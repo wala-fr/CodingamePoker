@@ -1,0 +1,32 @@
+bet are in fact a all-in
+
+KS KH KC TD AD
+
+player 4
+
+KD TC
+1000
+1058
+
+AS 9D
+28
+0
+
+AH 9S
+300
+280
+
+2H 3S
+1000
+990
+
+bb 2
+
+3:FOLD
+0:BET 10:CALL
+1:BET 10:CALL
+2:CALL:CHECK
+
+1:BET 6:ALL-IN
+2:FOLD
+0:ALL-IN

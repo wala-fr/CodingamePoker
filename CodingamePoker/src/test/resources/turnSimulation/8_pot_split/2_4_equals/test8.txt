@@ -1,0 +1,28 @@
+pot split 4-way
+
+KS KH KC TD AD
+
+player 4
+
+5S 9D
+800
+800
+
+5D 8C
+1000
+1000
+
+3H 7S
+751
+751
+
+2H 3S
+1500
+1500
+
+bb 2
+
+3:ALL-IN
+0:ALL-IN
+1:ALL-IN
+2:ALL-IN

@@ -29,6 +29,13 @@ pair of king, high card ace...
 add tests 2 player 3 player
 
 
+## message player
+raise to 100
+3-bet to 200
+All-on raise to 1000
+########
+
+add player cards in input
 //////////
 use logger see springChallenge
 see animation springChallenge
@@ -36,4 +43,16 @@ statement input
 improve input
 finish special cases
 logo poker
-code a basic AI
+code a basic AI Chen formula
+
+
+rmove all todo from the md
+stop blind if too big so that one player always does action
+
+
+try to print all message from properties in a test
+
+at the end add comment from statement to stub.txt
+
+
+"You can't raise yourself."
