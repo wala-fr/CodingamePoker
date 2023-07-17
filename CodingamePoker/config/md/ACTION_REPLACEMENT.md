@@ -6,7 +6,7 @@ table, td, th {
 }
 </style>-->
 <table  border="1px solid #000" cellspacing="0" cellpadding="0">
-	<tr height="80">
+	<tr   border="1px solid #000"height="80">
 		<th align="center">player action</th>
 		<th align="center">replacement action</th>
 		<th align="center">explanation</th>
