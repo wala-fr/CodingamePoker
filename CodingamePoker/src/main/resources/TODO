@@ -1,26 +1,14 @@
 
 stack in bigblind 37 bb
 
-logo POKER
-
 percent win
 
 clean code-graphics vs game in springChallenge
 clean sizePoint...
 
-
-2-bet, 3-bet....
-
-consider 2 to 4 player
-
-show message as info and some as error???
-
+show replacement message as info and some as error???
 
 bug deck card name appear
-
-desactvate / remove assertion
-
-discard and burned card slightly shifted
 
 
 pair of king, high card ace...
@@ -28,31 +16,40 @@ pair of king, high card ace...
 
 add tests 2 player 3 player
 
+//////////
+see animation springChallenge
+finish special cases
+logo poker
 
-## message player
+
+remove all todo from the md
+
+tune blind values, level hand nb... max turn
+buy-In at least 10 time the big blind
+stop blind if too big so that one player always does action
+
+work on md table appearance
+
+"You can't raise yourself."
+
+
+find better back card
+
+bug move button
+
+################ message player
+2-bet, 3-bet....
+
 raise to 100
 3-bet to 200
 All-on raise to 1000
-########
 
-add player cards in input
-//////////
-use logger see springChallenge
-see animation springChallenge
-statement input
-improve input
-finish special cases
-logo poker
+################ WITH AI
 code a basic AI Chen formula
-
-
-rmove all todo from the md
-stop blind if too big so that one player always does action
-
-
 try to print all message from properties in a test
 
-at the end add comment from statement to stub.txt
+################ END
+format code + remove unused import
+at the end add comment from stub.txt to statement 
+deactivate assertion and log
 
-
-"You can't raise yourself."

@@ -3,6 +3,8 @@ package com.codingame.view;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.codingame.gameengine.module.entities.Curve;
 import com.codingame.gameengine.module.entities.Sprite;
 import com.codingame.model.object.Card;
@@ -19,8 +21,10 @@ import com.google.inject.Singleton;
 @Singleton
 public class DeckUI {
 
+  private static final Logger logger = LoggerFactory.getLogger(DeckUI.class);
+
   @Inject
-  private Game graphics;
+  private Game game;
 
   private Sprite[] cards;
 
@@ -28,13 +32,14 @@ public class DeckUI {
   private int discardCardIndex;
 
   private Map<Card, Integer> cardToIndex = new HashMap<>();
-  // private int gameNb = -1;
-
-  private void init(Game graphics) {
+  
+  private int zIndex;
+  
+  private void init() {
     if (cards == null) {
       cards = new Sprite[52];
       for (int i = 0; i < cards.length; i++) {
-        cards[i] = graphics.getGraphics()
+        cards[i] = game.getGraphics()
           .createSprite()
           .setImage(ViewUtils.getCardBackUrl())
           .setX(0)
@@ -42,121 +47,112 @@ public class DeckUI {
           .setBaseWidth(ViewConstant.CARD_WIDTH)
           .setBaseHeight(ViewConstant.CARD_HEIGHT);
       }
-      // highlight = new Sprite[13];
-      // for (int i = 0; i < highlight.length; i++) {
-      // highlight[i] = graphics.getGraphics()
-      // .createSprite()
-      // .setImage(ViewUtils.getCardHighlightUrl())
-      // .setX(0)
-      // .setY(0)
-      // .setBaseWidth(ViewConstant.CARD_WIDTH)
-      // .setBaseHeight(ViewConstant.CARD_HEIGHT)
-      // .setVisible(false);
-      // }
     }
   }
 
-  public void reset(Game graphic) {
-    init(graphic);
-    Board board = graphic.getBoard();
+  public void reset() {
+    init();
+    Board board = game.getBoard();
     if (board.getDealPositions().isEmpty()) {
+      zIndex = ViewConstant.Z_INDEX_CARD;
       cardToIndex.clear();
       nextCardIndex = 0;
       discardCardIndex = 0;
-      for (int i = 0; i < cards.length; i++) {
-        resetCard(board, i);
+      for (int i = cards.length - 1; i >= 0; i--) {
+        resetCard(i);
       }
       // TODO
-      graphic.commitWorldState(graphic.isFirstRound() ? 0 : Phase.INIT_DECK.getEndTime());
-      System.err.println("getTime " + graphic.getTime());
+      game.commitWorldState(game.isFirstRound() ? 0 : Phase.INIT_DECK.getEndTime());
     }
   }
 
-  private void resetCard(Board board, int i) {
+  private void resetCard(int i) {
+    Board board = game.getBoard();
     Sprite card = cards[i];
     card.setImage(ViewUtils.getCardBackUrl());
     Point position = ViewUtils.getDeckCardPosition(board.getDealerId(), i);
     position.setPosition(card);
-    card.setZIndex(i);
+    setZIndex(card);
     card.setAlpha(1);
-    card.setTint(0xFFFFFF);
-    graphics.getTooltips().setTooltipText(card, "");
+    card.setTint(0xFFFFFF, Curve.IMMEDIATE);
+    game.getTooltips().setTooltipText(card, "");
+  }
+  
+  private void setZIndex(Sprite card) {
+    card.setZIndex(zIndex);
+    zIndex++;
   }
 
-  public void foldPlayerId(Board board, int playerId) {
-    if (!graphics.isAction()) {
+  public void foldPlayerId(int playerId) {
+    if (!game.isAction()) {
       return;
     }
+    Board board = game.getBoard();
+
     List<DealPosition> dealPositions = board.getDealPositions();
     int i = 0;
     for (DealPosition dealPosition : dealPositions) {
       if (dealPosition.getId() == playerId) {
-        Point position = ViewUtils.getDiscardCardPosition(board.getDealerId(), discardCardIndex);
-        move(position, false, null, i, discardCardIndex);
-        graphics.setTime(1);
-        graphics.commitWorldState(0);
-
-        discardCardIndex++;
+        Point position = calculateDiscardCardPosition();
+        move(position, false, null, i);
       }
       i++;
     }
+    game.setTime(1);
+    game.commitWorldState(0);
   }
 
-  public void deal(Game graphics) {
-    Board board = graphics.getBoard();
+  public void deal() {
+    Board board = game.getBoard();
     List<DealPosition> dealPositions = board.getDealPositions();
-
-    // TODO 0.8 beacuase first player can fold
-    int cardDealNb = dealPositions.size() - nextCardIndex;
-    double timeIncrement = (graphics.getPhase().getEndTime() - graphics.getTime()) / cardDealNb;
 
     for (; nextCardIndex < dealPositions.size(); nextCardIndex++) {
       DealPosition dealPosition = dealPositions.get(nextCardIndex);
-      Point position = ViewUtils.getCardPosition(graphics, dealPosition);
-      // System.err.println(dealPosition + " " + position);
       Card card = board.getCard(dealPosition);
-      move(position, !dealPosition.isBurned(), card, nextCardIndex, nextCardIndex);
-      graphics.commitWorldState(0.1);
-
-      // graphics.incrementTime(timeIncrement);
-      System.err
-        .println("Time " + graphics.getTime() + " " + graphics.getPhase() + " " + dealPosition);
-      // graphics.getGraphics().commitEntityState(graphics.getTime(), cards[nextCardIndex]);
-      // graphics.commitWorldState(timeIncrement);
+      Point position;
+      if (dealPosition.isBurned()) {
+        position = calculateDiscardCardPosition();
+      } else {
+        position = ViewUtils.getCardPosition(game, dealPosition);
+      }
+      move(position, !dealPosition.isBurned(), card, nextCardIndex);
+      game.commitEntityState(cards[nextCardIndex], 0.1);
     }
   }
+  
+  private Point calculateDiscardCardPosition() {
+    discardCardIndex++;
+    Board board = game.getBoard();
+    return ViewUtils.getDiscardCardPosition(board.getDealerId(), discardCardIndex);
+  }
 
-  private void move(Point position, boolean visible, Card card, int index, int zIndex) {
-    // move sprite to position
-
+  private void move(Point position, boolean visible, Card card, int index) {
     Sprite sprite = cards[index];
-    // if (!visible) {
-    // sprite.setImage(ViewUtils.getCardBackUrl());
-    // graphics.commitEntityState(sprite);
-    // }
-    sprite.setZIndex(52 - index);
-    position.setPosition(sprite);
-    if (visible) {
-      graphics.getTooltips().setTooltipText(sprite, card.getLabel());
-      cardToIndex.put(card, index);
-    } else {
-      cardToIndex.remove(card);
-      graphics.getTooltips().setTooltipText(sprite, "");
-    }
-    // TODO test change ???
     if (visible) {
       sprite.setImage(ViewUtils.getCardUrl(card));
     } else {
       sprite.setImage(ViewUtils.getCardBackUrl());
     }
+    setZIndex(sprite);
+    
+    if (visible) {
+      game.getTooltips().setTooltipText(sprite, card.getLabel());
+      cardToIndex.put(card, index);
+    } else {
+      cardToIndex.remove(card);
+      game.getTooltips().setTooltipText(sprite, "");
+    }
+    
+    game.commitEntityState(sprite);
+
+    position.setPosition(sprite);
+
   }
 
-  public void highlightCard(Game graphics, Card card, boolean win) {
+  public void highlightCard(Card card, boolean win) {
     int index = cardToIndex.get(card);
     Sprite sprite = cards[index];
-//    sprite.setImage(ViewUtils.getCardHighlightUrl(card, win));
     sprite.setTint(win ? 0x82fc4c : 0xfa6f6f, Curve.LINEAR);
   }
-
 
 }

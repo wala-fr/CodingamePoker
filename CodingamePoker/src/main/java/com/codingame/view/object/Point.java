@@ -1,7 +1,6 @@
 package com.codingame.view.object;
 
 import com.codingame.gameengine.module.entities.Entity;
-import com.codingame.view.parameter.ViewConstant;
 
 public class Point implements IPoint {
 

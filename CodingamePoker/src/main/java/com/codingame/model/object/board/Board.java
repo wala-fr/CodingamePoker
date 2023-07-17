@@ -1,15 +1,9 @@
 package com.codingame.model.object.board;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.IntSummaryStatistics;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.codingame.game.Player;
-import com.codingame.game.Referee;
 import com.codingame.model.object.Action;
 import com.codingame.model.object.ActionInfo;
 import com.codingame.model.object.Card;
@@ -27,6 +21,8 @@ public class Board {
   private static final Logger logger = LoggerFactory.getLogger(Board.class);
 
   private Deck deck = new Deck();
+  
+  private int firstBigBlindId;
 
   private int handNb;
   private int level;
@@ -58,12 +54,12 @@ public class Board {
 
   private int lastPlayerId;
   private int nextPlayerId;
-//  private int[] winnings;
+  // private int[] winnings;
   private boolean over;
   // TODO suppress
   private int assertStacks;
 
-//  private List<Integer> bestPlayers = new ArrayList<>();
+  // private List<Integer> bestPlayers = new ArrayList<>();
 
   private WinningCalculator winningCalculator;
 
@@ -73,7 +69,7 @@ public class Board {
     players = new ArrayList<>(playerNb);
     this.playerNb = playerNb;
     for (int i = 0; i < playerNb; i++) {
-      players.add(new PlayerModel(i));
+      players.add(new PlayerModel(i, playerNb));
     }
     smallBlind = Parameter.SMALL_BLINB;
     bigBlind = Parameter.BIG_BLINB;
@@ -84,6 +80,8 @@ public class Board {
     handNb = -1;
 
     this.bbId = bbId;
+    firstBigBlindId = bbId;
+    
     winningCalculator = new WinningCalculator(this);
   }
 
@@ -103,7 +101,7 @@ public class Board {
     pot = 0;
 
     dealPositions.clear();
-//    bestPlayers.clear();
+    // bestPlayers.clear();
 
     resetRound();
     if (!end) {
@@ -238,8 +236,7 @@ public class Board {
     }
     player.bet(value);
     int raise = player.getRoundBetAmount() - lastTotalRoundBet;
-    // player.setRoundLastRaise(raise);
-    if ((isFirstBet() && raise >= bigBlind) || (!isFirstBet() &&  raise >= lastRoundRaise)) {
+    if ((isFirstBet() && raise >= bigBlind) || (!isFirstBet() && raise >= lastRoundRaise)) {
       // in case one all-in is not enough to be considered as as a raise
       lastRoundRaise = raise;
       lastRoundRaisePlayerId = player.getId();
@@ -310,9 +307,6 @@ public class Board {
         }
       }
     }
-    // if (!over) {
-    // }
-    // System.err.println("nextPlayerId " + nextPlayerId);
   }
 
   public void dealAllBoardCards() {
@@ -346,45 +340,16 @@ public class Board {
     dealPositions.add(DealPosition.createBoardCardPosition(boardCards.size()));
     boardCards.add(deck.dealCard());
   }
-  
+
   public void initPlayerBestHands() {
     for (PlayerModel player : players) {
       player.calculateBestFiveCardhand(boardCards);
     }
   }
-  
+
   public List<Integer> findWinner() {
     return winningCalculator.findWinner();
   }
-
-//  public List<Integer> findWinner() {
-//
-////    if (isOnlyOneNotFolded()) {
-////      // all player have fold except one who wins
-////      return players.stream()
-////        .filter(p -> !p.isFolded())
-////        .map(p -> p.getId())
-////        .collect(Collectors.toList());
-////    }
-//    int bestScore = Integer.MIN_VALUE;
-//    List<Integer> bestPlayers = new ArrayList<>();
-//    for (PlayerModel player : players) {
-//      if (!player.isFolded()) {
-//        int score = player.getBestPossibleHandValue();
-//        if (score > bestScore) {
-//          bestScore = score;
-//          bestPlayers.clear();
-//          bestPlayers.add(player.getId());
-//        } else if (score == bestScore) {
-//          bestPlayers.add(player.getId());
-//        }
-//      }
-//    }
-////    if (first) {
-////      this.bestPlayers.addAll(bestPlayers);
-////    }
-//    return bestPlayers;
-//  }
 
   public void doAction(ActionInfo actionInfo) {
     PlayerModel player = players.get(nextPlayerId);
@@ -463,8 +428,7 @@ public class Board {
     for (PlayerModel player : players) {
       if (!player.isFolded() && !player.isAllIn()) {
         if (!player.isSpoken()) {
-          if (players.stream()
-            .noneMatch(p -> p.canSpeak() && p.getId() != player.getId())) {
+          if (players.stream().noneMatch(p -> p.canSpeak() && p.getId() != player.getId())) {
             // case bb hasn't spoken yet but all other players are folded or all-in
             // and bb can't make a raise (all bets are less than the bb value)
             if (player.getRoundBetAmount() < calculateMaxChipInAction()) {
@@ -483,27 +447,20 @@ public class Board {
   }
 
   private void calculatePlayerWinnings() {
-
-//    cutBiggestAllIn();
     int[] winnings = winningCalculator.calculateWinnings();
     for (int i = 0; i < winnings.length; i++) {
       players.get(i).addToStack(winnings[i]);
     }
-//    for (int i = 0; i < winnings.length; i++) {
-//      winnings[i] = 0;
-//    }
-//    resolveSidePot(0);
-//    logger.info("winnings {}", Arrays.toString(winnings));
-////    resolveDeadMoney();
-//    for (int i = 0; i < winnings.length; i++) {
-//      players.get(i).addToStack(winnings[i]);
-//    }
     calculateEliminationRanks();
 
-    players.forEach(p -> p.resetEndTurn());
-    pot = 0;
-
     over = true;
+  }
+  
+  public void endTurnView() {
+    if (over) {
+      players.forEach(p -> p.resetEndTurn());
+      pot = 0;
+    }
   }
 
   private void calculateEliminationRanks() {
@@ -536,11 +493,11 @@ public class Board {
 
   public void eliminatePlayer(int id) {
     PlayerModel player = getPlayer(id);
-    fold(player);
+//    fold(player);
     assertStacks -= player.getStack();
     player.setStack(0);
-    int nextRank = getNextRank();
-    player.setEliminationRank(nextRank);
+//    int nextRank = getNextRank();
+//    player.setEliminationRank(nextRank);
   }
 
   private int getNextRank() {
@@ -554,111 +511,9 @@ public class Board {
     return lastRoundRaisePlayerId == -1;
   }
 
-//  private void cutBiggestAllIn() {
-//    // so the biggest all-in player get back the chip excess
-//    List<PlayerModel> sortedPlayers = players.stream()
-//      .filter(p -> !p.isFolded())
-//      .sorted(Comparator.<PlayerModel>comparingInt(p -> p.getTotalBetAmount()).reversed())
-//      .collect(Collectors.toList());
-//    if (sortedPlayers.size() > 1) {
-//      AssertUtils.test(sortedPlayers.size() >= 2);
-//      PlayerModel player1 = sortedPlayers.get(0);
-//      PlayerModel player2 = sortedPlayers.get(1);
-//      int delta = player1.getTotalBetAmount() - player2.getTotalBetAmount();
-//      AssertUtils.test(delta >= 0);
-//      if (delta > 0) {
-//        betChips(player1, -delta);
-//        if (player1.getId() == lastRoundRaisePlayerId) {
-//          lastRoundRaise -= delta;
-//          lastTotalRoundBet -= delta;
-//        }
-//      }
-//    }
-//  }
-
-//  private void resolveSidePot(int alreadyDoneBet) {
-//    boolean first = alreadyDoneBet == 0;
-//    int playerInvolvedNb = calculatNotFoldedPlayerNb();
-//    IntSummaryStatistics summary = players.stream()
-//      .filter(p -> !p.isFolded())
-//      .mapToInt(p -> p.getTotalBetAmount())
-//      .summaryStatistics();
-//    int minBet = summary.getMin();
-//    boolean allIn = minBet != summary.getMax();
-//    int minimumBetAmountPerPlayer = minBet - alreadyDoneBet;
-//    logger.debug("allIn {} {}", allIn, minimumBetAmountPerPlayer);
-//    if (!first) {
-//      AssertUtils.test(!allIn);
-//    }
-//    alreadyDoneBet += minimumBetAmountPerPlayer;
-//    if (!allIn || playerInvolvedNb <= 2) {
-//      applyWinnings(minimumBetAmountPerPlayer, first);
-//      return;
-//    }
-//    applyWinnings(minimumBetAmountPerPlayer, first);
-//    logger.debug("winnings {}", Arrays.toString(winnings));
-//
-//    players.stream()
-//      .filter(p -> !p.isFolded() && p.getTotalBetAmount() == minBet)
-//      .forEach(p -> p.setFolded(true));
-//    resolveSidePot(alreadyDoneBet);
-//  }
-
   public int calculatNotFoldedPlayerNb() {
     return (int) players.stream().filter(p -> !p.isFolded()).count();
   }
-
-//  private void applyWinnings(int minBet, boolean first) {
-//    List<Integer> winnerIds = findWinner();
-//    if (first) {
-//      this.bestPlayers.addAll(winnerIds);
-//    }
-//    int playerInvolvedNb = calculatNotFoldedPlayerNb();
-//
-//    int potSplit = (minBet * playerInvolvedNb) / winnerIds.size();
-//    int remaining = (minBet * playerInvolvedNb) % winnerIds.size();
-//
-//    for (Integer playerId : winnerIds) {
-//      winnings[playerId] += potSplit;
-//    }
-//    // Odd chips go to first player in game order
-//    int oddChipWinningPlayerId = dealerId + 1;
-//    while (true) {
-//      oddChipWinningPlayerId %= playerNb;
-//      if (winnerIds.contains(oddChipWinningPlayerId)) {
-//        break;
-//      }
-//      oddChipWinningPlayerId++;
-//    }
-//    winnings[oddChipWinningPlayerId] += remaining;
-//  }
-
-//  private void resolveDeadMoney() {
-//    int payout = 0;
-//    int winnerNb = 0;
-//    for (int i = 0; i < winnings.length; i++) {
-//      if (winnings[i] > 0) {
-//        payout += winnings[i];
-//        winnerNb++;
-//      }
-//    }
-//    int deadMoney = pot - payout;
-//    for (int i = 0; i < winnings.length; i++) {
-//      if (winnings[i] > 0) {
-//        winnings[i] += deadMoney / winnerNb;
-//      }
-//    }
-//    int remaining = deadMoney % winnerNb;
-//    int oddChipWinningPlayerId = dealerId + 1;
-//    while (true) {
-//      oddChipWinningPlayerId %= playerNb;
-//      if (winnings[oddChipWinningPlayerId] > 0) {
-//        break;
-//      }
-//      oddChipWinningPlayerId++;
-//    }
-//    winnings[oddChipWinningPlayerId] += remaining;
-//  }
 
   public void cancelCurrentHand() {
     if (!over) {
@@ -757,7 +612,7 @@ public class Board {
     return pot;
   }
 
-  public int getGameNb() {
+  public int getHandNb() {
     return handNb;
   }
 
@@ -808,9 +663,17 @@ public class Board {
     return dealPositions;
   }
 
-//  public List<Integer> getBestPlayers() {
-//    return bestPlayers;
-//  }
+  public List<Card> getBurnedCards() {
+    return burnedCards;
+  }
+
+  public List<ActionInfo> getActions() {
+    return actions;
+  }
+
+  public int getFirstBigBlindId() {
+    return firstBigBlindId;
+  }
 
   public Card getCard(DealPosition dealPosition) {
     int index = dealPosition.getIndex();
@@ -837,16 +700,6 @@ public class Board {
           player.getLastAction() == null ? "" : player.getLastAction(),
           lastRoundRaisePlayerId == id ? "RAISE " + lastRoundRaise : "", player.getMessage(this),
           nextPlayerId == id ? "***" : ""));
-      // ret.append("Player ");
-      // ret.append(player.getId());
-      // ret.append(' ');
-      // ret.append(getPosition(id));
-      // ret.append(' ');
-      // ret.append(player.getStatus());
-      // ret.append(' ');
-      // ret.append(player.getTotalBetAmount());
-      // ret.append(' ');
-      // ret.append(player.getRoundBetAmount());
     }
     return ret.toString();
   }

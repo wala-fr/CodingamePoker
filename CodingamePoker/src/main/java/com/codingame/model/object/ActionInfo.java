@@ -1,5 +1,6 @@
 package com.codingame.model.object;
 
+import com.codingame.model.object.enumeration.ActionType;
 import com.codingame.model.utils.MessageUtils;
 
 public class ActionInfo {
@@ -7,13 +8,9 @@ public class ActionInfo {
   private int playerId;
   private Action action;
   private String error;
+  private boolean levelError;
 
   private ActionInfo() {}
-
-  // public ActionInfo(int playerId, Action action) {
-  // this.playerId = playerId;
-  // this.action = action;
-  // }
 
   public int getPlayerId() {
     return playerId;
@@ -27,11 +24,12 @@ public class ActionInfo {
     this.action = action;
   }
 
-  public void setError(String s) {
+  public void setError(String s, boolean levelError) {
     if (s == null) {
       return;
     }
     error = s;
+    this.levelError = levelError;
   }
 
   public boolean hasError() {
@@ -42,6 +40,14 @@ public class ActionInfo {
     return error;
   }
 
+  public boolean isLevelError() {
+    return levelError;
+  }
+
+  public static ActionInfo create(int playerId, ActionType type) {
+    return create(playerId, type.toString());
+  }
+
   public static ActionInfo create(int playerId, String str) {
     ActionInfo info = new ActionInfo();
     info.playerId = playerId;
@@ -50,6 +56,7 @@ public class ActionInfo {
     } catch (Exception e) {
       info.action = Action.FOLD;
       info.error = MessageUtils.format("wrong.action.format", playerId, str);
+      info.levelError = true;
     }
     return info;
   }

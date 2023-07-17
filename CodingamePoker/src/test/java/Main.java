@@ -7,8 +7,8 @@ public class Main {
         gameRunner.setSeed(-6353511557071152000l);
         
         gameRunner.addAgent(AgentCall.class, "wala", "https://github.com/wala-fr/CodingamePoker/blob/main/CodingamePoker/src/main/resources/view/assets/wala.png");
-//        gameRunner.addAgent(AgentCall.class);
-//        gameRunner.addAgent(AgentCall.class);
+        gameRunner.addAgent(AgentCall.class);
+        gameRunner.addAgent(AgentCall.class);
         gameRunner.addAgent(AgentCall.class);
 
         gameRunner.start();

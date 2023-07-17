@@ -1,12 +1,5 @@
 package com.codingame.view;
 
-import com.codingame.game.Constant;
-import com.codingame.game.Player;
-import com.codingame.gameengine.core.MultiplayerGameManager;
-import com.codingame.gameengine.module.entities.GraphicEntityModule;
-import com.codingame.gameengine.module.entities.RoundedRectangle;
-import com.codingame.gameengine.module.tooltip.TooltipModule;
-import com.codingame.model.object.board.Board;
 import com.codingame.view.object.Game;
 import com.codingame.view.parameter.ViewConstant;
 import com.codingame.view.parameter.ViewUtils;
@@ -17,22 +10,20 @@ import com.google.inject.Singleton;
 public class Viewer {
 
   @Inject
-  private Game graphic;
+  private Game game;
   @Inject
   private BoardUI boardUI;
 
   public void init() {
-    int viewerWidth = graphic.getGraphics().getWorld().getWidth();
-    int viewerHeight = graphic.getGraphics().getWorld().getHeight();
-    graphic.getGraphics()
+    game.getGraphics()
       .createSprite()
       .setImage(ViewUtils.getBackGroundUrl())
       .setX(0)
       .setY(0)
-      .setBaseWidth(viewerWidth)
-      .setBaseHeight(viewerHeight)
-      .setZIndex(-1000);
-    graphic.commitWorldState();
+      .setBaseWidth(ViewConstant.WIDTH)
+      .setBaseHeight(ViewConstant.HEIGHT)
+      .setZIndex(ViewConstant.Z_INDEX_BACK);
+    game.commitWorldState();
     // graphics.getGraphics()
     // .createRectangle()
     // .setWidth(viewerWidth)
@@ -42,8 +33,8 @@ public class Viewer {
   }
 
   public void resetTurn(int turn) {
-    graphic.resetTime();
-    graphic.setTurn(turn);
+    game.resetTime();
+    game.setTurn(turn);
   }
 
   public void resetHAnd() {
@@ -52,9 +43,6 @@ public class Viewer {
 
   public void update() {
     boardUI.update();
-    if (graphic.isEnd()) {
-      System.err.println(graphic.getBoard().toPlayerStatesString());
-    }
   }
 
 

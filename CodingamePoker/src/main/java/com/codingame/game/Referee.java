@@ -1,6 +1,5 @@
 package com.codingame.game;
 
-import java.text.MessageFormat;
 import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,12 +11,14 @@ import com.codingame.gameengine.module.endscreen.EndScreenModule;
 import com.codingame.gameengine.module.entities.GraphicEntityModule;
 import com.codingame.gameengine.module.toggle.ToggleModule;
 import com.codingame.gameengine.module.tooltip.TooltipModule;
-import com.codingame.model.object.Action;
+import com.codingame.input.InputSender;
 import com.codingame.model.object.ActionInfo;
 import com.codingame.model.object.PlayerModel;
 import com.codingame.model.object.board.Board;
+import com.codingame.model.object.enumeration.ActionType;
 import com.codingame.model.utils.ActionUtils;
 import com.codingame.model.utils.AssertUtils;
+import com.codingame.model.utils.MessageUtils;
 import com.codingame.model.utils.RandomUtils;
 import com.codingame.model.variable.Parameter;
 import com.codingame.view.Viewer;
@@ -44,7 +45,10 @@ public class Referee extends AbstractReferee {
   private Viewer viewer;
 
   @Inject
-  private Game graphic;
+  private Game game;
+
+  @Inject
+  private InputSender inputSender;
 
   private Board board;
   private int playerEliminatedNb;
@@ -57,14 +61,14 @@ public class Referee extends AbstractReferee {
 
     int playerNb = gameManager.getPlayerCount();
 
-    int bbId = RandomUtils.nextInt(playerNb);
-    board = new Board(playerNb, bbId);
-    graphic.setBoard(board);
+    int firstBigBlindId = RandomUtils.nextInt(playerNb);
+    board = new Board(playerNb, firstBigBlindId);
+    game.setBoard(board);
 
     // board.init(Constant.PLAYER_NB);
-    gameManager.setMaxTurns(Constant.MAX_TURN);
-    gameManager.setFirstTurnMaxTime(Constant.FIRST_ROUND_TIME_OUT);
-    gameManager.setTurnMaxTime(Constant.TIME_OUT);
+    gameManager.setMaxTurns(RefereeConstant.MAX_TURN);
+    gameManager.setFirstTurnMaxTime(RefereeConstant.FIRST_ROUND_TIME_OUT);
+    gameManager.setTurnMaxTime(RefereeConstant.TIME_OUT);
     gameManager.setFrameDuration(ViewConstant.FRAME_DURATION);
 
     // ActionUtils.initBoard(board);
@@ -88,32 +92,29 @@ public class Referee extends AbstractReferee {
     initBoard();
 
     logger.info("nextPlayerId {}", board.getNextPlayerId());
-    
+
     int playerId = board.getNextPlayerId();
     if (playerId == -1) {
       logger.info("all players are all-in");
+      inputSender.updateRoundInfo(board, null, turn);
     } else {
       Player currentPlayer = gameManager.getPlayer(playerId);
       String nickName = currentPlayer.getNicknameToken();
-      AssertUtils.test(playerId ==currentPlayer.getIndex());
-      sendInputs(turn, currentPlayer);
+      AssertUtils.test(playerId == currentPlayer.getIndex());
+      inputSender.sendInputs(board, turn, currentPlayer);
+
+      ActionInfo actionInfo;
       try {
         currentPlayer.execute();
-        System.err.println("currentPlayer.getOutputs() " + currentPlayer.getOutputs());
-
         String[] outputs = currentPlayer.getOutputs().get(0).split(";", -1);
         if (outputs.length > 1) {
           String message = outputs[1];
           currentPlayer.setMessage(message);
         }
-        logger.error("outputs {}", Arrays.toString(outputs));
+        logger.info("outputs {}", Arrays.toString(outputs));
         outputs[0] = outputs[0].toUpperCase().trim();
-        ActionInfo actionInfo = ActionInfo.create(playerId, outputs[0]);
-        ActionUtils.doAction(board, actionInfo);
-        if (actionInfo.hasError()) {
-          gameManager.addToGameSummary((nickName + " :" + actionInfo.getError()));
-          logger.info("actionInfo {}", actionInfo.getError());
-        }
+        actionInfo = ActionInfo.create(playerId, outputs[0]);
+
       } catch (TimeoutException e) {
         // TODO considered as fold ????
         logger.info("TimeoutException {}", playerId);
@@ -122,24 +123,41 @@ public class Referee extends AbstractReferee {
         currentPlayer.deactivate(nickName + " timeout.");
         // currentPlayer.setScore(-1);
         board.eliminatePlayer(playerId);
+        actionInfo = ActionInfo.create(playerId, ActionType.FOLD);
+        String errorStr = MessageUtils.format("wrong.action.timeout", playerId);
+        actionInfo.setError(errorStr, true);
+      }
+
+      inputSender.updateRoundInfo(board, actionInfo, turn);
+      ActionUtils.doAction(board, actionInfo);
+      if (actionInfo.hasError()) {
+        String message = nickName + " :" + actionInfo.getError();
+        if (actionInfo.isLevelError()) {
+          message = GameManager.formatErrorMessage(message);
+        }
+        gameManager.addToGameSummary(message);
+        logger.info("actionInfo {}", actionInfo.getError());
       }
     }
- 
-    graphic.setPhase(Phase.ACTION);
+
+    game.setPhase(Phase.ACTION);
     viewer.update();
 
     board.endTurn();
-    graphic.setPhase(Phase.END);
+    inputSender.updateHandInfo(board);
+    board.endTurnView();
+
+    game.setPhase(Phase.END);
     viewer.update();
 
     eliminatePlayers();
     if (board.isGameOver()) {
-      System.err.println("GameOver " + board.getPot());
+      logger.info("GameOver {}", board.getPot());
       board.calculateFinalScores();
       gameManager.endGame();
       return;
     }
-    if (graphic.isEndRound()) {
+    if (game.isMaxRound()) {
       board.cancelCurrentHand();
       board.calculateFinalScores();
       viewer.update();
@@ -148,38 +166,38 @@ public class Referee extends AbstractReferee {
 
   private void initBoard() {
     if (board.isOver()) {
-      graphic.setPhase(Phase.INIT_DECK);
+      game.setPhase(Phase.INIT_DECK);
       board.resetHand();
       board.initDeck();
       viewer.update();
-      
+
       board.initBlind();
       board.calculateNextPlayer();
       viewer.update();
 
-      graphic.setPhase(Phase.DEAL);
+      game.setPhase(Phase.DEAL);
       board.dealFirst();
       viewer.update();
 
     } else {
-      graphic.setPhase(Phase.DEAL);
+      game.setPhase(Phase.DEAL);
       board.calculateNextPlayer();
       viewer.update();
     }
-    
+
   }
 
   private void eliminatePlayers() {
     int nb = 0;
     do {
       int nextRank = playerEliminatedNb + 1;
-      System.err.println("playerEliminatedNb " + nextRank);
+      logger.debug("playerEliminatedNb nextRank {}", nextRank);
       nb = 0;
       for (int i = 0; i < board.getPlayerNb(); i++) {
         PlayerModel playerModel = board.getPlayer(i);
-        System.err.println(i + " getEliminationRank " + playerModel.getEliminationRank());
+        logger.debug("{} eliminationRank {}", i, playerModel.getEliminationRank());
         if (playerModel.getEliminationRank() == nextRank) {
-          System.err.println(i + " is eliminated " + playerModel.getScore());
+          logger.debug("{} is eliminated {}", i, playerModel.getScore());
           Player player = gameManager.getPlayer(i);
           player.setScore(playerModel.getScore());
           if (player.isActive()) {
@@ -193,44 +211,7 @@ public class Referee extends AbstractReferee {
     } while (nb > 0);
   }
 
-  public void sendInputs(int turn, Player currentPlayer) {
-    int id = currentPlayer.getIndex();
-    int playerNb = board.getPlayerNb();
-    PlayerModel playerModel = board.getPlayer(id);
-    if (turn <= board.getPlayerNb()) {
-      currentPlayer.sendInputLine(Parameter.SMALL_BLINB);
-      currentPlayer.sendInputLine(Parameter.BIG_BLINB);
-      currentPlayer.sendInputLine(Parameter.HAND_NB_BY_LEVEL);
-      currentPlayer.sendInputLine(Parameter.LEVEL_BLIND_MULTIPLICATOR);
-      currentPlayer.sendInputLine(playerNb);
-      currentPlayer.sendInputLine(id);
-    }
-    currentPlayer.sendInputLine(turn);
-    for (int i = 0; i < playerNb; i++) {
-      currentPlayer.sendInputLine(board.getPlayer(i).getStack());
-    }
-    currentPlayer.sendInputLine(board.getPot());
-    int boardCardNb = board.getBoardCards().size();
-    currentPlayer.sendInputLine(boardCardNb);
-    for (int i = 0; i < boardCardNb; i++) {
-      currentPlayer.sendInputLine(board.getBoardCards().get(i));
-    }
-    for (int i = 0; i < 2; i++) {
-      currentPlayer.sendInputLine(playerModel.getHand().getCard(i));
-    }
-    int actionNb = playerNb;
-    int index = id + 1;
-    currentPlayer.sendInputLine(actionNb);
-    for (int i = 0; i < actionNb; i++) {
-      index++;
-      index %= playerNb;
-      Action lastAction = board.getPlayer(index).getLastAction();
-      logger.debug("{}", lastAction);
-      currentPlayer.sendInputLine(index);
-      currentPlayer.sendInputLine(lastAction == null ? "null" : lastAction.getType().toString());
-      currentPlayer.sendInputLine(lastAction == null ? 0 : lastAction.getAmount());
-    }
-  }
+
 
   @Override
   public void onEnd() {

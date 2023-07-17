@@ -1,6 +1,5 @@
 package com.codingame.model.object;
 
-import java.util.ArrayList;
 import java.util.List;
 import com.codingame.model.object.board.Board;
 import com.codingame.model.object.enumeration.ActionType;
@@ -32,9 +31,9 @@ public class PlayerModel {
 
   private FiveCardHand bestPossibleHand;
 
-  public PlayerModel(int id) {
+  public PlayerModel(int id, int playerNb) {
     this.id = id;
-    stack = Parameter.BUY_IN;
+    stack = Parameter.TOTAL_BUY_IN / playerNb;
   }
 
   public void reset() {

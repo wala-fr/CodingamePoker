@@ -1,10 +1,8 @@
 package com.codingame.offline;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import javax.imageio.ImageIO;
@@ -20,7 +18,6 @@ public class ColorImageUtils {
           if (f.getName().contains("_")) {
             continue;
           }
-          System.err.println(f.getName());
           String newName = f.getName().replaceAll(".png", "_R.png");
           Path destination = dir.toPath().resolve(newName);
           BufferedImage image = ImageIO.read(f);

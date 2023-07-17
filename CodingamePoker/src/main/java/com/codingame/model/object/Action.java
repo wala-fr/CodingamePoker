@@ -1,6 +1,7 @@
 package com.codingame.model.object;
 
 import java.util.Objects;
+import com.codingame.game.RefereeConstant;
 import com.codingame.model.object.enumeration.ActionType;
 
 public class Action {
@@ -85,6 +86,14 @@ public class Action {
   @Override
   public String toString() {
     return type + (amount > 0 ? " " + amount : "");
+  }
+
+  public String toInputString() {
+    String ret = type.toString();
+    if (type == ActionType.BET) {
+      ret += RefereeConstant.WORD_DELIMITER + amount;
+    }
+    return ret;
   }
 
 

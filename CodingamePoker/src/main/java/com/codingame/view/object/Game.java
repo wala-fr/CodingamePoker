@@ -1,7 +1,9 @@
 package com.codingame.view.object;
 
-import com.codingame.game.Constant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.codingame.game.Player;
+import com.codingame.game.RefereeConstant;
 import com.codingame.gameengine.core.MultiplayerGameManager;
 import com.codingame.gameengine.module.entities.Entity;
 import com.codingame.gameengine.module.entities.GraphicEntityModule;
@@ -14,6 +16,8 @@ import com.google.inject.Singleton;
 
 @Singleton
 public class Game {
+
+  private static final Logger logger = LoggerFactory.getLogger(Game.class);
 
   @Inject
   private MultiplayerGameManager<Player> gameManager;
@@ -61,10 +65,9 @@ public class Game {
   private void incrementTime(double timeIncrement) {
     this.time += timeIncrement;
     if (time > 1) {
-      System.err.println("incrementTime error " + timeIncrement);
+      logger.error("incrementTime error {}", timeIncrement);
       time = 1;
     }
-    // System.err.println("t " + this.time + " " + time + " " + timeIncrement +" " + phase);
   }
 
   public void commitWorldState(double timeIncrement) {
@@ -87,6 +90,11 @@ public class Game {
   public void commitEntityState(Entity<?>... entities) {
     graphics.commitEntityState(time, entities);
 
+  }
+  
+  public void commitEntityState(Entity<?> entity, double timeIncrement) {
+    incrementTime(timeIncrement);
+    commitEntityState(entity);
   }
 
   public Text createText() {
@@ -129,8 +137,8 @@ public class Game {
     return turn == 1;
   }
 
-  public boolean isEndRound() {
-    return turn == Constant.MAX_TURN;
+  public boolean isMaxRound() {
+    return turn == RefereeConstant.MAX_TURN;
   }
 
 }

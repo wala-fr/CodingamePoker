@@ -1,6 +1,5 @@
 package com.codingame.view.object;
 
-import com.codingame.gameengine.module.entities.GraphicEntityModule;
 import com.codingame.gameengine.module.entities.Text;
 import com.codingame.gameengine.module.entities.Text.FontWeight;
 import com.codingame.gameengine.module.entities.TextBasedEntity.TextAlign;
@@ -12,11 +11,11 @@ public class TextPoint implements ISizePoint {
   private int fontSize;
   private FontWeight fontWeight = FontWeight.NORMAL;
 
-  public TextPoint(SizePoint point, int fontSize, FontWeight fontWeight) {
-    this.fontSize = fontSize;
-    this.fontWeight = fontWeight;
-    this.point = point.copy();
-  }
+//  private TextPoint(SizePoint point, int fontSize, FontWeight fontWeight) {
+//    this.fontSize = fontSize;
+//    this.fontWeight = fontWeight;
+//    this.point = point.copy();
+//  }
 
   public TextPoint(int x, int y, int fontSize, FontWeight fontWeight, int width, int height) {
     this.fontSize = fontSize;
@@ -47,9 +46,9 @@ public class TextPoint implements ISizePoint {
     return text;
   }
 
-  public TextPoint copy() {
-    return new TextPoint(point, fontSize, fontWeight);
-  }
+//  public TextPoint copy() {
+//    return new TextPoint(point, fontSize, fontWeight);
+//  }
 
   public int getFontSize() {
     return fontSize;

@@ -1,6 +1,5 @@
 package com.codingame.view;
 
-import com.codingame.gameengine.module.entities.Text.FontWeight;
 import com.codingame.view.object.Point;
 import com.codingame.view.object.SizePoint;
 import com.codingame.view.object.TextPoint;
@@ -9,20 +8,20 @@ import com.codingame.view.parameter.ViewUtils;
 
 public class PlayerUICoordinates {
 
-  // private Point top;
   private SizePoint avatar;
   private SizePoint avatarFrame;
-
   private TextPoint name;
+  
   private SizePoint card1;
   private SizePoint card2;
+  
   private TextPoint action;
   private TextPoint position;
   private TextPoint message;
+  private TextPoint stack;
 
   private Point button;
 
-  private TextPoint stack;
 
   public PlayerUICoordinates(int id) {
     if (id == 0) {
@@ -138,7 +137,6 @@ public class PlayerUICoordinates {
     message =  new TextPoint(x, y + 2 * ViewConstant.STACK_HEIGHT, ViewConstant.ACTION_WIDTH);
   }
 
-
   public SizePoint getAvatar() {
     return avatar;
   }
@@ -147,31 +145,12 @@ public class PlayerUICoordinates {
     return avatarFrame;
   }
 
-  public PlayerUICoordinates setAvatar(int x, int y) {
-
-    return this;
-  }
-
-  // public SizePoint getCard1() {
-  // return card1;
-  // }
-  //
-  // public SizePoint getCard2() {
-  // return card2;
-  // }
-
   public SizePoint getCard(int idx) {
     return idx == 0 ? card1 : card2;
   }
 
   public TextPoint getName() {
     return name;
-  }
-
-  public PlayerUICoordinates setAction(int x, int y) {
-    this.action = new TextPoint(x, y, ViewConstant.ACTION_FONT_SIZE, FontWeight.NORMAL,
-        ViewConstant.ACTION_WIDTH, ViewConstant.ACTION_HEIGHT);
-    return this;
   }
 
   public TextPoint getStack() {
@@ -201,7 +180,5 @@ public class PlayerUICoordinates {
         + card2.getPoint() + ", action=" + action.getPoint() + ", position=" + position.getPoint()
         + ", stack=" + stack.getPoint() + "]";
   }
-
-
 
 }

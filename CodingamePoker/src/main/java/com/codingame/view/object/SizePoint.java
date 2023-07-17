@@ -3,8 +3,6 @@ package com.codingame.view.object;
 import com.codingame.gameengine.module.entities.GraphicEntityModule;
 import com.codingame.gameengine.module.entities.RoundedRectangle;
 import com.codingame.gameengine.module.entities.Sprite;
-import com.codingame.gameengine.module.entities.Text;
-import com.codingame.view.parameter.ViewConstant;
 
 public class SizePoint implements ISizePoint {
 

@@ -38,8 +38,8 @@ public class BoardUI {
 
   private Text pot;
 
-
   private PlayerUI[] playerUIS;
+  
   private Group button;
   private Group levelGroup;
   private Group potGroup;
@@ -86,6 +86,7 @@ public class BoardUI {
         .setFillColor(ViewConstant.BUTTON_WRITE_COLOR);
       game.getTooltips().setTooltipText(button, "DEALER");
       button.add(buttonText);
+      button.setZIndex(ViewConstant.Z_INDEX_BUTTON);
       updateButton(board);
     }
   }
@@ -115,16 +116,17 @@ public class BoardUI {
     ViewUtils.updateText(game, level, Integer.toString(board.getLevel()));
     ViewUtils.updateText(game, blinds,
         "$ " + board.getSmallBlind() + " / " + board.getBigBlind());
-    ViewUtils.updateText(game, gameNb, Integer.toString(board.getGameNb()));
+    ViewUtils.updateText(game, gameNb, Integer.toString(board.getHandNb()));
     for (int id = 0; id < playerUIS.length; id++) {
       PlayerUI playerUI = playerUIS[id];
       playerUI.setEliminated(game);
     }
+
+    deckUI.reset();
+    
     updateButton(board);
 
-    deckUI.reset(game);
-
-    deckUI.deal(game);
+    deckUI.deal();
 
     // TODO
     for (int id = 0; id < playerUIS.length; id++) {
@@ -132,7 +134,7 @@ public class BoardUI {
       PlayerModel player = board.getPlayer(id);
       // TODO put if in method
       if (!playerUI.isFolded() && player.isFolded()) {
-        deckUI.foldPlayerId(board, id);
+        deckUI.foldPlayerId(id);
       }
       playerUI.update(game);
     }
@@ -148,22 +150,20 @@ public class BoardUI {
         potOver += player.getId() + " : $ " + player.getTotalBetAmount() + "\n";
       }
     }
-    // System.err.println(potOver);
     ViewUtils.updateText(game, pot, "$ " + board.getPot(),
         potOver.substring(0, potOver.length() - 1));
 
     game.commitWorldState();
-
   }
 
   public void resetHand() {
-    deckUI.reset(game);
-
+    deckUI.reset();
   }
 
   private void updateButton(Board board) {
     Point point = ViewUtils.getPlayerUICoordinates(board, board.getDealerId()).getButton();
-    button.setX(point.getX()).setY(point.getY());
+    point.setPosition(button);
+    game.commitEntityState(button, 0.1);
   }
 
   private void highlightWinningCards() {
@@ -185,15 +185,19 @@ public class BoardUI {
           }
           playerUIS[player.getId()].setWinOrLose(game, win);
         }
+        
+        // highlight players cards
         for (PlayerModel player : board.getPlayers()) {
           if (!player.isEliminated()) {
             for (Card card : player.getHand().getCards()) {
-              deckUI.highlightCard(game, card, winCards.contains(card));
+              deckUI.highlightCard(card, winCards.contains(card));
             }
           }
         }
+        
+        // highlight board cards
         for (Card card : board.getBoardCards()) {
-          deckUI.highlightCard(game, card, winCards.contains(card));
+          deckUI.highlightCard(card, winCards.contains(card));
         }
         game.commitWorldState();
       }

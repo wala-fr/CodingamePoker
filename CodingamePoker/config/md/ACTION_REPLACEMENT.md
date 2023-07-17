@@ -1,11 +1,11 @@
 <h1>ACTION REPLACEMENT</h1>
-<style>
+<!--<style>
 table, td, th {
 	border: 1px solid #000;
 	border-collapse: collapse;
 }
-</style>
-<table>
+</style>-->
+<table  border="1px solid #000" cellspacing="0" cellpadding="0">
 	<tr height="80">
 		<th align="center">player action</th>
 		<th align="center">replacement action</th>

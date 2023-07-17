@@ -21,8 +21,8 @@ public class PlayerUI {
   private Group labelGroup;
 
   private Player player;
-
   private int id;
+  
   private Text action;
   private Text stack;
   private Text position;
@@ -31,127 +31,112 @@ public class PlayerUI {
   private boolean folded = false;
   private boolean eliminated = false;
 
-  private RoundedRectangle playerRectangle;
-  private Text name;
-  private Sprite avatar;
-
-  public PlayerUI(Player player, Game graphics) {
+  public PlayerUI(Player player, Game game) {
     id = player.getIndex();
     this.player = player;
-    PlayerUICoordinates coordinates = ViewUtils.getPlayerUICoordinates(graphics, id);
-    createAvatar(player, graphics, coordinates);
-    createLabel(graphics, coordinates);
+    PlayerUICoordinates coordinates = ViewUtils.getPlayerUICoordinates(game, id);
+    createAvatar(player, game, coordinates);
+    createLabel(game, coordinates);
   }
 
-  private void createAvatar(Player player, Game graphics, PlayerUICoordinates coordinates) {
-    avatarGroup = graphics.getGraphics().createGroup();
+  private void createAvatar(Player player, Game game, PlayerUICoordinates coordinates) {
+    avatarGroup = game.getGraphics().createGroup();
 
-    playerRectangle = coordinates.getAvatarFrame()
-      .createRoundedRectangle(graphics)
+    RoundedRectangle playerRectangle = coordinates.getAvatarFrame()
+      .createRoundedRectangle(game)
       .setLineWidth(10)
       .setFillColor(ViewConstant.AVATAR_COLOR)
       .setLineColor(player.getColorToken());
     avatarGroup.add(playerRectangle);
 
-    avatar = coordinates.getAvatar().create(graphics);
+    Sprite avatar = coordinates.getAvatar().create(game);
     avatar.setImage(player.getAvatarToken());
     avatarGroup.add(avatar);
 
-    name = coordinates.getName().create(graphics);
+    Text name = coordinates.getName().create(game);
     String nickname = player.getNicknameToken();
     name.setText(nickname);
     name.setTextAlign(TextAlign.CENTER);
     avatarGroup.add(name);
     
-    graphics.getTooltips().setTooltipText(avatarGroup, " " + id + " ");// space otherwise id 0 bugs
+    avatarGroup.setZIndex(ViewConstant.Z_INDEX_BOARD);
+    
+    game.getTooltips().setTooltipText(avatarGroup, " " + id + " ");// space otherwise id 0 bugs
   }
 
-  private void createLabel(Game graphics, PlayerUICoordinates coordinates) {
-    labelGroup = graphics.createGroup();
-    action = graphics.createText();
-    ViewUtils.createTextRectangle(action, coordinates.getAction(), false, graphics, labelGroup);
-    stack = graphics.createText();
-    ViewUtils.createTextRectangle(stack, coordinates.getStack(), false, graphics, labelGroup);
-    position = graphics.createText();
-    ViewUtils.createTextRectangle(position, coordinates.getPosition(), true, graphics, labelGroup);
-    message = graphics.createText();
-    ViewUtils.createTextRectangle(message, coordinates.getMessage(), false, graphics, labelGroup);
+  private void createLabel(Game game, PlayerUICoordinates coordinates) {
+    labelGroup = game.createGroup();
+    action = game.createText();
+    ViewUtils.createTextRectangle(action, coordinates.getAction(), false, game, labelGroup);
+    stack = game.createText();
+    ViewUtils.createTextRectangle(stack, coordinates.getStack(), false, game, labelGroup);
+    position = game.createText();
+    ViewUtils.createTextRectangle(position, coordinates.getPosition(), true, game, labelGroup);
+    message = game.createText();
+    ViewUtils.createTextRectangle(message, coordinates.getMessage(), false, game, labelGroup);
   }
 
-  void update(Game graphics) {
-    Board board = graphics.getBoard();
+  void update(Game game) {
+    Board board = game.getBoard();
     PlayerModel player = board.getPlayers().get(id);
     if (!eliminated) {
       AssertUtils.test(player.getTotalBetAmount() <= board.getPot(), player.getTotalBetAmount(),
           board.getPot());
-      ViewUtils.updateText(graphics, stack, "$ " + player.getStack(),
+      ViewUtils.updateText(game, stack, "$ " + player.getStack(),
           "BET : $ " + player.getTotalBetAmount());
-      updatePosition(graphics);
-      if (graphics.isDeal()) {
+      updatePosition(game);
+      if (game.isDeal()) {
         setLast(board);
       }
-      if (!graphics.isEnd()) {
-        ViewUtils.updateText(graphics, action, player.getMessage(board));
+      if (!game.isEnd()) {
+        ViewUtils.updateText(game, action, player.getMessage(board));
         folded = player.isFolded();
       }
-      if (graphics.isEnd() && graphics.isEndRound() && !board.isOver()) {
-        ViewUtils.clearText(graphics, action);
+      if (game.isEnd() && game.isMaxRound() && !board.isOver()) {
+        ViewUtils.clearText(game, action);
       }
-      ViewUtils.updateText(graphics, message, this.player.getMessage());
+      ViewUtils.updateText(game, message, this.player.getMessage());
 
     }
   }
 
-  private void updatePosition(Game graphics) {
-    Position pos = graphics.getBoard().getPosition(id);
-    ViewUtils.updateText(graphics, position, pos.getSmallLabel(), pos.getLabel());
+  private void updatePosition(Game game) {
+    Position pos = game.getBoard().getPosition(id);
+    ViewUtils.updateText(game, position, pos.getSmallLabel(), pos.getLabel());
   }
 
   private void setLast(Board board) {
-    PlayerModel player = board.getPlayer(id);
     if (!eliminated) {
-      System.err.println("setLast " + this.id + " " + board.getNextPlayerId());
-      // playerRectangle
-      // .setFillColor(this.id == board.getNextPlayerId() ? ViewConstant.AVATAR_COLOR_CURRENT
-      // : ViewConstant.AVATAR_COLOR);
       avatarGroup.setAlpha(this.id == board.getNextPlayerId() ? 1 : 0.5);
     }
   }
 
-  public void setEliminated(Game graphics) {
-    if (graphics.isEnd()) {
+  public void setEliminated(Game game) {
+    if (game.isEnd()) {
       return;
     }
-    PlayerModel player = getPlayer(graphics);
+    PlayerModel player = getPlayer(game);
     if (player.isEliminated() && !eliminated) {
-      System.err.println("setEliminated " + id);
       eliminated = true;
-      // ViewUtils.clearText(graphics, stack);
-      // ViewUtils.clearText(graphics, action);
-      // ViewUtils.clearText(graphics, position);
-      // playerRectangle.setFillColor(ViewConstant.AVATAR_COLOR_ELIMINATED);
-      // name.setFillColor(ViewConstant.AVATAR_NAME_COLOR_ELIMINATED);
-      //
-      // avatarGroup.setAlpha(0.5);
       avatarGroup.setVisible(false);
       labelGroup.setVisible(false);
-      graphics.commitWorldState();
+      game.commitWorldState();
     }
   }
 
-  public void setWinOrLose(Game graphics, boolean win) {
+  public void setWinOrLose(Game game, boolean win) {
     // String message = win ? "WIN" : "LOSE";
-    PlayerModel player = getPlayer(graphics);
+    PlayerModel player = getPlayer(game);
     if (!eliminated) {
       FiveCardHand hand = player.getBestPossibleHand();
-      ViewUtils.updateText(graphics, action, (hand != null ? hand.getHandType().getLabel() : ""));
+      ViewUtils.updateText(game, action, (hand != null ? hand.getHandType().getLabel() : ""));
       // playerRectangle.setFillColor(win ? ViewConstant.AVATAR_COLOR_WIN :
       // ViewConstant.AVATAR_COLOR_LOSE);
     }
   }
 
-  public PlayerModel getPlayer(Game graphics) {
-    Board board = graphics.getBoard();
+  public PlayerModel getPlayer(Game game) {
+    Board board = game.getBoard();
     PlayerModel player = board.getPlayers().get(id);
     return player;
   }
