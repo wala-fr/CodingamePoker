@@ -12,11 +12,11 @@ table, td, th {
 		<th align="center">explanation</th>
 		<th align="center">example</th>
 	</tr>
-		<tr>
+		<tr  border="1px solid #000">
 		<td align="left" colspan="4" height="80"><u><b style="color:red">WARNING</b></u> : <b>FOLD</b> is never replaced. Even if a <b>CHECK</b> is possible.
 		</td>
 	</tr>
-	<tr>
+	<tr  border="1px solid #000">
 		<td align="center"><b>CALL</b></td>
 		<td align="center"><b>ALL-IN</b></td>
 		<td align="left">Player hasn't enough chips to <b>CALL</b>.
@@ -29,7 +29,7 @@ table, td, th {
 			</ol>
 		</td>
 	</tr>
-	<tr>
+	<tr  border="1px solid #000">
 		<td align="center"><b>CALL</b></td>
 		<td align="center"><b>CHECK</b></td>
 		<td align="left">Player can only <b>CHECK</b> or <b>RAISE</b>.
@@ -44,7 +44,7 @@ table, td, th {
 			</ol>
 		</td>
 	</tr>
-	<tr>
+	<tr  border="1px solid #000">
 		<td align="center"><b>BET</b> / <b>ALL-IN</b></td>
 		<td align="center"><b>CALL</b></td>
 		<td align="left">Player can only <b>CALL</b> or <b>FOLD</b>,
@@ -64,7 +64,7 @@ table, td, th {
 			</ol>
 		</td>
 	</tr>
-	<tr>
+	<tr  border="1px solid #000">
 		<td align="center"><b>BET</b></td>
 		<td align="center"><b>ALL-IN</b></td>
 		<td align="left">Player hasn't enough chips to bet the given
@@ -76,13 +76,13 @@ table, td, th {
 			</ol>
 		</td>
 	</tr>
-	<tr>
+	<tr  border="1px solid #000">
 		<td align="left" colspan="4" height="80">The basic <b>BET</b>
 			rule is : if you put chip in the pot you <b style="color:red">can't take them back</b>.You
 			have to complete the bet so it's legal.
 		</td>
 	</tr>
-	<tr>
+	<tr  border="1px solid #000">
 		<td align="center" rowspan="2"><b>BET</b></td>
 		<td align="center"><b>BET</b></td>
 		<td align="left" rowspan="2">The bet amount must <b>at least
@@ -96,7 +96,7 @@ table, td, th {
 			</ol>
 		</td>
 	</tr>
-	<tr>
+	<tr  border="1px solid #000">
 		<td align="center"><b>ALL-IN</b></td>
 		<td align="left">POST-FLOP with a big blind of $10
 			<ol>
@@ -106,7 +106,7 @@ table, td, th {
 			</ol>
 		</td>
 	</tr>
-	<tr>
+	<tr  border="1px solid #000">
 		<td align="center" rowspan="2"><b>BET</b></td>
 		<td align="center"><b>BET</b></td>
 		<td align="left" rowspan="2">The bet amount must <b>at least
@@ -126,7 +126,7 @@ table, td, th {
 			</ol>
 		</td>
 	</tr>
-	<tr>
+	<tr  border="1px solid #000">
 		<td align="center"><b>ALL-IN</b></td>
 		</td>
 		<td align="left">POST-FLOP
@@ -138,7 +138,7 @@ table, td, th {
 			</ol>
 		</td>
 	</tr>
-	<tr>
+	<tr  border="1px solid #000">
 		<td align="center"><b>CHECK</b></td>
 		<td align="center"><b>FOLD</b></td>
 		<td align="left">Player must add chips to the pot (<b>CALL</b> or
@@ -152,7 +152,7 @@ table, td, th {
 			</ol>
 		</td>
 	</tr>
-	<tr>
+	<tr  border="1px solid #000">
 		<td align="center"><b>INVALID ACTION</b></td>
 		<td align="center"><b>FOLD</b></td>
 		<td align="left">Invalid action</td>
