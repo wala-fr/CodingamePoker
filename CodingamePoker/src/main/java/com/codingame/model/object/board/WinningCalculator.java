@@ -9,6 +9,7 @@ import java.util.stream.IntStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.codingame.model.object.PlayerModel;
+import com.codingame.model.utils.AssertUtils;
 
 public class WinningCalculator {
 
@@ -29,10 +30,6 @@ public class WinningCalculator {
     this.board = board;
   }
 
-  public static void main(String[] args) {
-    System.out.println(WinningCalculator.class.getName());
-  }
-
   public int[] calculateWinnings() {
     for (int i = 0; i < playerNb; i++) {
       winnings[i] = 0;
@@ -41,9 +38,18 @@ public class WinningCalculator {
       folded[i] = player.isFolded();
     }
     board.initPlayerBestHands();
-
-    logger.debug(board.toPlayerStatesString());
+    for (int i = 0; i < playerNb; i++) {
+      logger.debug("{} {}", i, board.getPlayer(i).getBestPossibleHand());
+    }
     resolveSidePot();
+    for (int i = 0; i < playerNb; i++) {
+      int remain = bets[i]; 
+      if (remain > 0) {
+        // 2 players - small blind directly all-in and big blind folds - so he gets some of his chips back
+        AssertUtils.test(board.getPlayer(i).isFolded());
+      }
+      winnings[i] += remain;
+    }
     logger.info("winnings {}", Arrays.toString(winnings));
 
     return winnings;
@@ -56,6 +62,7 @@ public class WinningCalculator {
         IntStream.range(0, playerNb).filter(i -> !folded[i]).map(i -> bets[i]).summaryStatistics();
     int minBet = summary.getMin();
     boolean allIn = minBet != summary.getMax();
+    logger.debug("allIn {}", allIn);
     if (!allIn) {
       applyWinnings(minBet);
       return;
@@ -78,6 +85,7 @@ public class WinningCalculator {
       }
     }
     int winnerNb = winnerIds.size();
+    AssertUtils.test(winnerNb > 0);
     int potSplit = potSplitTotal / winnerNb;
     int remaining = potSplitTotal % winnerNb;
     for (Integer playerId : winnerIds) {

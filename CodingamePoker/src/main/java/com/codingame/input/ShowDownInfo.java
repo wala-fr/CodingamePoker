@@ -18,11 +18,26 @@ public class ShowDownInfo {
 
   private int handNb;
   private List<Card> playerCards;
+  private List<Card> boardCard;
+
   private boolean[] playerShow;
+  private boolean[] playerEliminated;
 
   public ShowDownInfo(Board board) {
     this.handNb = board.getHandNb();
     playerCards = new ArrayList<>();
+    playerEliminated = new boolean[board.getPlayerNb()];
+
+    for (int i = 0; i < board.getPlayerNb(); i++) {
+      PlayerModel player = board.getPlayer(i);
+      playerEliminated[i] = player.isEliminated();
+      for (Card card : player.getHand().getCards()) {
+        playerCards.add(card);
+      }
+    }
+  }
+  
+  public void update(Board board) {
     playerShow = new boolean[board.getPlayerNb()];
     int notFoldedPlayerNb = board.calculatNotFoldedPlayerNb();
     AssertUtils.test(notFoldedPlayerNb > 0);
@@ -32,10 +47,8 @@ public class ShowDownInfo {
       PlayerModel player = board.getPlayer(i);
       logger.debug("{} ShowDownInfo {} isFolded {}", i, handNb, player.isFolded());
       playerShow[i] = !player.isFolded() && !showNone;
-      for (Card card : player.getHand().getCards()) {
-        playerCards.add(card);
-      }
     }
+    boardCard = new ArrayList<>(board.getBoardCards());
   }
 
   public void sendInput(Player player) {
@@ -47,11 +60,15 @@ public class ShowDownInfo {
       for (int cardNb = 0; cardNb < 2; cardNb++) {
         if (show) {
           showDownCards.add(playerCards.get(2 * playerId + cardNb));
+          AssertUtils.test(!playerEliminated[playerId]);
+        } else if (playerEliminated[playerId]) {
+          showDownCards.add(CardUtils.ELIMINATED);
         } else {
           showDownCards.add(CardUtils.BURNED);
         }
       }
     }
+    player.sendBoardCards(boardCard);
     player.sendInputLine(showDownCards);
   }
 }

@@ -22,6 +22,7 @@ public class PlayerModel {
   private boolean folded;
   private boolean spoken;
   private boolean elimated;
+  private boolean timeout;
 
   private Action lastAction;
 
@@ -38,7 +39,9 @@ public class PlayerModel {
 
   public void reset() {
     hand.reset();
+    // TODO useless
     elimated = stack == 0;
+    bestPossibleHand = null;
     resetEndTurn();
   }
 
@@ -55,6 +58,11 @@ public class PlayerModel {
     // roundLastRaise = 0;
     spoken = false;
     lastAction = null;
+  }
+  
+  public void resetEndTurnView() {
+    totalBetAmount = 0;
+    roundBetAmount = 0;
   }
 
   public void addToStack(int delta) {
@@ -202,7 +210,22 @@ public class PlayerModel {
     this.score = score;
   }
 
+  public void setElimated(boolean elimated) {
+    this.elimated = elimated;
+  }
+  
+  public void setTimeout(boolean timeout) {
+    this.timeout = timeout;
+  }
+  
+  public boolean isTimeout() {
+    return timeout;
+  }
+
   public String getMessage(Board board) {
+    if (timeout) {
+      return MessageUtils.format("player.message.timeout");
+    }
     if (isEliminated()) {
       return MessageUtils.format("player.message.eliminated");
     }

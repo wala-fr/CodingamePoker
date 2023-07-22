@@ -31,4 +31,11 @@ public enum Rank {
   public int getIndex() {
     return index;
   }
+  
+  public String getPlural() {
+    if (this == SIX) {
+      return "SIXES";
+    }
+    return toString();
+  }
 }

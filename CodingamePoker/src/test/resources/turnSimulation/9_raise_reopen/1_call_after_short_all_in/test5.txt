@@ -1,0 +1,44 @@
+less than one big blind after the flop then call
+
+7D 6D QD 2D AH
+
+player 4
+
+QH KS
+35
+0
+
+7S QC
+1000
+1105
+
+8S 2H
+1000
+965
+
+JH AC
+1000
+965
+
+bb 3
+
+0:CALL
+1:CALL
+2:CALL
+3:CHECK
+
+2:CHECK
+3:CHECK
+0:ALL-IN
+1:CALL
+2:CALL
+3:CALL
+
+2:CHECK
+3:CHECK
+1:CHECK
+
+2:CHECK
+3:CHECK
+1:CHECK
+

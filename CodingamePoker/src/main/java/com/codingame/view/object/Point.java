@@ -33,6 +33,10 @@ public class Point implements IPoint {
     this.y = y;
   }
   
+  public boolean isAt(Entity<?> e) {
+    return e.getX() == x && e.getY() == y;
+  }
+  
   public void setPosition(Entity<?> e) {
     e.setX(x);
     e.setY(y);

@@ -1,0 +1,18 @@
+biggest is all-in and fold directly
+
+KS KH KC TD 3D
+
+player 2
+
+3H 7C
+50
+60
+
+8H 5C
+10
+0
+
+bb 0
+
+0:ALL-IN:CHECK
+

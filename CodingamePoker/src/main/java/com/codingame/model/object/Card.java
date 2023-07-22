@@ -45,6 +45,9 @@ public class Card implements Comparable<Card> {
     if (this == CardUtils.BURNED) {
       return CardUtils.BURNED_STR;
     }
+    if (this == CardUtils.ELIMINATED) {
+      return CardUtils.ELIMINATED_STR;
+    }
     return rank.getName() + suit.getName();
   }
 

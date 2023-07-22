@@ -11,7 +11,7 @@ show replacement message as info and some as error???
 bug deck card name appear
 
 
-pair of king, high card ace...
+player 0 and 2 more to the right and message text wider
 
 
 add tests 2 player 3 player
@@ -21,6 +21,7 @@ see animation springChallenge
 finish special cases
 logo poker
 
+big blind for first 4 level add 1 bb
 
 remove all todo from the md
 
@@ -32,10 +33,7 @@ work on md table appearance
 
 "You can't raise yourself."
 
-
-find better back card
-
-bug move button
+################ stub.txt
 
 ################ message player
 2-bet, 3-bet....
@@ -44,12 +42,23 @@ raise to 100
 3-bet to 200
 All-on raise to 1000
 
+################ BEFORE PUBLIC
+make github repo public
+check message
+check error message
+beat calling station
+statement + md
+tune blind vs level
+read again md, stub.txt, message properties
+
 ################ WITH AI
-code a basic AI Chen formula
 try to print all message from properties in a test
+assert player stack if no bet error
+check no error with given possible action
 
 ################ END
 format code + remove unused import
 at the end add comment from stub.txt to statement 
 deactivate assertion and log
+replace Boss fresh stub's comment
 

@@ -1,8 +1,7 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
-public class AgentCall {
+public class AgentFold {
   public static void main(String args[]) {
     Scanner in = new Scanner(System.in);
     int smallBlind = in.nextInt();
@@ -14,6 +13,7 @@ public class AgentCall {
     int firstBigBlindId = in.nextInt(); 
     int playerNb = in.nextInt(); 
     int playerId = in.nextInt(); 
+    
     while (true) {
       int round = in.nextInt(); 
       int handNb = in.nextInt(); 
@@ -45,33 +45,18 @@ public class AgentCall {
       int showDownNb = in.nextInt(); 
       for (int i = 0; i < showDownNb; i++) {
         int showDownHandNb = in.nextInt(); 
-        String showDownBoardCards = in.next();
+        String showDownBoardCards = in.next(); 
         String showDownCards = in.next(); 
         log("showDown", showDownHandNb, showDownBoardCards, showDownCards);
       }
-      int possibleActionNb = in.nextInt();
-      List<String> possibleActions = new ArrayList<>();
-      for (int i = 0; i < possibleActionNb; i++) {
-        String possibleAction = in.next();
-        log("possibleAction", possibleAction);
-        possibleActions.add(possibleAction);
-      }
+//      int possibleActionNb = in.nextInt(); 
+//      for (int i = 0; i < possibleActionNb; i++) {
+//        String possibleAction = in.next();
+//        log("possibleAction", possibleAction);
+//      }
 
-      System.out.println(findAction(possibleActions) + ";MESSAGE");
+      System.out.println("FOLD;MESSAGE");
     }
-  }
-  
-  private static String findAction(List<String> possibleActions) {
-    if (possibleActions.contains("CALL")) {
-      return "CALL";
-    }
-    if (possibleActions.contains("CHECK")) {
-      return "CHECK";
-    }
-    if (possibleActions.contains("ALL-IN")) {
-      return "ALL-IN";
-    }
-    return "FOLD";
   }
   
   private static void log(Object... obj) {

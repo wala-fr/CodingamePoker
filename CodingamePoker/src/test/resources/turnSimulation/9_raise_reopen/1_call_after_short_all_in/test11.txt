@@ -1,0 +1,35 @@
+4 PLAYERS-if big blind  player has less than a small blind
+
+KS KH KC TD AD
+
+player 4
+
+AH AC
+1000
+1045
+
+QD TC
+100
+80
+
+AS 9D
+10
+0
+
+2H 3S
+15
+0
+
+bb 2
+
+0:CALL
+1:CALL
+
+1:CHECK
+0:CHECK
+
+1:CHECK
+0:CHECK
+
+1:CHECK
+0:CHECK

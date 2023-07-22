@@ -32,9 +32,9 @@ public class DeckUI {
   private int discardCardIndex;
 
   private Map<Card, Integer> cardToIndex = new HashMap<>();
-  
+
   private int zIndex;
-  
+
   private void init() {
     if (cards == null) {
       cards = new Sprite[52];
@@ -61,6 +61,8 @@ public class DeckUI {
       for (int i = cards.length - 1; i >= 0; i--) {
         resetCard(i);
       }
+      zIndex = ViewConstant.Z_INDEX_CARD_DEAL;
+
       // TODO
       game.commitWorldState(game.isFirstRound() ? 0 : Phase.INIT_DECK.getEndTime());
     }
@@ -77,7 +79,7 @@ public class DeckUI {
     card.setTint(0xFFFFFF, Curve.IMMEDIATE);
     game.getTooltips().setTooltipText(card, "");
   }
-  
+
   private void setZIndex(Sprite card) {
     card.setZIndex(zIndex);
     zIndex++;
@@ -98,14 +100,22 @@ public class DeckUI {
       }
       i++;
     }
-    game.setTime(1);
+    game.setTime(0.95);
     game.commitWorldState(0);
   }
 
   public void deal() {
     Board board = game.getBoard();
     List<DealPosition> dealPositions = board.getDealPositions();
-
+    int cardNb = dealPositions.size() - nextCardIndex;
+    logger.debug("{} dealt cards {}", game.getTime(), cardNb);
+    
+    // TO AVOID THAT THE LAST CARD BUG : WITH A TIME OF 1 IT MOVES FIRST
+    double delta = (0.9 - game.getTime()) / cardNb;
+    if (delta > 0.1) {
+      delta = 0.1;
+    }
+    logger.debug("delta {}", delta);
     for (; nextCardIndex < dealPositions.size(); nextCardIndex++) {
       DealPosition dealPosition = dealPositions.get(nextCardIndex);
       Card card = board.getCard(dealPosition);
@@ -116,10 +126,12 @@ public class DeckUI {
         position = ViewUtils.getCardPosition(game, dealPosition);
       }
       move(position, !dealPosition.isBurned(), card, nextCardIndex);
-      game.commitEntityState(cards[nextCardIndex], 0.1);
+      game.commitEntityState(cards[nextCardIndex], delta);
+      logger.debug("time {}", game.getTime());
+
     }
   }
-  
+
   private Point calculateDiscardCardPosition() {
     discardCardIndex++;
     Board board = game.getBoard();
@@ -134,7 +146,7 @@ public class DeckUI {
       sprite.setImage(ViewUtils.getCardBackUrl());
     }
     setZIndex(sprite);
-    
+
     if (visible) {
       game.getTooltips().setTooltipText(sprite, card.getLabel());
       cardToIndex.put(card, index);
@@ -142,7 +154,7 @@ public class DeckUI {
       cardToIndex.remove(card);
       game.getTooltips().setTooltipText(sprite, "");
     }
-    
+
     game.commitEntityState(sprite);
 
     position.setPosition(sprite);

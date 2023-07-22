@@ -40,7 +40,7 @@ table, td, th {
 				</li>
 				<li>player 2 : <b>CALL</b> $5
 				</li>
-				<li>player 0 (big blind) : can only <b>CHECK</b> or <b>RAISE</b></li>
+				<li>player 0 (big blind for $10) : can only <b>CHECK</b> or <b>RAISE</b></li>
 			</ol>
 		</td>
 	</tr>
@@ -147,8 +147,21 @@ table, td, th {
 		<td align="left">POST-FLOP
 			<ol>
 				<li>player 0 : <b>BET 200</b></li>
-				<li>player 1 : <b>CHECK</b> (impossible)
-				</li>
+				<li>player 1 : <b>CHECK</b> (impossible)</li>
+			</ol>
+		</td>
+	</tr>
+	<tr>
+		<td align="center"><b>ALL-IN / BET / CALL</b></td>
+		<td align="center"><b>CHECK</b></td>
+		<td align="left">Player should <b>CHECK</b>.<br/> But he can <b>FOLD</b>.
+		</td>
+		<td align="left">PRE-FLOP (blinds $250 / $500)<br />
+			<ol>
+				<li>player 0 : directly all-in for $125</li>
+				<li>player 1 : directly all-in for $250</li>
+				<li>player 2 : directly all-in for $250</li>
+				<li>player 3 (big blind) : can only <b>CHECK</b> or <b>FOLD</b></li>
 			</ol>
 		</td>
 	</tr>

@@ -1,4 +1,4 @@
-4 PLAYERS-if player has less than big blind ost flop
+4 PLAYERS-if player has less than big blind post flop
 
 KS KH KC TD AD
 

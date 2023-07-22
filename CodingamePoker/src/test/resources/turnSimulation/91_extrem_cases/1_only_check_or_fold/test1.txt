@@ -1,0 +1,18 @@
+biggest is all-in and fold directly
+
+X X X X X
+
+player 2
+
+3H 7C
+50
+40
+
+8H 5C
+10
+20
+
+bb 0
+
+0:FOLD
+

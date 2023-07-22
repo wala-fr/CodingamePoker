@@ -11,3 +11,8 @@ TODO
 
 check cases
 
+post flop:  a player can call the  all-in for less than BB. not pre flop in the big blind is directly all-in for less than a small blind, the other must add a small blind to call (can't check)
+BTN : 10
+SB : 10
+BB ALL-IN 10
+Then BTN  and SB must add 10

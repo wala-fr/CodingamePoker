@@ -1,7 +1,7 @@
 package com.codingame.model.object;
 
 import java.util.Objects;
-import com.codingame.game.RefereeConstant;
+import com.codingame.game.RefereeParameter;
 import com.codingame.model.object.enumeration.ActionType;
 
 public class Action {
@@ -10,6 +10,7 @@ public class Action {
   public static final Action CALL = new Action(ActionType.CALL);
   public static final Action ALL_IN = new Action(ActionType.ALL_IN);
   public static final Action CHECK = new Action(ActionType.CHECK);
+  public static final Action TIMEOUT = new Action(ActionType.TIMEOUT);
 
   private ActionType type;
   private int amount;
@@ -33,10 +34,16 @@ public class Action {
     if (type == ActionType.CALL) {
       return CALL;
     }
+    if (type == ActionType.TIMEOUT) {
+      return TIMEOUT;
+    }
     return ALL_IN;
   }
 
   public static Action create(String str) throws InvalidMoveException {
+    if (str.startsWith(ActionType.BET.toString() + "_")) {
+      str.replaceAll("BET_", "BET ");
+    }
     String[] tmp = str.split(" ", -1);
     ActionType type = ActionType.fromString(tmp[0]);
     int amount = 0;
@@ -91,7 +98,7 @@ public class Action {
   public String toInputString() {
     String ret = type.toString();
     if (type == ActionType.BET) {
-      ret += RefereeConstant.WORD_DELIMITER + amount;
+      ret += RefereeParameter.WORD_DELIMITER + amount;
     }
     return ret;
   }

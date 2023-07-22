@@ -188,7 +188,7 @@ public class BoardUI {
         
         // highlight players cards
         for (PlayerModel player : board.getPlayers()) {
-          if (!player.isEliminated()) {
+          if (!player.isFolded()) {
             for (Card card : player.getHand().getCards()) {
               deckUI.highlightCard(card, winCards.contains(card));
             }

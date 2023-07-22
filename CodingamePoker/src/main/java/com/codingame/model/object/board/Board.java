@@ -21,7 +21,7 @@ public class Board {
   private static final Logger logger = LoggerFactory.getLogger(Board.class);
 
   private Deck deck = new Deck();
-  
+
   private int firstBigBlindId;
 
   private int handNb;
@@ -77,12 +77,14 @@ public class Board {
 
     over = true;
 
-    handNb = -1;
+    handNb = 0; // will immediatly be increased
 
     this.bbId = bbId;
     firstBigBlindId = bbId;
-    
+
     winningCalculator = new WinningCalculator(this);
+
+    initAssertStacks();
   }
 
   public void resetHand() {
@@ -140,8 +142,7 @@ public class Board {
     }
   }
 
-  private void initPositions() {
-    initAssertStacks();
+  public void initPositions() {
     calculateNextBigBlindId();
     int startIndex = bbId;
     sbId = -1;
@@ -152,6 +153,8 @@ public class Board {
       if (playerIndex < 0) {
         playerIndex += playerNb;
       }
+      logger.debug("playerIndex {}", playerIndex);
+
       PlayerModel player = players.get(playerIndex);
       if (!player.isFolded()) {
         nb++;
@@ -172,11 +175,12 @@ public class Board {
     lastRoundRaise = smallBlind;
     lastRoundRaisePlayerId = -1;
     raiseNb = 1;
+    logger.debug("dealerId {}", dealerId);
   }
 
 
   private void calculateNextBigBlindId() {
-    if (handNb <= 0) {
+    if (handNb <= 1) {
       return;
     } else {
       do {
@@ -205,18 +209,18 @@ public class Board {
   }
 
   public void increaseLevel() {
-    if (handNb > 0 && handNb % Parameter.HAND_NB_BY_LEVEL == 0) {
+    if (handNb > 1 && handNb % Parameter.HAND_NB_BY_LEVEL == 1) {
       level++;
-      smallBlind *= Parameter.LEVEL_BLIND_MULTIPLICATOR;
-      bigBlind *= Parameter.LEVEL_BLIND_MULTIPLICATOR;
+      smallBlind *= Parameter.LEVEL_BLIND_MULTIPLIER;
+      bigBlind *= Parameter.LEVEL_BLIND_MULTIPLIER;
     }
   }
 
   public void calculateNextPlayer() {
     int idx = nextPlayerId + 1;
     nextPlayerId = -1;
-    for (int i = 0; i < players.size(); i++) {
-      int playerIndex = idx % players.size();
+    for (int i = 0; i < playerNb; i++) {
+      int playerIndex = idx % playerNb;
       PlayerModel player = players.get(playerIndex);
       if (!player.isFolded() && !player.isAllIn()) {
         nextPlayerId = playerIndex;
@@ -342,8 +346,10 @@ public class Board {
   }
 
   public void initPlayerBestHands() {
-    for (PlayerModel player : players) {
-      player.calculateBestFiveCardhand(boardCards);
+    if (calculatNotFoldedPlayerNb() > 1) {
+      for (PlayerModel player : players) {
+        player.calculateBestFiveCardhand(boardCards);
+      }
     }
   }
 
@@ -367,6 +373,10 @@ public class Board {
       call(player);
     } else if (type == ActionType.BET) {
       bet(player, action.getAmount());
+    } else if (type == ActionType.TIMEOUT) {
+      timeout(player);
+    } else {
+      AssertUtils.test(type == ActionType.CHECK, type);
     }
   }
 
@@ -391,7 +401,7 @@ public class Board {
 
   public boolean isCheckPossible() {
     PlayerModel player = players.get(nextPlayerId);
-    boolean checkPossible = calculateMaxChipInAction() == player.getTotalBetAmount();
+    boolean checkPossible = calculateCallAmount(player) == 0;
     if (checkPossible) {
       AssertUtils.test((calculateBoardStatus() == BoardStatus.PRE_FLOP && nextPlayerId == bbId)
           || calculateRoundMaxChipInAction() == 0);
@@ -399,18 +409,31 @@ public class Board {
     return checkPossible;
   }
 
+  public boolean isBetPossible() {
+    PlayerModel player = players.get(nextPlayerId);
+    int canSpeakNb = (int) players.stream().filter(p -> p.canSpeak()).count();
+    return !(canSpeakNb == 1 && calculateCallAmount(player) == 0);
+  }
+
   public BoardStatus calculateBoardStatus() {
     return BoardStatus.getStatus(boardCards.size());
   }
 
+  public boolean isPreFlop() {
+    return calculateBoardStatus() == BoardStatus.PRE_FLOP;
+  }
+
   public int calculateCallAmount(PlayerModel player) {
-    return calculateMaxChipInActionOrBigBlind() - player.getTotalBetAmount();
+    if (isPreFlop()) {
+      return calculateMaxChipInActionOrBigBlind() - player.getTotalBetAmount();
+    } else {
+      return calculateMaxChipInAction() - player.getTotalBetAmount();
+    }
   }
 
   public int calculateMaxChipInActionOrBigBlind() {
-    int ret = players.stream().mapToInt(p -> p.getTotalBetAmount()).max().getAsInt();
     // in case bigBlind player can not pay the blinds
-    return Math.max(bigBlind, ret);
+    return Math.max(bigBlind, calculateMaxChipInAction());
   }
 
   public int calculateMaxChipInAction() {
@@ -449,16 +472,20 @@ public class Board {
   private void calculatePlayerWinnings() {
     int[] winnings = winningCalculator.calculateWinnings();
     for (int i = 0; i < winnings.length; i++) {
-      players.get(i).addToStack(winnings[i]);
+      PlayerModel player = players.get(i);
+      player.addToStack(winnings[i]);
     }
     calculateEliminationRanks();
 
     over = true;
   }
-  
+
+  /*
+   * to shown winning on view end frame of showdown end
+   */
   public void endTurnView() {
     if (over) {
-      players.forEach(p -> p.resetEndTurn());
+      players.forEach(p -> p.resetEndTurnView());
       pot = 0;
     }
   }
@@ -491,13 +518,11 @@ public class Board {
     }
   }
 
-  public void eliminatePlayer(int id) {
-    PlayerModel player = getPlayer(id);
-//    fold(player);
+  private void timeout(PlayerModel player) {
     assertStacks -= player.getStack();
     player.setStack(0);
-//    int nextRank = getNextRank();
-//    player.setEliminationRank(nextRank);
+    player.setTimeout(true);
+    fold(player);
   }
 
   private int getNextRank() {

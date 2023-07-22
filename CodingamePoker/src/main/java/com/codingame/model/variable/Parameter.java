@@ -9,6 +9,6 @@ public class Parameter {
   public static final int TOTAL_BUY_IN = 4800;
 
   public static final int HAND_NB_BY_LEVEL = 10;
-  public static final int LEVEL_BLIND_MULTIPLICATOR = 2;
+  public static final int LEVEL_BLIND_MULTIPLIER = 2;
 
 }

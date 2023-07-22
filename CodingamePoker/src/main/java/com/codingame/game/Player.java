@@ -8,6 +8,7 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.codingame.gameengine.core.AbstractMultiplayerPlayer;
+import com.codingame.model.object.Action;
 import com.codingame.model.object.ActionInfo;
 import com.codingame.model.object.Card;
 import com.codingame.model.utils.AssertUtils;
@@ -69,18 +70,21 @@ public class Player extends AbstractMultiplayerPlayer {
   }
   
   public void sendInputLine(Stream<Card> cards) {
-    sendInputLine2(cards.map(c -> c.toString()).collect(Collectors.joining(RefereeConstant.WORD_DELIMITER)));
+    sendInputLine2(cards.map(c -> c.toString()).collect(Collectors.joining(RefereeParameter.WORD_DELIMITER)));
   }
   
   
   public void sendInputLine(ActionInfo action) {
     if (action == null) {
       sendInputLine(-1);
-      sendInputLine(RefereeConstant.NONE);
+      sendInputLine(RefereeParameter.NONE);
     } else {
       sendInputLine(action.getPlayerId());
-      sendInputLine2(action.getAction().toInputString());
+      sendInputLine(action.getAction());
     }
-
+  }
+  
+  public void sendInputLine(Action action) {
+    sendInputLine2(action.toInputString());
   }
 }

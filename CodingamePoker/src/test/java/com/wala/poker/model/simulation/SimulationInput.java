@@ -101,6 +101,8 @@ public class SimulationInput {
     logger.debug("dealerId {}", board.getDealerId());
     logger.debug("nextPlayerId {}", board.getNextPlayerId());
     logger.debug("{}", board.toPlayerStatesString());
+    assertEquals(board.getBbId(), bbId);
+
     if (actions.isEmpty()) {
       ActionTestUtils.endTurn(board);
     } else {
@@ -111,8 +113,9 @@ public class SimulationInput {
         ActionInfo actionInfo = actionInput.getActionInfo();
         ActionUtils.doAction(board, actionInfo);
         if (actionInfo.hasError()) {
-          logger.debug("ERRRRRRRRRRRRRRRROR : {}", actionInfo.getError());
-          logger.debug("REAL ACTION:::: {}", actionInfo.getAction());
+          logger.info("ERRRRRRRRRRRRRRRROR : {} {}", actionInfo.getError(), actionInfo.isLevelError());
+          logger.info("REAL ACTION:::: {}", actionInfo.getAction());
+          System.err.println(actionInfo.getError() +" "+ actionInfo.isLevelError());
         }
         logger.debug("{}", board.toPlayerStatesString());
         assertEquals(actionInput.getRealAction(), actionInfo.getAction());
@@ -131,6 +134,7 @@ public class SimulationInput {
     logger.debug("playerNb {}", playerNb);
     board = new Board(playerNb, bbId);
     board.getPlayers().forEach(p -> p.setStack(players.get(p.getId()).getStartStack()));
+    board.initAssertStacks();
   }
 
   private List<Card> createDeckCards() {

@@ -3,7 +3,7 @@ package com.codingame.view.object;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.codingame.game.Player;
-import com.codingame.game.RefereeConstant;
+import com.codingame.game.RefereeParameter;
 import com.codingame.gameengine.core.MultiplayerGameManager;
 import com.codingame.gameengine.module.entities.Entity;
 import com.codingame.gameengine.module.entities.GraphicEntityModule;
@@ -76,6 +76,9 @@ public class Game {
   }
 
   public void setTime(double time) {
+    if (time < this.time) {
+      return;
+    }
     this.time = time;
   }
 
@@ -138,7 +141,7 @@ public class Game {
   }
 
   public boolean isMaxRound() {
-    return turn == RefereeConstant.MAX_TURN;
+    return turn == RefereeParameter.MAX_TURN;
   }
 
 }

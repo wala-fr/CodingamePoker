@@ -44,6 +44,14 @@ public class ActionInfo {
     return levelError;
   }
 
+
+
+  @Override
+  public String toString() {
+    return "ActionInfo [playerId=" + playerId + ", action=" + action + ", error=" + error
+        + ", levelError=" + levelError + "]";
+  }
+
   public static ActionInfo create(int playerId, ActionType type) {
     return create(playerId, type.toString());
   }

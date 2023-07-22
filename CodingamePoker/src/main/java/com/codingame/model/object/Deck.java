@@ -3,6 +3,7 @@ package com.codingame.model.object;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import com.codingame.model.utils.CardUtils;
 import com.codingame.model.utils.RandomUtils;
 
 public class Deck {
@@ -15,7 +16,7 @@ public class Deck {
 
   public void reset() {
     cards.clear();
-    cards.addAll(Constant.ALL_CARDS);
+    cards.addAll(CardUtils.ALL_CARDS);
     index = 0;
   }
 

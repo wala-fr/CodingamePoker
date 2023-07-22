@@ -154,7 +154,9 @@ public class ViewConstant {
   public static final int Z_INDEX_BACK = -1000;
   public static final int Z_INDEX_BOARD = 0;
   public static final int Z_INDEX_CARD = 100;
-  public static final int Z_INDEX_BUTTON = 10;
+  public static final int Z_INDEX_CARD_DEAL = 200;
+  // so the button goes over the deck
+  public static final int Z_INDEX_BUTTON = Z_INDEX_CARD_DEAL;
 
 
 }

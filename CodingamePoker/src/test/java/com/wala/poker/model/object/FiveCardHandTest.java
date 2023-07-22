@@ -1,7 +1,6 @@
 package com.wala.poker.model.object;
 
-import static org.junit.Assert.*;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
@@ -55,7 +54,7 @@ public class FiveCardHandTest {
       tmp.add(CardUtils.fromString(card));
     }
     FiveCardHand ret = new FiveCardHand(tmp);
-    logger.info("{}", ret);
+    logger.info("{} {}", ret, ret.getLabel());
     return ret;
   }
 

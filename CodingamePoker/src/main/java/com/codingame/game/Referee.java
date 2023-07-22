@@ -63,12 +63,14 @@ public class Referee extends AbstractReferee {
 
     int firstBigBlindId = RandomUtils.nextInt(playerNb);
     board = new Board(playerNb, firstBigBlindId);
+    // so the button is rightly placed at the begining
+    board.initPositions();
     game.setBoard(board);
 
     // board.init(Constant.PLAYER_NB);
-    gameManager.setMaxTurns(RefereeConstant.MAX_TURN);
-    gameManager.setFirstTurnMaxTime(RefereeConstant.FIRST_ROUND_TIME_OUT);
-    gameManager.setTurnMaxTime(RefereeConstant.TIME_OUT);
+    gameManager.setMaxTurns(RefereeParameter.MAX_TURN);
+    gameManager.setFirstTurnMaxTime(RefereeParameter.FIRST_ROUND_TIME_OUT);
+    gameManager.setTurnMaxTime(RefereeParameter.TIME_OUT);
     gameManager.setFrameDuration(ViewConstant.FRAME_DURATION);
 
     // ActionUtils.initBoard(board);
@@ -116,14 +118,12 @@ public class Referee extends AbstractReferee {
         actionInfo = ActionInfo.create(playerId, outputs[0]);
 
       } catch (TimeoutException e) {
-        // TODO considered as fold ????
         logger.info("TimeoutException {}", playerId);
         gameManager
           .addToGameSummary(GameManager.formatErrorMessage(nickName + " did not output in time!"));
         currentPlayer.deactivate(nickName + " timeout.");
-        // currentPlayer.setScore(-1);
-        board.eliminatePlayer(playerId);
-        actionInfo = ActionInfo.create(playerId, ActionType.FOLD);
+
+        actionInfo = ActionInfo.create(playerId, ActionType.TIMEOUT);
         String errorStr = MessageUtils.format("wrong.action.timeout", playerId);
         actionInfo.setError(errorStr, true);
       }
@@ -144,7 +144,7 @@ public class Referee extends AbstractReferee {
     viewer.update();
 
     board.endTurn();
-    inputSender.updateHandInfo(board);
+    inputSender.updateShowDownInfo(board);
     board.endTurnView();
 
     game.setPhase(Phase.END);
@@ -221,9 +221,10 @@ public class Referee extends AbstractReferee {
     String[] text = new String[playerNb];
 
     for (int i = 0; i < playerNb; i++) {
-      int score = board.getPlayer(i).getScore();
+      PlayerModel player = board.getPlayer(i);
+      int score = player.getScore();
       scores[i] = score;
-      text[i] = score > 0 ? "" + scores[i] : "";
+      text[i] = player.isTimeout() ? "TIMEOUT" : ("" + (score > 0 ? scores[i] : 0));
       gameManager.getPlayer(i).setScore(score);
     }
     endScreenModule.setScores(scores, text);

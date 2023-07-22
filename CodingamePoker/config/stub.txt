@@ -10,9 +10,8 @@ read playerId:int
 gameloop
 read round:int
 read handNb:int
-read pot:int
 loop playerNb
-	read stack:int
+	read stack:int chipInPot:int
 read boardCards:word(14)
 read playerCards:word(5)
 read actionNb:int
@@ -20,22 +19,25 @@ loop actionNb
 	read actionRound:int actionHandNb:int actionPlayerId:int action:word(10) actionBoardCards:word(14)
 read showDownNb:int
 loop showDownNb
-	read showDownHandNb:int showDownCards:word(23)
+	read showDownHandNb:int showDownBoardCards:word(14) showDownPlayerCards:word(23)
+read possibleActionNb:int
+loop possibleActionNb
+	read possibleAction:word(10)
 write CALL;MESSAGE
 
 INPUT
-smallBlind:initial value of the small blind
-bigBlind:initial value of the big blind
+smallBlind:initial small blind's value
+bigBlind:initial big blind's value
 handNbByLevel:number of hand to play to reach next level
-levelBlindMultiplyCoeff:coefficient that multiplies the blinds when the level changes
+levelBlindMultiplier:blinds are multiply by this coefficient when the level changes
 buyIn:initial stack for each player
 firstBigBlindId:id of the first big blind player 
 playerNb:number of player (2 to 4)
 playerId:your id
 round:referee round (starts at 1-game ends when it reaches 600)
-handNb:hand number (starts at 0)
-pot:number of chips in the pot
+handNb:hand number (starts at 1)
 stack:number of chips in the player stack
+chipInPot:number of player's chips in the pot
 boardCards:board cards (example : AD_QH_2S_X_X)
 playerCards:your cards (example : TC_JH)
 actionNb:number of actions since your last turn
@@ -44,6 +46,8 @@ actionHandNb:hand number of the action
 actionPlayerId:player id of the action
 action:action (examples : BET_200, FOLD, NONE...)
 actionBoardCards:board cards when the action is done (example : AD_QH_2S_4H_X)
-showDownNb:number of hand that ended since your last turn
+showDownNb:number of hands that ended since your last turn
 showDownHandNb:hand number
-showDownCards:player's cards shown at the end of the hand (example : AD_QH_X_X_X_X_8S_8H player0's cards, followed by player1's cards ...)
+showDownPlayerCards:player's cards shown at the end of the hand (example : AD_QH_E_E_X_X_8S_8H player0's cards, followed by player1's cards ...)
+possibleActionNb:number of actions you can do
+possibleAction:your possible action (BET_240 means 240 is the minimum raise, you can bet more)

@@ -9,6 +9,7 @@ import java.util.Map;
 import com.codingame.model.object.enumeration.HandType;
 import com.codingame.model.object.enumeration.Rank;
 import com.codingame.model.object.enumeration.Suit;
+import com.codingame.model.utils.AssertUtils;
 
 public class FiveCardHand {
 
@@ -158,11 +159,36 @@ public class FiveCardHand {
   public List<Card> getCards() {
     return cards;
   }
-  
+
   public String getLabel() {
-    String ret = handType.toString();
-    // TODO
-    return ret;
+    StringBuilder ret = new StringBuilder(handType.getLabel());
+    ret.append(' ');
+    if (handType == HandType.HIGH_CARD || handType == HandType.THREE_OF_A_KIND || handType == HandType.FOUR_OF_A_KIND) {
+      Card card = cards.get(4);
+      ret.append(card.getRank().toString());
+    } else if (handType == HandType.PAIR) {
+      ret.append("OF ");
+      Card card = cards.get(4);
+      ret.append(card.getRank().toString());
+    } else if (handType == HandType.TWO_PAIR) {
+      Card card0 = cards.get(4);
+      ret.append(card0.getRank().toString());
+      ret.append(" AND ");
+      Card card1 = cards.get(2);
+      ret.append(card1.getRank().toString());
+    } else if (handType == HandType.STRAIGHT || handType == HandType.FLUSH || handType == HandType.STRAIGHT_FLUSH) {
+      ret.insert(0, "-HIGH ");
+      Card card = cards.get(4);
+      ret.insert(0, card.getRank().toString());
+    } else {
+      AssertUtils.test(handType == HandType.FULL_HOUSE);
+      Card card0 = cards.get(4);
+      ret.append(card0.getRank().toString());
+      ret.append(" OVER ");
+      Card card1 = cards.get(1);
+      ret.append(card1.getRank().toString());
+    }
+    return ret.toString().toUpperCase().trim();
   }
 
   @Override

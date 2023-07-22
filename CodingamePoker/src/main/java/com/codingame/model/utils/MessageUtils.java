@@ -10,7 +10,9 @@ public class MessageUtils {
 
   public static String format(String key, Object... params) {
     try {
-      return MessageFormat.format(RESOURCE_BUNDLE.getString(key), params);
+      String str = RESOURCE_BUNDLE.getString(key);
+      AssertUtils.test(str.replaceAll("\\D", "").length() == params.length, key);
+      return MessageFormat.format(str, params);
     } catch (MissingResourceException e) {
       throw new IllegalStateException(e);
     }

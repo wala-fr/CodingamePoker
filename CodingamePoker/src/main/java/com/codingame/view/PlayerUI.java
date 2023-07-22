@@ -129,7 +129,7 @@ public class PlayerUI {
     PlayerModel player = getPlayer(game);
     if (!eliminated) {
       FiveCardHand hand = player.getBestPossibleHand();
-      ViewUtils.updateText(game, action, (hand != null ? hand.getHandType().getLabel() : ""));
+      ViewUtils.updateText(game, action, (hand != null ? hand.getLabel() : ""));
       // playerRectangle.setFillColor(win ? ViewConstant.AVATAR_COLOR_WIN :
       // ViewConstant.AVATAR_COLOR_LOSE);
     }
