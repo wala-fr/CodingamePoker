@@ -24,7 +24,7 @@ import com.google.inject.Singleton;
 
 @Singleton
 public class BoardUI {
-  
+
   private static final Logger logger = LoggerFactory.getLogger(BoardUI.class);
 
   @Inject
@@ -39,8 +39,10 @@ public class BoardUI {
   private Text pot;
 
   private PlayerUI[] playerUIS;
-  
+
   private Group button;
+  private Group actionButton;
+
   private Group levelGroup;
   private Group potGroup;
 
@@ -87,8 +89,35 @@ public class BoardUI {
       game.getTooltips().setTooltipText(button, "DEALER");
       button.add(buttonText);
       button.setZIndex(ViewConstant.Z_INDEX_BUTTON);
-      updateButton(board);
+
+      actionButton = game.getGraphics().createGroup();
+      createButton(actionButton, "A", "ACTION", ViewConstant.ACTION_BUTTON_FILL_COLOR,
+          ViewConstant.Z_INDEX_ACTION_BUTTON);
+      updateButtons(board);
     }
+  }
+
+  private void createButton(Group button, String text, String toolTipText, int fillcolor,
+      int zIndex) {
+    Circle buttonCircle = game.getGraphics()
+      .createCircle()
+      .setFillColor(fillcolor)
+      .setLineWidth(8)
+      .setLineColor(ViewConstant.BUTTON_WRITE_COLOR)
+      .setRadius(ViewConstant.BUTTON_RADIUS);
+    button.add(buttonCircle);
+    Text buttonText = game.getGraphics()
+      .createText(text)
+      .setX(-16)
+      .setY(-25)
+      .setFontSize(40)
+      .setFontWeight(FontWeight.BOLDER)
+      .setFontFamily(ViewConstant.FONT)
+      .setTextAlign(TextAlign.RIGHT)
+      .setFillColor(ViewConstant.BUTTON_WRITE_COLOR);
+    game.getTooltips().setTooltipText(button, toolTipText);
+    button.add(buttonText);
+    button.setZIndex(zIndex);
   }
 
   private void createLabelAndText(Text text, int x, int y, String label) {
@@ -114,8 +143,7 @@ public class BoardUI {
     Board board = game.getBoard();
 
     ViewUtils.updateText(game, level, Integer.toString(board.getLevel()));
-    ViewUtils.updateText(game, blinds,
-        "$ " + board.getSmallBlind() + " / " + board.getBigBlind());
+    ViewUtils.updateText(game, blinds, "$ " + board.getSmallBlind() + " / " + board.getBigBlind());
     ViewUtils.updateText(game, gameNb, Integer.toString(board.getHandNb()));
     for (int id = 0; id < playerUIS.length; id++) {
       PlayerUI playerUI = playerUIS[id];
@@ -123,8 +151,8 @@ public class BoardUI {
     }
 
     deckUI.reset();
-    
-    updateButton(board);
+
+    updateButtons(board);
 
     deckUI.deal();
 
@@ -160,10 +188,16 @@ public class BoardUI {
     deckUI.reset();
   }
 
-  private void updateButton(Board board) {
+  private void updateButtons(Board board) {
+    if (!game.isDeal()) {
+      return;
+    }
     Point point = ViewUtils.getPlayerUICoordinates(board, board.getDealerId()).getButton();
     point.setPosition(button);
-    game.commitEntityState(button, 0.1);
+
+    point = ViewUtils.getPlayerUICoordinates(board, board.getNextPlayerId()).getActionButton();
+    point.setPosition(actionButton);
+    game.commitEntityState(0.1, button, actionButton);
   }
 
   private void highlightWinningCards() {
@@ -173,7 +207,8 @@ public class BoardUI {
       AssertUtils.test(!bestPlayers.isEmpty());
       logger.debug("{}", board.toPlayerStatesString());
       logger.debug("calculatNotFoldedPlayerNb {}", board.calculatNotFoldedPlayerNb());
-      if (!bestPlayers.isEmpty() && board.getPlayer(bestPlayers.get(0)).getBestPossibleHand() != null) {
+      if (!bestPlayers.isEmpty()
+          && board.getPlayer(bestPlayers.get(0)).getBestPossibleHand() != null) {
         Set<Card> winCards = new HashSet<>();
         for (PlayerModel player : board.getPlayers()) {
           boolean win = bestPlayers.contains(player.getId());
@@ -185,7 +220,7 @@ public class BoardUI {
           }
           playerUIS[player.getId()].setWinOrLose(game, win);
         }
-        
+
         // highlight players cards
         for (PlayerModel player : board.getPlayers()) {
           if (!player.isFolded()) {
@@ -194,7 +229,7 @@ public class BoardUI {
             }
           }
         }
-        
+
         // highlight board cards
         for (Card card : board.getBoardCards()) {
           deckUI.highlightCard(card, winCards.contains(card));

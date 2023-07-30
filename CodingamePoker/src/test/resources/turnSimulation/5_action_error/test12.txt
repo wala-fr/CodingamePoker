@@ -1,0 +1,32 @@
+bet is not even a call
+
+KS KH KC TD AD
+
+player 4
+
+KD TC
+1000
+1610
+
+AS 9D
+1000
+700
+
+AH 9S
+300
+0
+
+2H 3S
+1000
+990
+
+bb 2
+
+3:CHECK:FOLD
+0:BET 290
+1:BET 10:CALL
+2:BET 280:ALL-IN
+
+1:CHECK
+0:BET_200
+1:FOLD

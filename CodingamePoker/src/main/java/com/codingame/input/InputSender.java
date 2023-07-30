@@ -20,7 +20,7 @@ public class InputSender {
 
   private final RoundInfo[] roundInfos = new RoundInfo[RefereeParameter.MAX_TURN + 1];
   private final int[] lastSendRounds = new int[4]; // first turn is 1
-  private final ShowDownInfo[] handInfos = new ShowDownInfo[RefereeParameter.MAX_TURN + 1];
+  private final ShowDownInfo[] showdownInfos = new ShowDownInfo[RefereeParameter.MAX_TURN + 1];
   private final int[] lastSendHandNbs = new int[4]; // first handNb is 1
   private final boolean[] sendGameInput = new boolean[4]; // if the 4 3 first player fold then the third player won't play in fourth (automatically win)
 
@@ -32,14 +32,14 @@ public class InputSender {
   
   public void updateShowDownInfo(Board board) {
     int handNb = board.getHandNb();
-    if (handInfos[handNb] == null) {
+    if (showdownInfos[handNb] == null) {
       // create at the start of the hand so if a player time out we still have his cards (not yet eliminated)
       // eve if they will not be shown (since he's folded)
       ShowDownInfo handInfo = new ShowDownInfo(board);
-      handInfos[handNb] = handInfo;
+      showdownInfos[handNb] = handInfo;
     }
     if (board.isOver()) {
-      handInfos[handNb].update(board);
+      showdownInfos[handNb].update(board);
       logger.debug("updateHandInfo {}", handNb);
     }
   }
@@ -66,12 +66,12 @@ public class InputSender {
 
 //    player.sendInputLine(board.getPot());
     for (int i = 0; i < playerNb; i++) {
-      player.sendInputLine(board.getPlayer(i).getStack());
-      player.sendInputLine(board.getPlayer(i).getTotalBetAmount());
+      String str = String.format("%d %d", board.getPlayer(i).getStack(), board.getPlayer(i).getTotalBetAmount());
+      player.sendInputLine(str);
     }
     
-    player.sendBoardCards(board.getBoardCards());
-    player.sendInputLine(playerModel.getHand().getCards());
+    player.sendInputLine2(InputUtils.toInputLineBoardCards(board.getBoardCards()));
+    player.sendInputLine2(InputUtils.toInputLine(playerModel.getHand().getCards()));
 
     sendRoundInfoInput(board, turn, player);
     sendHandInfoInput(board, player);
@@ -86,7 +86,8 @@ public class InputSender {
     player.sendInputLine(nb);
     for (int i = lastSendRound; i < turn; i++) {
       logger.debug("id {} referee round {}", player.getIndex(), i +" / " + turn);
-      roundInfos[i].sendInput(player);
+      player.sendInputLine2(roundInfos[i].toInputLine());
+
     }
     lastSendRounds[player.getIndex()] = turn - 1;
   }
@@ -98,7 +99,7 @@ public class InputSender {
     int nb = handNb - lastSendHand;
     player.sendInputLine(nb);
     for (int i = lastSendHand; i < handNb; i++) {
-      handInfos[i].sendInput(player);
+      player.sendInputLine2(showdownInfos[i].toInputLine(player));
     }
     lastSendHandNbs[player.getIndex()] = handNb - 1;
   }
@@ -107,7 +108,7 @@ public class InputSender {
     if (RefereeParameter.POSSIBLE_ACTION_INPUT) {
       List<Action> possibleActions = ActionUtils.calculatePossibleActions(board);
       player.sendInputLine(possibleActions.size());
-      possibleActions.forEach(a ->  player.sendInputLine(a));
+      possibleActions.forEach(a ->  player.sendInputLine2(a.toInputString()));
     }
   }
 }

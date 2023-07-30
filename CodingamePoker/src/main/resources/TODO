@@ -11,20 +11,12 @@ show replacement message as info and some as error???
 bug deck card name appear
 
 
-player 0 and 2 more to the right and message text wider
-
-
 add tests 2 player 3 player
 
 //////////
 see animation springChallenge
-finish special cases
-logo poker
 
 big blind for first 4 level add 1 bb
-
-remove all todo from the md
-
 tune blind values, level hand nb... max turn
 buy-In at least 10 time the big blind
 stop blind if too big so that one player always does action
@@ -46,10 +38,13 @@ All-on raise to 1000
 make github repo public
 check message
 check error message
-beat calling station
 statement + md
 tune blind vs level
 read again md, stub.txt, message properties
+add demo
+
+contribute message
+the number of hand by level may change. the big blind may be stop 
 
 ################ WITH AI
 try to print all message from properties in a test

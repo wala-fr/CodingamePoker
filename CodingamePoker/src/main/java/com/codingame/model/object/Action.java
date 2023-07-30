@@ -41,8 +41,8 @@ public class Action {
   }
 
   public static Action create(String str) throws InvalidMoveException {
-    if (str.startsWith(ActionType.BET.toString() + "_")) {
-      str.replaceAll("BET_", "BET ");
+    if (str.startsWith("BET_")) {
+      str = str.replaceAll("BET_", "BET ");
     }
     String[] tmp = str.split(" ", -1);
     ActionType type = ActionType.fromString(tmp[0]);

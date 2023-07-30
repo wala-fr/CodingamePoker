@@ -1,161 +1,154 @@
+
 <div id="statement_back" class="statement_back" style="display: none"></div>
 <div class="statement-body">
 	<!-- RULES -->
-
 	<div class="statement-section statement-rules">
 		<br />
 		<div class="statement-rules-content">
-			Let's play <b>poker</b> !
-			<br />
-			This is a port of the <b>Texas hold'em</b> version.
-			<br />
-			The source code of this game is available <a target="_blank" href="https://github.com/wala-fr/CodingamePoker">on this GitHub repository</a> .
+			<p>This is a port of the <b>Texas hold'em</b> version of Poker.</p>
+			<p>The source code of this game is available <a target="_blank" href="https://github.com/wala-fr/CodingamePoker">on this GitHub repository</a> .</p>
 		</div>
 		<br />
-		<h1>
+		<h1 style="font-size: 20px;">
 			<span class="icon icon-rules">&nbsp;</span> <span>RULES</span>
 		</h1>
-		<div class="statement-rules-content">
-			The rules of <b>Texas hold 'em</b> can be found all over the <a target="_blank" href="https://www.google.com/search?q=texas+hold'em+rules">web</a> . For example : <a target="_blank"
-				href="https://en.wikipedia.org/wiki/Texas_hold_'em#Rules">wikipedia</a> with the <a target="_blank" href="https://en.wikipedia.org/wiki/Texas_hold_'em#Hand_values">hand ranking</a> .
-			<br />
-			<br />
-			<strong>Game inputs</strong>
-			<br />
-			The <var>number of players</var> can be from
-			<const>2</const>
-			to
-			<const>4</const>
-			.
-			<br />
-			The total of all players buy-ins is
-			<const>$4800</const>
-			. So for 2 players the <var>buy-in</var> is
-			<const>$2400</const>
-			, for 3 players it's
-			<const>$1600</const>
-			and for 4 players it's
-			<const>$1200</const>
-			.
-			<br />
-			The value of the <var>small blind</var> / <var>big blind</var> are
-			<const>$5</const>
-			/
-			<const>10$</const>
-			.
-			<br />
-			Then every
-			<const>10</const>
-			hands, the level is increased and the blinds (small and big) are multiplied by a <var>2</var>.
-			<br />
-			The <var>first big blind player</var> is random.
-			<br />
-			These values are given as game inputs.
-			<br />
-			The action moves <b>clockwise</b> around the table. The
-			<const>player 0</const>
-			is at the
-			<const>top</const>
-			(in heads up he's on the
-			<const>left</const>
-			).
-			<br />
-			The game ends when :
-			<ul>
-				<li>one player owns all the chips.</li>
-				<li>
-					after
-					<const>600</const>
-					rounds (if the <b>last hand</b> is not over, it's <b>cancelled</b> ).
-				</li>
-			</ul>
-			The players are ranked by elimination round and stack.
-			<br />
-			The card's abbreviations are
-			<const>2D</const>
-			,
-			<const>KH</const>
-			... ( <a target="_blank" href="https://github.com/wala-fr/CodingamePoker/blob/main/CodingamePoker/config/md/CARDS.md">complete list</a> ).
-			<br />
-			A list of how some special cases are handled is <a target="_blank" href="https://github.com/wala-fr/CodingamePoker/blob/main/CodingamePoker/config/md/SPECIAL_CASES.md">here</a> .
+		<p style="margin-bottom:15px">The rules of <b>Texas hold 'em</b> can be found all over the <a target="_blank" href="https://www.google.com/search?q=texas+hold'em+rules">web</a>.
+		For example : <a target="_blank" href="https://en.wikipedia.org/wiki/Texas_hold_'em#Rules">wikipedia</a> with the <a target="_blank" href="https://en.wikipedia.org/wiki/Texas_hold_'em#Hand_values">hand ranking</a>.</p>
+		<h2><strong>Game inputs</strong></h2>
+		<div style="margin-top:7px; margin-bottom:15px">
+		<p>The <var>number of players</var> may vary from <const>2</const> to <const>4</const>. The action moves <b>clockwise</b> around the table. The <const>player 0</const> is at the <const>top</const> (in heads up he's on the <const>left</const>).</p>
+		<p>The total of all buy-ins is always <const>$4800</const>. So for 2 players the <var>buy-in</var> is <const>$2400</const>, for 3 players it's <const>$1600</const> and for 4 players it's <const>$1200</const>.<br/>
+		<p>The value of the <var>small blind</var> / <var>big blind</var> are <const>$5</const> / <const>$10</const>.
+		Then every <const>10</const> hands, the <b>level</b> will increase and the blinds (small and big) are multiplied by <const>2</const> (the first hand is <const>1</const> so to simplify the blinds will increase at levels <const>10</const>, <const>20</const>,...).</p>
+		<p>The <var>first big blind player</var> is random.</p>
+		<p>These values are given as game inputs.</p>
+		</div>
+		<h2><strong>End game</strong></h2>
+		<div style="margin-top:7px; margin-bottom:15px">
+		The game ends :
+		<ul style="margin-top:5px; margin-bottom:0px">
+			<li> when one player owns all the chips.</li>
+			<li>after <const>600</const> rounds and if the <b>last hand</b> is not over, it's <b>cancelled</b>.</li>
+		</ul>
+		<p>The players are ranked by elimination round and stack.</p>
+		</div>
+		<h2><strong>Timeout</strong></h2>
+		<div style="margin-top:7px; margin-bottom:15px">
+		When a player timeouts :
+		<ol style="margin-top:5px; margin-bottom:0px">
+			<li>He is eliminated.</li>
+			<li>He is considered folded for the current hand.</li>
+			<li>The chips from his stack are removed from the game.</li>
+		</ol>
+		<h2><strong>Limit cases</strong></h2>
+		<div style="margin-top:7px; margin-bottom:15px">
+		<p>A list of how the referee handles some "limit"" cases is <a target="_blank" href="https://github.com/wala-fr/CodingamePoker/blob/main/CodingamePoker/config/md/SPECIAL_CASES.md">here</a> .
 		</div>
 		<br />
-		<h2>
-			<span class="icon icon-example">&nbsp;</span> <span>ACTIONS</span>
-		</h2>
-		<strong>Possible actions</strong>
-		<br />
-		<br />
-		<div class="statement-rules-content">
-			There are
-			<const>5</const>
-			possible actions :
-			<br />
-			<ul>
-				<li>
-					<action>CALL</action>
-				</li>
-				<li>
-					<action>CHECK</action>
-				</li>
-				<li>
-					<action>BET <var>amount</var></action>
-					, the <var>amount</var> is the number of chips that the player adds to the pot.
-				</li>
-				<li>
-					<action>ALL-IN</action>
-				</li>
-				<li>
-					<action>FOLD</action>
-				</li>
-			</ul>
+		<h1 style="font-size: 20px;">
+			<span class="icon icon-rules">&nbsp;</span> <span>CARDS</span>
+		</h1>
+		<div style="margin-top:7px; margin-bottom:15px">
+		<p>The card's abbreviations are <const>2D</const>, <const>KH</const>... (<a target="_blank" href="https://github.com/wala-fr/CodingamePoker/blob/main/CodingamePoker/config/md/CARDS.md">complete list</a>).</p>
+		<table>
+		<tbody>
+			<tr>
+				<td><b>Hand examples</b></td>
+				<td colspan=2><const>AS_AD</const></td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td colspan=2><const>TC_5H</const></td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td><b>Board examples</b></td>
+				<td><const>X_X_X_X_X</const></td>
+				<td>PREFLOP</td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td><const>4H_6H_JS_X_X</const></td>
+				<td>FLOP</td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td><const>4H_6H_JS_AC_X</const></td>
+				<td>TURN</td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td><const>4H_6H_JS_AC_AD</const></td>
+				<td>RIVER</td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td style="vertical-align: top;"><b>Showdown examples</b>&nbsp;&nbsp;</td>
+				<td style="vertical-align: top;"><const>QH_3S_E_E_X_X_7D_KC</const>&nbsp;&nbsp;</td>
+				<td>player1 was eliminated (<const>E</const>) at the start of the hand.<br/>player2 is folded (<const>X</const>).<br/>player0 and player3 have shown their cards.<br/>&nbsp;</td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td style="vertical-align: top;"><const>QH_3S_X_X_X_X_X_X</const></td>
+				<td>No showdown. All player except the winner have folded.<br/>But your cards (player0) are always visible to you.</td>
+			</tr>
+			</tbody>
+		</table>
+		<h2><strong>Showdown</strong></h2>
+		<ol style="margin-top:5px; margin-bottom:0px">
+			<li>In case of showdown, the cards of all active (not folded) players will be visible to all (no possibility of <a target="_blank" href="https://en.wikipedia.org/wiki/Glossary_of_poker_terms#muck">mucking/hiding</a> your cards).</li>
+			<li> <const>E</const> is used if a player was eliminated at the start of the hand and <const>X</const> if he's folded.</li>
+			<li>Your cards are always visible in your input showdowns (in case all players fold and you win the hand without acting in it).</li>
+		</ol>
 		</div>
 		<br />
-		<strong>Action replacement</strong>
-		<br />
-		<br />
-		<div class="statement-rules-content">
-			In some cases, if you give an "invalid" action, it will be automatically replaced by a "legal" one.
-			<br />
-			For example :
-			<ul>
-				<li>
-					<action>BET 500</action>
-					with a stack of $400 will be considered as an
-					<action>ALL-IN</action>
-					.
-				</li>
-				<li>
-					<action>TOTO</action>
-					or other invalid action will be considered as a
-					<action>FOLD</action>
-					.
-				</li>
-			</ul>
-			The complete list can be found <a target="_blank" href="https://github.com/wala-fr/CodingamePoker/blob/main/CodingamePoker/config/md/ACTION_REPLACEMENT.md">here</a> .
-			<br />
-			However if you
-			<action>FOLD</action>
-			when you could just
-			<action>CHECK</action>
-			, it won't be replaced.
-			<br />
-			The replacement informations are written in the output console.
-			<br />
+		<h1 style="font-size: 20px;">
+			<span class="icon icon-examples">&nbsp;</span> <span>ACTIONS</span>
+		</h1>
+		<h2><span class="icon icon-rules">&nbsp;</span> <span><strong>Possible actions</strong></span></h2>
+		<div style="margin-top:7px; margin-bottom:15px">
+		<p>There are <const>5</const> possible actions :</p>
+		<ul style="margin-top:5px; margin-bottom:0px">
+			<li><action>CALL</action></li>
+			<li><action>CHECK</action></li>
+			<li><action>BET <var>amount</var></action>, where <var>amount</var> is the number of chips that the player adds to the pot.</li>
+			<li><action>ALL-IN</action></li>
+			<li><action>FOLD</action></li>
+		</ul>
+		<p>A list of possible actions is given in your inputs. <action>BET_240</action> means 240 is the minimum raise. You can bet more. If you bet less it will be replaced by <action>CALL</action> or <action>BET 240</action> (depending on your amount).</p>
+		<p>In the inputs, <action>BET</action> actions have an <b>underscore</b>. In the outputs, you can use a space.</p>
 		</div>
-		<br />
-		<h2>
-			<span class="icon icon-example">&nbsp;</span> <span>BLINDS</span>
-		</h2>
-		<div class="statement-rules-content">
-			The <var>small blind</var> and <var>big blind</var> initial values are given in the initial inputs.
-			<br />
-			Then every " <var>number of hands by level</var> " the level is increased and the blinds (small and big) are multiplied by a <var>coefficient</var> (those values are also given in the initial
-			inputs).
-			<br />
+		<h2><strong>Action replacement</strong></h2>
+		<div style="margin-top:7px; margin-bottom:15px">
+		<p>In some cases, if you give an "invalid" action, it will be <b>automatically replaced</b> by a "legal" one.</p>
+		<p>For example :</p>
+		<ul style="margin-top:5px; margin-bottom:0px">
+			<li><action>BET 500</action> with a stack of $400 will be replaced by an <action>ALL-IN</action>.</li>
+			<li><action>TOTO</action> or other invalid action will be replaced by a <action>FOLD</action>.</li>
+		</ul>
+		<p>However if you <action>FOLD</action> when you could just <action>CHECK</action>, it won't be replaced.</p>
+		<p>The replacement informations are written in the output console and a complete list can be found <a target="_blank" href="https://github.com/wala-fr/CodingamePoker/blob/main/CodingamePoker/config/md/ACTION_REPLACEMENT.md">here</a> .</p>
+		</div>
+		<h2><strong>Other players action</strong></h2>
+		<div style="margin-top:7px; margin-bottom:15px">
+		<p>The actions of all the players are given as well as the round, hand's number, playerId and board cards when each action was done.</p>
+		<p>The action can be :</p>
+		<ul style="margin-top:5px; margin-bottom:0px">
+			<li><action>CALL</action></li>
+			<li><action>CHECK</action></li>
+			<li><action>BET_500</action>, there's an underscore before 500.</li>
+			<li><action>ALL-IN</action></li>
+			<li><action>FOLD</action></li>
+			<li><action>NONE</action>, if no action during the hand (for example, if all players are directly all-in). Then playerId is -1.</li>
+			<li><action>TIMEOUT</action>, the player has timeout</li>
+		</ul>
+		<p>The first action given is always your last action.</p>
 		</div>
 	</div>
-
 
 	<!-- Victory conditions -->
 	<div class="statement-victory-conditions">
@@ -195,35 +188,63 @@
 		<div class="blk">
 			<div class="title">Initialization input</div>
 			<div class="text">
-				<span class="statement-lineno">Line 1</span> : <var>startSmallBlind</var>
+				<span class="statement-lineno">Line 1</span> : <var>smallBlind</var>
 				<br />
-				<span class="statement-lineno">Line 2</span> : <var>startBigBlind</var> the initial values of the blinds.
+				<span class="statement-lineno">Line 2</span> : <var>bigBlind</var> the initial values of the blinds.
 				<br />
-				<span class="statement-lineno">Line 3</span> : <var>handlNbByLevel</var> the number of hands before the level increases.
+				<span class="statement-lineno">Line 3</span> : <var>handNbByLevel</var> number of hands to play to reach the next level.
 				<br />
-				<span class="statement-lineno">Line 4</span> : <var>levelBlindMultiplicator</var> the blinds are multiplied by this coefficient when the level changes.
+				<span class="statement-lineno">Line 4</span> : <var>levelBlindMultiplier</var> blinds are multiply by this coefficient when the level changes.
 				<br />
-				<span class="statement-lineno">Line 5</span> : <var>playerNb</var> the initial number of players.
+				<span class="statement-lineno">Line 5</span> : <var>buyIn</var> initial stack for each player.
 				<br />
-				<span class="statement-lineno">Line 6</span> : <var>playerId</var> your id.
+				<span class="statement-lineno">Line 6</span> : <var>firstBigBlindId</var> id of the first big blind player .
+				<br />
+				<span class="statement-lineno">Line 7</span> : <var>playerNb</var> number of players (<const>2</const> to <const>4</const>).
+				<br />
+				<span class="statement-lineno">Line 8</span> : <var>playerId</var> your id.
 				<br />
 			</div>
 			<br>
 			<div class="title">Input for one game turn</div>
 			<div class="text">
-				<span class="statement-lineno">Line 1</span> : <var>round</var> referee round (game will end when it reaches
-				<const>600</const>
-				).
+				<span class="statement-lineno">Line 1</span> : <var>round</var> referee round / frame (starts at <const>1</const>, game ends when it reaches <const>600</const>).
 				<br />
-				<span class="statement-lineno">Line 2</span> : <var>pot</var> number of chips in the pot.
+				<span class="statement-lineno">Line 2</span> : <var>handNb</var> hand's number (starts at <const>1</const>).
 				<br>
-				<span class="statement-lineno"> Next <var>playerNb</var> lines
-				</span> : <var>stack</var> stack of each player.
+				<span class="statement-lineno"> Next <var>playerNb</var> lines :</span>
+				<ul>
+				<li><var>stack</var> number of chips in the player's stack.</li>
+				<li><var>chipInPot</var> number of player's chips in the pot. The sum of all the chipInPot values is equal to the pot.</li>
+				</ul>
 				<br />
-				<span class="statement-lineno">Next line</span> : <var>boardCardNb</var> number of board cards already dealt.
+				<span class="statement-lineno">Next line</span> : <var>boardCards</var> board cards (example : <const>AD_QH_2S_X_X</const>).
 				<br>
-				<span class="statement-lineno"> Next <var>boardCardNb</var> lines
-				</span> : <var>boardCard</var> board card abbreviation (2H, KD... see <a target="_blank" href="https://github.com/wala-fr/CodingamePoker/blob/main/CodingamePoker/config/md/CARDS.md">abreviations</a> ).
+				<span class="statement-lineno">Next line</span> : <var>playerCards</var> your cards (example : <const>TC_JH</const>).
+				<br>
+				<span class="statement-lineno">Next line</span> : <var>actionNb</var> number of actions since your last turn.
+				<br>
+				<span class="statement-lineno"> Next <var>actionNb</var> lines :</span>
+				<ul>
+				<li><var>actionRound</var> round of the action.</li>
+				<li><var>actionHandNb</var> hand number of the action.</li>
+				<li><var>actionPlayerId</var> player id of the action.</li>
+				<li><var>action</var> action (examples : <const>BET_200</const>, <const>FOLD</const>, <const>NONE</const>...).</li>
+				<li><var>actionBoardCards</var> board cards when the action is done (example : <const>AD_QH_2S_4H_X</const>).</li>
+				</ul>
+				<br />
+				<span class="statement-lineno">Next line</span> : <var>showDownNb</var> number of hands that ended since your last turn.
+				<br>
+				<span class="statement-lineno"> Next <var>showDownNb</var> lines :</span>
+				<ul>
+				<li><var>showDownHandNb</var> hand's number.</li>
+				<li><var>showDownBoardCards</var> board cards at the showdown.</li>
+				<li><var>showDownPlayerCards</var> players cards shown at the end of the hand (example : <const>AD_QH_E_E_X_X_8S_8H</const> player0's cards, followed by player1's cards ...).</li>
+				</ul>
+				<br />
+				<span class="statement-lineno">Next line</span> : <var>possibleActionNb</var> number of actions you can do.
+				<br>
+				<span class="statement-lineno"> Next <var>possibleActionNb</var> lines :</span> <var>possibleAction</var> your possible action (<const>BET_240</const> means 240 is the minimum raise, you can bet more).
 				<br />
 			</div>
 		</div>
@@ -231,15 +252,10 @@
 			<br>
 			<div class="title">Output</div>
 			<div class="text">
-				<span class="statement-lineno">A single line</span> containing the player action.
-				<br>
-				Example:
+				<span class="statement-lineno">A single line</span> containing the player action. Example:
 				<action>BET 200</action>
 				<br>
-				You can also add a message :
-				<br>
-				Example:
-				<action>FOLD;MESSAGE</action>
+				You can also add a message : <action>FOLD;MESSAGE</action>
 			</div>
 		</div>
 

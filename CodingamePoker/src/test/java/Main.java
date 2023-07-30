@@ -8,8 +8,8 @@ public class Main {
         
         gameRunner.addAgent(AgentCall.class, "wala", "https://github.com/wala-fr/CodingamePoker/blob/main/CodingamePoker/src/main/resources/view/assets/wala.png");
         gameRunner.addAgent(AgentCall.class);
-        gameRunner.addAgent(AgentCall.class);
-        gameRunner.addAgent(AgentFold.class);
+//        gameRunner.addAgent(AgentCall.class);
+//        gameRunner.addAgent(AgentFold.class);
 
         gameRunner.start();
     }

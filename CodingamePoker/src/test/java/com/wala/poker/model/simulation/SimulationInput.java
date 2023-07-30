@@ -115,7 +115,7 @@ public class SimulationInput {
         if (actionInfo.hasError()) {
           logger.info("ERRRRRRRRRRRRRRRROR : {} {}", actionInfo.getError(), actionInfo.isLevelError());
           logger.info("REAL ACTION:::: {}", actionInfo.getAction());
-          System.err.println(actionInfo.getError() +" "+ actionInfo.isLevelError());
+//          System.err.println(actionInfo.getError() +" "+ actionInfo.isLevelError());
         }
         logger.debug("{}", board.toPlayerStatesString());
         assertEquals(actionInput.getRealAction(), actionInfo.getAction());

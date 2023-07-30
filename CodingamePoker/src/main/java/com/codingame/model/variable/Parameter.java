@@ -2,7 +2,7 @@ package com.codingame.model.variable;
 
 public class Parameter {
 
-  public static final boolean ACTIVATE_ASSERTION = true;
+  public static boolean ACTIVATE_ASSERTION = true;
 
   public static int SMALL_BLINB = 5;
   public static int BIG_BLINB = 10;

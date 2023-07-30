@@ -95,6 +95,11 @@ public class Game {
 
   }
   
+  public void commitEntityState(double timeIncrement, Entity<?>... entities) {
+    incrementTime(timeIncrement);
+    graphics.commitEntityState(time, entities);
+  }
+  
   public void commitEntityState(Entity<?> entity, double timeIncrement) {
     incrementTime(timeIncrement);
     commitEntityState(entity);

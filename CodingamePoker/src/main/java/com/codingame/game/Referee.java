@@ -64,24 +64,19 @@ public class Referee extends AbstractReferee {
     int firstBigBlindId = RandomUtils.nextInt(playerNb);
     board = new Board(playerNb, firstBigBlindId);
     // so the button is rightly placed at the begining
-    board.initPositions();
+    board.resetHand();
+    board.initDeck();
+    board.initBlind();
+    board.calculateNextPlayer();
+    
     game.setBoard(board);
 
-    // board.init(Constant.PLAYER_NB);
     gameManager.setMaxTurns(RefereeParameter.MAX_TURN);
     gameManager.setFirstTurnMaxTime(RefereeParameter.FIRST_ROUND_TIME_OUT);
     gameManager.setTurnMaxTime(RefereeParameter.TIME_OUT);
     gameManager.setFrameDuration(ViewConstant.FRAME_DURATION);
 
-    // ActionUtils.initBoard(board);
     viewer.init();
-    // viewer.resetTurn(turn);
-    //
-    // graphic.setPhase(Phase.INIT_DECK);
-    // board.resetHand();
-    // board.initDeck();
-    // board.initBlind(); // viewer.update(board, -1);
-    // viewer.update(board);
 
     playerEliminatedNb = -1;
   }
@@ -89,9 +84,9 @@ public class Referee extends AbstractReferee {
   @Override
   public void gameTurn(int turn) {
     logger.info("########################### {}", turn);
-    logger.info("{}", board.toPlayerStatesString());
     viewer.resetTurn(turn);
-    initBoard();
+    initBoard(turn);
+    logger.info("{}", board.toPlayerStatesString());
 
     logger.info("nextPlayerId {}", board.getNextPlayerId());
 
@@ -164,18 +159,22 @@ public class Referee extends AbstractReferee {
     }
   }
 
-  private void initBoard() {
-    if (board.isOver()) {
+  private void initBoard(int turn) {
+    if (board.isOver() || turn == 1) {
       game.setPhase(Phase.INIT_DECK);
-      board.resetHand();
-      board.initDeck();
+      if (turn > 1) {
+        board.resetHand();
+        board.initDeck();
+      }
       viewer.update();
-
-      board.initBlind();
-      board.calculateNextPlayer();
+      if (turn > 1) {
+        board.initBlind();
+        board.calculateNextPlayer();
+      }
       viewer.update();
 
       game.setPhase(Phase.DEAL);
+      System.err.println("dealFirst");
       board.dealFirst();
       viewer.update();
 

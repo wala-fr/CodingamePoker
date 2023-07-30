@@ -29,6 +29,7 @@ public class PlayerModel {
   private int eliminationRank = -1;
   private int score = 0;
 
+  private double winChance = 0;
 
   private FiveCardHand bestPossibleHand;
 
@@ -163,24 +164,10 @@ public class PlayerModel {
   public void setSpoken(boolean spoken) {
     this.spoken = spoken;
   }
-
-//  public void updateSpoken() {
-//    if (!isCheck()) {
-//      setSpoken(true);
-//    }
-//  }
   
   public boolean isCheck() {
     return lastAction != null && lastAction.getType() == ActionType.CHECK;
   }
-
-  // public int getRoundLastRaise() {
-  // return roundLastRaise;
-  // }
-  //
-  // public void setRoundLastRaise(int roundLastRaiseAmount) {
-  // this.roundLastRaise = roundLastRaiseAmount;
-  // }
 
   public Action getLastAction() {
     return lastAction;
@@ -220,6 +207,14 @@ public class PlayerModel {
   
   public boolean isTimeout() {
     return timeout;
+  }
+  
+  public double getWinChance() {
+    return winChance;
+  }
+
+  public void setWinChance(double winChance) {
+    this.winChance = winChance;
   }
 
   public String getMessage(Board board) {

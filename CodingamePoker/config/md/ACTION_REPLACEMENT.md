@@ -21,7 +21,7 @@ table, td, th {
 		<td align="center"><b>ALL-IN</b></td>
 		<td align="left">Player hasn't enough chips to <b>CALL</b>.
 		</td>
-		<td align="left">POST-FLOP
+		<td align="left">FLOP
 			<ol>
 				<li>player 0 : <b>BET 200</b></li>
 				<li>player 1 : <b>CALL</b> (with a stack of $100)
@@ -50,7 +50,7 @@ table, td, th {
 		<td align="left">Player can only <b>CALL</b> or <b>FOLD</b>,
 			since he was<br /> <b>the last one to make a 'proper' raise</b>.
 		</td>
-		<td align="left">POST-FLOP
+		<td align="left">FLOP
 			<ol>
 				<li>player 0 : <b>BET 200</b></li>
 				<li>player 1 : <b>ALL-IN</b> $300 (not a proper raise since
@@ -69,7 +69,7 @@ table, td, th {
 		<td align="center"><b>ALL-IN</b></td>
 		<td align="left">Player hasn't enough chips to bet the given
 			amount.</td>
-		<td align="left">POST-FLOP
+		<td align="left">FLOP
 			<ol>
 				<li>player 0 : <b>BET 200</b> (with a stack of $100)
 				</li>
@@ -83,12 +83,26 @@ table, td, th {
 		</td>
 	</tr>
 	<tr>
+		<td align="center"><b>BET</b></td>
+		<td align="center"><b>CALL</b></td>
+		<td align="left">The <b>BET</b> amount is less than the <b>CALL</b> amount.
+		</td>
+		<td align="left">FLOP
+			<ol>
+				<li>player 0 : <b>BET 100</b>
+				</li>
+				<li>player 1 : <b>BET 50</b> replaced by <b>CALL</b> (identical as <b>BET 100</b>).
+				</li>
+			</ol>
+		</td>
+	</tr>
+	<tr>
 		<td align="center" rowspan="2"><b>BET</b></td>
 		<td align="center"><b>BET</b></td>
 		<td align="left" rowspan="2">The bet amount must <b>at least
 				be one big blind</b>.
 		</td>
-		<td align="left">POST-FLOP with a big blind of $10
+		<td align="left">FLOP with a big blind of $10
 			<ol>
 				<li>player 0 : <b>BET 5</b> (should be at least $10)<br />=>
 					replaced by <b>BET 10</b>
@@ -98,7 +112,7 @@ table, td, th {
 	</tr>
 	<tr>
 		<td align="center"><b>ALL-IN</b></td>
-		<td align="left">POST-FLOP with a big blind of $10
+		<td align="left">FLOP with a big blind of $10
 			<ol>
 				<li>player 0 : <b>BET 5</b> with a stack of $7 (should be at
 					least $10)<br />=> replaced by <b>ALL-IN</b>
@@ -112,7 +126,7 @@ table, td, th {
 		<td align="left" rowspan="2">The bet amount must <b>at least
 				be the last raise</b>.
 		</td>
-		<td align="left">POST-FLOP
+		<td align="left">FLOP
 			<ol>
 				<li>player 0 : <b>BET 200</b></li>
 				<li>player 1 : <b>BET 300</b><br />should be at least $400
@@ -129,7 +143,7 @@ table, td, th {
 	<tr>
 		<td align="center"><b>ALL-IN</b></td>
 		</td>
-		<td align="left">POST-FLOP
+		<td align="left">FLOP
 			<ol>
 				<li>player 0 : <b>BET 200</b></li>
 				<li>player 1 : <b>BET 150</b> with a stack of $180 (should be
@@ -144,7 +158,7 @@ table, td, th {
 		<td align="left">Player must add chips to the pot (<b>CALL</b> or
 			<b>BET</b>).
 		</td>
-		<td align="left">POST-FLOP
+		<td align="left">FLOP
 			<ol>
 				<li>player 0 : <b>BET 200</b></li>
 				<li>player 1 : <b>CHECK</b> (impossible)</li>

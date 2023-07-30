@@ -6,12 +6,16 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.ToIntFunction;
 import com.codingame.model.object.enumeration.HandType;
 import com.codingame.model.object.enumeration.Rank;
 import com.codingame.model.object.enumeration.Suit;
 import com.codingame.model.utils.AssertUtils;
 
 public class FiveCardHand {
+
+  public static final ToIntFunction<FiveCardHand> naiveValue = h -> h.getValue();
 
   private List<Card> cards;
   private HandType handType;
@@ -160,10 +164,15 @@ public class FiveCardHand {
     return cards;
   }
 
+  public Card getCard(int index) {
+    return cards.get(index);
+  }
+
   public String getLabel() {
     StringBuilder ret = new StringBuilder(handType.getLabel());
     ret.append(' ');
-    if (handType == HandType.HIGH_CARD || handType == HandType.THREE_OF_A_KIND || handType == HandType.FOUR_OF_A_KIND) {
+    if (handType == HandType.HIGH_CARD || handType == HandType.THREE_OF_A_KIND
+        || handType == HandType.FOUR_OF_A_KIND) {
       Card card = cards.get(4);
       ret.append(card.getRank().toString());
     } else if (handType == HandType.PAIR) {
@@ -176,7 +185,8 @@ public class FiveCardHand {
       ret.append(" AND ");
       Card card1 = cards.get(2);
       ret.append(card1.getRank().toString());
-    } else if (handType == HandType.STRAIGHT || handType == HandType.FLUSH || handType == HandType.STRAIGHT_FLUSH) {
+    } else if (handType == HandType.STRAIGHT || handType == HandType.FLUSH
+        || handType == HandType.STRAIGHT_FLUSH) {
       ret.insert(0, "-HIGH ");
       Card card = cards.get(4);
       ret.insert(0, card.getRank().toString());
@@ -197,5 +207,21 @@ public class FiveCardHand {
         + ", identicals=" + identicals + "]";
   }
 
+  @Override
+  public int hashCode() {
+    return Objects.hash(cards);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    FiveCardHand other = (FiveCardHand) obj;
+    return Objects.equals(cards, other.cards);
+  }
 
 }

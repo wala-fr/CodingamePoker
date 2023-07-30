@@ -21,6 +21,7 @@ public class TestUtils {
   public static void initParameter() {
     Parameter.BIG_BLINB = TestParameter.BIG_BLINB;
     Parameter.SMALL_BLINB = TestParameter.SMALL_BLINB;
+    Parameter.ACTIVATE_ASSERTION = true;
   }
 
   public static List<Card> createDeckCards(int dealerId, int playerNb, List<Card> boardCards,

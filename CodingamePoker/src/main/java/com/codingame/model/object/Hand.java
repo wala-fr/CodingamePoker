@@ -2,6 +2,9 @@ package com.codingame.model.object;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.ToIntFunction;
+import com.codingame.model.utils.AssertUtils;
+import com.codingame.model.variable.Parameter;
 
 public class Hand {
 
@@ -16,14 +19,20 @@ public class Hand {
   public void deal(Card card) {
     hand[calculateCardIndex()] = card;
   }
-  
+
   public int calculateCardIndex() {
     return hand[0] == null ? 0 : 1;
   }
-  
+
   public FiveCardHand calculateBestFiveCardhand(List<Card> commonCards) {
+    FiveCardHand ret = calculateBestFiveCardhand(commonCards, FiveCardHand.naiveValue);
+    return ret;
+  }
+
+  public FiveCardHand calculateBestFiveCardhand(List<Card> commonCards,
+      ToIntFunction<FiveCardHand> value) {
     FiveCardHand best = new FiveCardHand(commonCards);
-    int bestScore = best.getValue();
+    int bestScore = value.applyAsInt(best);
     List<Card> tmp = new ArrayList<>(5);
 
     // use only one player's card
@@ -37,7 +46,7 @@ public class Hand {
           }
         }
         FiveCardHand tmpFiveCardHand = new FiveCardHand(tmp);
-        int score = tmpFiveCardHand.getValue();
+        int score = value.applyAsInt(tmpFiveCardHand);
         if (score > bestScore) {
           bestScore = score;
           best = tmpFiveCardHand;
@@ -56,7 +65,7 @@ public class Hand {
           }
         }
         FiveCardHand tmpFiveCardHand = new FiveCardHand(tmp);
-        int score = tmpFiveCardHand.getValue();
+        int score = value.applyAsInt(tmpFiveCardHand);
         if (score > bestScore) {
           bestScore = score;
           best = tmpFiveCardHand;
@@ -65,7 +74,7 @@ public class Hand {
     }
     return best;
   }
-  
+
   public Card[] getCards() {
     return hand;
   }
@@ -73,10 +82,10 @@ public class Hand {
   public Card getCard(int idx) {
     return hand[idx];
   }
-  
+
   @Override
   public String toString() {
-    if (hand[0]==null) {
+    if (hand[0] == null) {
       return "[, ]";
     }
     return "[" + hand[0] + ", " + hand[1] + "]";

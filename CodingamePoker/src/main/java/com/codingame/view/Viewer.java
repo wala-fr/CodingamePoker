@@ -1,6 +1,7 @@
 package com.codingame.view;
 
 import com.codingame.view.object.Game;
+import com.codingame.view.object.Phase;
 import com.codingame.view.parameter.ViewConstant;
 import com.codingame.view.parameter.ViewUtils;
 import com.google.inject.Inject;
@@ -15,6 +16,7 @@ public class Viewer {
   private BoardUI boardUI;
 
   public void init() {
+    game.setPhase(Phase.DEAL);
     game.getGraphics()
       .createSprite()
       .setImage(ViewUtils.getBackGroundUrl())

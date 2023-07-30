@@ -54,16 +54,13 @@ public class Board {
 
   private int lastPlayerId;
   private int nextPlayerId;
-  // private int[] winnings;
   private boolean over;
   // TODO suppress
   private int assertStacks;
 
-  // private List<Integer> bestPlayers = new ArrayList<>();
-
   private WinningCalculator winningCalculator;
 
-  // private int playerEliminatedNb;
+  private boolean calculateWinChance;
 
   public Board(int playerNb, int bbId) {
     players = new ArrayList<>(playerNb);
@@ -98,13 +95,9 @@ public class Board {
     burnedCards.clear();
     actions.clear();
     over = false;
-    // sbId = -1;
-    // bbId = -1;
     pot = 0;
 
     dealPositions.clear();
-    // bestPlayers.clear();
-
     resetRound();
     if (!end) {
       handNb++;
@@ -119,6 +112,7 @@ public class Board {
     lastTotalRoundBet = 0;
     lastRoundRaisePlayerId = -1;
     raiseNb = 0;
+    calculateWinChance = false;
   }
 
   public void initDeck() {
@@ -205,11 +199,10 @@ public class Board {
         betChips(player, bet);
       }
     }
-    // calculateNextPlayer();
   }
 
   public void increaseLevel() {
-    if (handNb > 1 && handNb % Parameter.HAND_NB_BY_LEVEL == 1) {
+    if (handNb % Parameter.HAND_NB_BY_LEVEL == 0) {
       level++;
       smallBlind *= Parameter.LEVEL_BLIND_MULTIPLIER;
       bigBlind *= Parameter.LEVEL_BLIND_MULTIPLIER;
@@ -228,6 +221,8 @@ public class Board {
       }
       idx++;
     }
+    logger.info("calculateNextPlayer {}", nextPlayerId);
+
     // AssertUtils.test(nextPlayerId >= 0, nextPlayerId);
     // throw new IllegalStateException();
   }
@@ -382,6 +377,7 @@ public class Board {
 
   public void fold(PlayerModel player) {
     player.setFolded(true);
+    calculateWinChance = false;
   }
 
   public void check(PlayerModel player) {}
@@ -698,6 +694,14 @@ public class Board {
 
   public int getFirstBigBlindId() {
     return firstBigBlindId;
+  }
+
+  public boolean isCalculateWinChance() {
+    return calculateWinChance;
+  }
+
+  public void setCalculateWinChance(boolean calculateWinChance) {
+    this.calculateWinChance = calculateWinChance;
   }
 
   public Card getCard(DealPosition dealPosition) {

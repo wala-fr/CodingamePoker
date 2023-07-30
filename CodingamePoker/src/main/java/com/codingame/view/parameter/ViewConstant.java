@@ -28,6 +28,8 @@ public class ViewConstant {
   public static final int BUTTON_WRITE_COLOR = 0xFFFFFF;
   public static final int BUTTON_RADIUS = 30;
 
+  public static final int ACTION_BUTTON_FILL_COLOR = 0x354264;
+
   public static final int ACTION_HEIGHT = 0;
   public static final int ACTION_FONT_SIZE = DEFAULT_FONT_SIZE;
 
@@ -76,7 +78,7 @@ public class ViewConstant {
     int middleX = WIDTH / 2;
     int middleY = HEIGHT / 2;
 
-    BOARD_CARD_Y = middleY - CARD_HEIGHT / 2;
+    BOARD_CARD_Y = middleY - CARD_HEIGHT / 2 - 30;
     BOARD_CARD_X = middleX - (5 * CARD_WIDTH + 2 * CARD_DELTA) / 2;
 
     DECK_CARD_Y = BOARD_CARD_Y + CARD_HEIGHT + CARD_DELTA;
@@ -98,7 +100,7 @@ public class ViewConstant {
     BLIND_Y = GAME_NB_Y + LABEL_HEIGHT;
 
     POT_X = middleX - POT_LABEL_WIDTH;// (POT_LABEL_WIDTH + POT_WIDTH) / 2;
-    POT_Y = BOARD_CARD_Y - 100;
+    POT_Y = BOARD_CARD_Y - 110;
 
     // int sideWidth = 2 * CARD_WIDTH + CARD_DELTA;
     int sideHeight = CARD_HEIGHT + CARD_DELTA + 3 * LABEL_HEIGHT;
@@ -106,7 +108,7 @@ public class ViewConstant {
     // int topHeight = CARD_HEIGHT + AVATAR_NAME_HEIGHT;
     int topWidth = AVATAR_WIDTH + 2 * CARD_WIDTH + 3 * CARD_DELTA;
 
-    TOP_X = middleX - topWidth / 2;
+    TOP_X = middleX - topWidth / 2 - 80;
     SIDE_Y = middleY - sideHeight / 2;
 
     COORDINATES = new PlayerUICoordinates[4];
@@ -139,7 +141,7 @@ public class ViewConstant {
 
   public static final int POSITION_WIDTH = 100;
 
-  public static final int ACTION_WIDTH = 300;
+  public static final int ACTION_WIDTH = 340;
 
   public static final int STACK_WIDTH = ACTION_WIDTH - POSITION_WIDTH;
 
@@ -157,6 +159,7 @@ public class ViewConstant {
   public static final int Z_INDEX_CARD_DEAL = 200;
   // so the button goes over the deck
   public static final int Z_INDEX_BUTTON = Z_INDEX_CARD_DEAL;
+  public static final int Z_INDEX_ACTION_BUTTON = 1000;
 
 
 }

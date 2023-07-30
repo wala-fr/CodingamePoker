@@ -1,18 +1,10 @@
-TODO
-<ul>
-<li>in case one all-in is not enough to be considered as as a raise</li>
-<li>If the player's stack is larger than the small blind but smaller than the big blind, they will be considered all-in in any position other than the small blind (assuming they fold for their option).</li>
-<li>In heads up : the small blind is the dealer.</li>
-<li>Modern poker rules require that raises must be at least equal to the amount of the previous bet or raise.</li>
-<li>the minimum bet allowed at any given time is equivalent to the amount of the big blind.</li>
-<li>Bet must meet the minimum of twice the previous bet.  Call bet amount and raise exactly that amount or more</li>
-<li>Alternatively, if there is no previous bet, the first bet must be at least the big blind</li>
-</ul>
-
-check cases
-
-post flop:  a player can call the  all-in for less than BB. not pre flop in the big blind is directly all-in for less than a small blind, the other must add a small blind to call (can't check)
-BTN : 10
-SB : 10
-BB ALL-IN 10
-Then BTN  and SB must add 10
+Here are some <b>"limit" cases</b> and how  the referee handles them :
+<ol>
+<li>The minimum bet is the amount of the BB (big blind), except for all-in.</li>
+<li>PREFLOP if the BB's player is directly ALL-IN for less than a SB (small blind), the other players must add a SB to CALL (they can't CHECK).</li> 
+<li>After the FLOP a player can call an ALL-IN for less than a BB.</li>
+<li>If a player's stack is larger than the SB but smaller than the BB, he will be considered ALL-IN in any position other than the SB (assuming he folds).</li>
+<li>A raise must be at least equal to the amount of the previous bet or raise.</li>
+<li>If one ALL-IN is not enough to be considered as as a raise, it doesn't re-open the raise</li>
+<li>In heads up : the SB is the dealer.</li>
+</ol>

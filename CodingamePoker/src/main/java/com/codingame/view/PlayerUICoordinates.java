@@ -8,22 +8,24 @@ import com.codingame.view.parameter.ViewUtils;
 
 public class PlayerUICoordinates {
 
+  private int positionId;
   private SizePoint avatar;
   private SizePoint avatarFrame;
   private TextPoint name;
-  
+
   private SizePoint card1;
   private SizePoint card2;
-  
+
   private TextPoint action;
   private TextPoint position;
   private TextPoint message;
   private TextPoint stack;
 
-  private Point button;
-
+  private Point buttonTop;
+  private Point buttonBottom;
 
   public PlayerUICoordinates(int id) {
+    positionId = id;
     if (id == 0) {
       initTop();
     } else if (id == 2) {
@@ -64,7 +66,8 @@ public class PlayerUICoordinates {
     int yCard = ViewConstant.HEIGHT - (ViewConstant.DELTA_BOARD_SIDE + ViewConstant.CARD_HEIGHT);
     initCard(xCard, yCard);
     int xLabel = calculateLabelTopX();
-    int yLabel = ViewConstant.HEIGHT - (ViewConstant.DELTA_BOARD_SIDE + 3 * ViewConstant.LABEL_HEIGHT);
+    int yLabel =
+        ViewConstant.HEIGHT - (ViewConstant.DELTA_BOARD_SIDE + 3 * ViewConstant.LABEL_HEIGHT);
 
     initLabels(xLabel, yLabel);
     return this;
@@ -74,7 +77,7 @@ public class PlayerUICoordinates {
     int x = ViewConstant.DELTA_BOARD_SIDE;
     int y = ViewConstant.SIDE_Y;
     initAvatar(x, y);
-    initButton(x + ViewConstant.AVATAR_WIDTH , y, false);
+    initButton(x + ViewConstant.AVATAR_WIDTH, y);
     int yCard = calculateCardSideY();
     initCard(x, yCard);
     int yLabel = calculateLabelSideY();
@@ -96,7 +99,7 @@ public class PlayerUICoordinates {
     initLabels(xLabel, yLabel);
     return this;
   }
-  
+
   private int calculateCardSideY() {
     return ViewConstant.SIDE_Y + ViewConstant.AVATAR_WIDTH + 50 + ViewConstant.CARD_DELTA;
   }
@@ -106,12 +109,14 @@ public class PlayerUICoordinates {
   }
 
   private void initButton(int x, int y) {
-    initButton(x, y, true);
+    boolean left = positionId != 3;
+    buttonTop = new Point(x + (30 + ViewConstant.BUTTON_RADIUS) * (left ? -1 : 1),
+        y + (ViewConstant.BUTTON_RADIUS + 10));
+    y += calculateAvatarHeight();
+    buttonBottom = new Point(x + (30 + ViewConstant.BUTTON_RADIUS) * (left ? -1 : 1),
+        y - (ViewConstant.BUTTON_RADIUS + 10));
   }
-  
-  private void initButton(int x, int y, boolean left) {
-    button = new Point(x + (30 + ViewConstant.BUTTON_RADIUS) * (left ? -1 : 1), y + ViewConstant.BUTTON_RADIUS);
-  }
+
 
   private void initCard(int x, int y) {
     card1 = ViewUtils.getCardPosition(x, y, 0);
@@ -125,7 +130,7 @@ public class PlayerUICoordinates {
     avatar = new SizePoint(x + delta, y + delta, w, w);
     name = new TextPoint(x + 10, y + delta + w + ViewConstant.CARD_DELTA, ViewConstant.NAME_WIDTH);
   }
-  
+
   private int calculateAvatarHeight() {
     return ViewConstant.AVATAR_WIDTH + 40;
   }
@@ -134,7 +139,7 @@ public class PlayerUICoordinates {
     position = new TextPoint(x, y, ViewConstant.POSITION_WIDTH);
     stack = new TextPoint(x + ViewConstant.POSITION_WIDTH, y, ViewConstant.STACK_WIDTH);
     action = new TextPoint(x, y + ViewConstant.STACK_HEIGHT, ViewConstant.ACTION_WIDTH);
-    message =  new TextPoint(x, y + 2 * ViewConstant.STACK_HEIGHT, ViewConstant.ACTION_WIDTH);
+    message = new TextPoint(x, y + 2 * ViewConstant.STACK_HEIGHT, ViewConstant.ACTION_WIDTH);
   }
 
   public SizePoint getAvatar() {
@@ -169,9 +174,18 @@ public class PlayerUICoordinates {
     return message;
   }
 
-  public Point getButton() {
-    return button;
+  private boolean isButtonOnTop() {
+    return positionId == 0;
   }
+
+  public Point getButton() {
+    return isButtonOnTop() ? buttonTop : buttonBottom;
+  }
+
+  public Point getActionButton() {
+    return !isButtonOnTop() ? buttonTop : buttonBottom;
+  }
+
 
   @Override
   public String toString() {

@@ -22,11 +22,10 @@ public class RoundInfo {
     boardCard = new ArrayList<>(board.getBoardCards());
   }
 
-  public void sendInput(Player player) {
-    player.sendInputLine(turn);
-    player.sendInputLine(handNb);
-    player.sendInputLine(action);
-    player.sendBoardCards(boardCard);
+  public String toInputLine() {
+    String str = String.format("%d %d %s %s", turn, handNb, InputUtils.toInputLine(action),
+        InputUtils.toInputLineBoardCards(boardCard));
+    return str;
   }
 
   @Override

@@ -36,7 +36,7 @@ public class ShowDownInfo {
       }
     }
   }
-  
+
   public void update(Board board) {
     playerShow = new boolean[board.getPlayerNb()];
     int notFoldedPlayerNb = board.calculatNotFoldedPlayerNb();
@@ -51,9 +51,8 @@ public class ShowDownInfo {
     boardCard = new ArrayList<>(board.getBoardCards());
   }
 
-  public void sendInput(Player player) {
+  public String toInputLine(Player player) {
     logger.debug("sendInput {} playerShow {}", handNb, Arrays.toString(playerShow));
-    player.sendInputLine(handNb);
     List<Card> showDownCards = new ArrayList<>();
     for (int playerId = 0; playerId < playerShow.length; playerId++) {
       boolean show = playerShow[playerId] || playerId == player.getIndex();
@@ -68,7 +67,8 @@ public class ShowDownInfo {
         }
       }
     }
-    player.sendBoardCards(boardCard);
-    player.sendInputLine(showDownCards);
+    String str = String.format("%d %s %s", handNb, InputUtils.toInputLineBoardCards(boardCard),
+        InputUtils.toInputLine(showDownCards));
+    return str;
   }
 }
