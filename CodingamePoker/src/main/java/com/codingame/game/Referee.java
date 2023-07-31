@@ -174,7 +174,6 @@ public class Referee extends AbstractReferee {
       viewer.update();
 
       game.setPhase(Phase.DEAL);
-      System.err.println("dealFirst");
       board.dealFirst();
       viewer.update();
 

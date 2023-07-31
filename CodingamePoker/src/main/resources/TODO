@@ -1,8 +1,4 @@
 
-stack in bigblind 37 bb
-
-percent win
-
 clean code-graphics vs game in springChallenge
 clean sizePoint...
 
@@ -36,24 +32,20 @@ All-on raise to 1000
 
 ################ BEFORE PUBLIC
 make github repo public
+check demo
+submit bot
 check message
 check error message
-statement + md
 tune blind vs level
 read again md, stub.txt, message properties
-add demo
 
 contribute message
 the number of hand by level may change. the big blind may be stop 
 
+
 ################ WITH AI
-try to print all message from properties in a test
-assert player stack if no bet error
-check no error with given possible action
 
 ################ END
 format code + remove unused import
-at the end add comment from stub.txt to statement 
 deactivate assertion and log
-replace Boss fresh stub's comment
 

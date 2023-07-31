@@ -91,7 +91,7 @@ table, td, th {
 			<ol>
 				<li>player 0 : <b>BET 100</b>
 				</li>
-				<li>player 1 : <b>BET 50</b> replaced by <b>CALL</b> (identical as <b>BET 100</b>).
+				<li>player 1 : <b>BET 50</b> replaced by <b>CALL</b> (same as <b>BET 100</b>).
 				</li>
 			</ol>
 		</td>
@@ -146,7 +146,7 @@ table, td, th {
 		<td align="left">FLOP
 			<ol>
 				<li>player 0 : <b>BET 200</b></li>
-				<li>player 1 : <b>BET 150</b> with a stack of $180 (should be
+				<li>player 1 : <b>BET 300</b> with a stack of $350 (should be
 					at least $400)<br />=> replaced by <b>ALL-IN</b>
 				</li>
 			</ol>

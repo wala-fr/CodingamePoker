@@ -6,7 +6,7 @@ public class Main {
         MultiplayerGameRunner gameRunner = new MultiplayerGameRunner();
         gameRunner.setSeed(-7006392080589544000l);
         
-        gameRunner.addAgent(AgentCall.class, "wala", "https://github.com/wala-fr/CodingamePoker/blob/main/CodingamePoker/src/main/resources/view/assets/wala.png");
+        gameRunner.addAgent(AgentCall.class, "wala", "https://raw.githubusercontent.com/wala-fr/CodingamePoker/main/CodingamePoker/src/main/resources/view/assets/demo/wala.png");
         gameRunner.addAgent(AgentCall.class);
 //        gameRunner.addAgent(AgentCall.class);
 //        gameRunner.addAgent(AgentFold.class);

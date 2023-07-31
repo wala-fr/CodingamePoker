@@ -51,4 +51,4 @@ showDownHandNb:hand number
 showDownBoardCards:board cards at the showdown
 showDownPlayerCards:players cards shown at the end of the hand (example : AD_QH_E_E_X_X_8S_8H player0's cards, followed by player1's cards ...)
 possibleActionNb:number of actions you can do
-possibleAction:your possible action (BET_240 means 240 is the minimum raise, you can bet more)
+possibleAction:your possible action (BET_240 means 240 is the minimum raise but you can bet more)
