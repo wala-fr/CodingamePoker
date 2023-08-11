@@ -62,6 +62,8 @@ public class Board {
 
   private boolean calculateWinChance;
 
+  private boolean dealCard;
+
   public Board(int playerNb, int bbId) {
     players = new ArrayList<>(playerNb);
     this.playerNb = playerNb;
@@ -212,17 +214,22 @@ public class Board {
   public void calculateNextPlayer() {
     int idx = nextPlayerId + 1;
     nextPlayerId = -1;
-    for (int i = 0; i < playerNb; i++) {
-      int playerIndex = idx % playerNb;
-      PlayerModel player = players.get(playerIndex);
-      if (!player.isFolded() && !player.isAllIn()) {
-        nextPlayerId = playerIndex;
-        break;
+    if (!calculateNoMoreCanDoAction()) {
+      // there is still player that can spoke
+      for (int i = 0; i < playerNb; i++) {
+        int playerIndex = idx % playerNb;
+        PlayerModel player = players.get(playerIndex);
+        if (!player.isFolded() && !player.isAllIn()) {
+          nextPlayerId = playerIndex;
+          break;
+        }
+        idx++;
       }
-      idx++;
     }
     logger.info("calculateNextPlayer {}", nextPlayerId);
-
+    if (nextPlayerId == -1) {
+      AssertUtils.test(isPreFlop() && lastPlayerId == -1);
+    }
     // AssertUtils.test(nextPlayerId >= 0, nextPlayerId);
     // throw new IllegalStateException();
   }
@@ -281,16 +288,13 @@ public class Board {
       player.setSpoken(true);
     }
     logger.info("isTurnOver {} {}", isTurnOver(), nextPlayerId);
+    dealCard = false;
     if (isOnlyOneNotFolded()) {
       // only one player still involved
       logger.info("Only one player still involved. All other are folded.");
       calculatePlayerWinnings();
     } else if (isTurnOver()) {
-      if (players.stream()
-        .filter(p -> !p.isFolded())
-        // .peek(p -> System.err.println(p.getId()+ " " + p.isAllIn()))
-        .filter(p -> !p.isAllIn())
-        .count() <= 1) {
+      if (calculateNoMoreCanDoAction()) {
         // no more bet possible due to all-ins
         logger.info("no more bet possible due to all-ins");
         dealAllBoardCards();
@@ -300,12 +304,29 @@ public class Board {
         if (isAllBoardCardDealt()) {
           calculatePlayerWinnings();
         } else {
-          dealBoardCards();
+          dealCard = true;
           lastPlayerId = -1;
           nextPlayerId = dealerId;
         }
       }
     }
+
+  }
+
+  public boolean calculateNoMoreCanDoAction() {
+    if (calculateCanStillDoActionCount() <= 1) {
+      int max = calculateMaxChipInAction();
+      return players.stream().noneMatch(p -> p.canStillDoAction() && p.getTotalBetAmount() < max);
+    }
+    return false;
+  }
+
+
+  public void deal() {
+    if (dealCard) {
+      dealBoardCards();
+    }
+    dealCard = false;
   }
 
   public void dealAllBoardCards() {
@@ -380,7 +401,9 @@ public class Board {
     calculateWinChance = false;
   }
 
-  public void check(PlayerModel player) {}
+  public void check(PlayerModel player) {
+    AssertUtils.test(isCheckPossible());
+  }
 
   public void allIn(PlayerModel player) {
     betChips(player, player.getStack());
@@ -388,10 +411,13 @@ public class Board {
 
   public void call(PlayerModel player) {
     int call = calculateCallAmount(player);
+    AssertUtils.test(call > 0 && call < player.getStack());
     betChips(player, call);
   }
 
   public void bet(PlayerModel player, int amount) {
+    AssertUtils
+      .test(amount > 0 && amount < player.getStack() && amount > calculateCallAmount(player));
     betChips(player, amount);
   }
 
@@ -405,10 +431,8 @@ public class Board {
     return checkPossible;
   }
 
-  public boolean isBetPossible() {
-    PlayerModel player = players.get(nextPlayerId);
-    int canSpeakNb = (int) players.stream().filter(p -> p.canSpeak()).count();
-    return !(canSpeakNb == 1 && calculateCallAmount(player) == 0);
+  public int calculateCanStillDoActionCount() {
+    return (int) players.stream().filter(p -> p.canStillDoAction()).count();
   }
 
   public BoardStatus calculateBoardStatus() {
@@ -445,12 +469,13 @@ public class Board {
   public boolean isTurnOver() {
     int maxAmount = calculateMaxChipInAction();
     for (PlayerModel player : players) {
-      if (!player.isFolded() && !player.isAllIn()) {
+      if (player.canStillDoAction()) {
         if (!player.isSpoken()) {
-          if (players.stream().noneMatch(p -> p.canSpeak() && p.getId() != player.getId())) {
+          if (players.stream()
+            .noneMatch(p -> p.canStillDoAction() && p.getId() != player.getId())) {
             // case bb hasn't spoken yet but all other players are folded or all-in
             // and bb can't make a raise (all bets are less than the bb value)
-            if (player.getRoundBetAmount() < calculateMaxChipInAction()) {
+            if (player.getTotalBetAmount() < maxAmount) {
               return false;
             }
           } else {
@@ -466,6 +491,7 @@ public class Board {
   }
 
   private void calculatePlayerWinnings() {
+    deal();
     int[] winnings = winningCalculator.calculateWinnings();
     for (int i = 0; i < winnings.length; i++) {
       PlayerModel player = players.get(i);

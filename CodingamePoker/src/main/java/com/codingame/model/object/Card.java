@@ -57,7 +57,7 @@ public class Card implements Comparable<Card> {
   }
 
   public String getLabel() {
-    return (rank.toString() + " of " + suit.toString()).toLowerCase();
+    return (rank.toString() + " of " + suit.toString()).toUpperCase();
   }
 
 }

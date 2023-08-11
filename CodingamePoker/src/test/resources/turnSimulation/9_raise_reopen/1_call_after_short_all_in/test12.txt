@@ -1,0 +1,44 @@
+all-in pre flop for less than a big blind
+
+7D 6D QD 2D AH
+
+player 4
+
+QH KS
+25
+0
+
+7S QC
+1000
+1075
+
+8S 2H
+1000
+975
+
+JH AC
+1000
+975
+
+bb 0
+
+1:CALL
+2:CALL
+3:CALL
+0:ALL-IN
+1:CALL
+2:CALL
+3:CALL
+
+3:CHECK
+1:CHECK
+2:CHECK
+
+3:CHECK
+1:CHECK
+2:CHECK
+
+3:CHECK
+1:CHECK
+2:CHECK
+

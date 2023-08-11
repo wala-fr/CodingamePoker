@@ -1,0 +1,33 @@
+last one to make a proper raise
+
+KS KH KC TD AD
+
+player 3
+
+KD TC
+400
+1200
+
+AS 9D
+1000
+600
+
+AH 9S
+1000
+600
+
+bb 1
+
+2:BET 300
+0:ALL-IN
+1:CALL
+2:BET 600:CALL
+
+1:CHECK
+2:CHECK
+
+1:CHECK
+2:CHECK
+
+1:CHECK
+2:CHECK

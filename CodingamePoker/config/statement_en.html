@@ -23,6 +23,7 @@
 		Then every <const>10</const> hands, the <b>level</b> will increase and the blinds (small and big) are multiplied by <const>2</const> (the first hand is <const>1</const> so to simplify the blinds will increase at levels <const>10</const>, <const>20</const>,...).</p>
 		<p>The <var>first big blind player</var> is random.</p>
 		<p>These values are given as game inputs.</p>
+		<p>In heads up : the small blind is the dealer.</p>
 		</div>
 		
 		<h2><span class="icon icon-rules">&nbsp;</span> <span><strong>End game</strong></span></h2>
@@ -45,10 +46,6 @@
 		</ol>
 		</div>
 		
-		<h2><span class="icon icon-rules">&nbsp;</span> <span><strong>Limit cases</strong></span></h2>
-		<div style="margin-top:7px; margin-bottom:15px">
-		<p>A list of how the referee handles some "limit"" cases is <a target="_blank" href="https://github.com/wala-fr/CodingamePoker/blob/main/CodingamePoker/config/md/SPECIAL_CASES.md">here</a> .
-		</div>
 		<br />
 		
 		<h1 style="font-size: 20px;">
@@ -107,7 +104,7 @@
 		
 		<h2><span class="icon icon-rules">&nbsp;</span> <span><strong>Showdown</strong></span></h2>
 		<ol style="margin-top:5px; margin-bottom:0px">
-			<li>In case of showdown, the cards of all active (not folded) players will be visible to all (no possibility of <a target="_blank" href="https://en.wikipedia.org/wiki/Glossary_of_poker_terms#muck">mucking / hiding</a> your cards).</li>
+			<li>In case of <a target="_blank" href="https://en.wikipedia.org/wiki/Showdown_(poker)">showdown</a>, the cards of all active (not folded) players will be visible to all (no possibility of <a target="_blank" href="https://en.wikipedia.org/wiki/Glossary_of_poker_terms#muck">mucking / hiding</a> your cards).</li>
 			<li> <const>E</const> is used if a player was eliminated at the start of the hand and <const>X</const> if he's folded.</li>
 			<li>Your cards are always visible in your input showdowns (in case all players fold and you win the hand without acting in it).</li>
 		</ol>
@@ -129,6 +126,11 @@
 		</ul>
 		<p>A list of all possible actions is given in your inputs. <action>BET_240</action> means 240 is the minimum raise. You can bet more. If you bet less it will be replaced by <action>CALL</action> or <action>BET 240</action> (depending on your amount).</p>
 		<p>In the inputs, <action>BET</action> actions have an <b>underscore</b>. In the outputs, you can use a space.</p>
+		</div>
+		
+		<h2><span class="icon icon-rules">&nbsp;</span> <span><strong>Bet / Raise</strong></span></h2>
+		<div style="margin-top:7px; margin-bottom:15px">
+		<p>A list of bet rules (with examples) can be found <a target="_blank" href="https://github.com/wala-fr/CodingamePoker/blob/main/CodingamePoker/config/md/RAISE.md">here</a> .
 		</div>
 		
 		<h2><span class="icon icon-rules">&nbsp;</span> <span><strong>Action replacement</strong></span></h2>

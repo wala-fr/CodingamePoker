@@ -86,6 +86,10 @@ public class ViewUtils {
   public static PlayerUICoordinates getPlayerUICoordinates(Game graphics, int id) {
     return getPlayerUICoordinates(graphics.getBoard(), id);
   }
+  
+  public static Point getNoActionButtonPosition() {
+    return new Point(ViewConstant.NO_ACTION_X, ViewConstant.NO_ACTION_Y);
+  }
 
   public static PlayerUICoordinates getPlayerUICoordinates(Board board, int id) {
     int playerNb = board.getPlayerNb();

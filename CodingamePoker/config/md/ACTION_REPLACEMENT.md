@@ -12,7 +12,7 @@ table, td, th {
 		<th align="center">explanation</th>
 		<th align="center">example</th>
 	</tr>
-		<tr>
+	<tr>
 		<td align="left" colspan="4" height="80"><u><b style="color:red">WARNING</b></u> : <b>FOLD</b> is never replaced. Even if a <b>CHECK</b> is possible.
 		</td>
 	</tr>
@@ -52,7 +52,7 @@ table, td, th {
 		</td>
 		<td align="left">FLOP
 			<ol>
-				<li>player 0 : <b>BET 200</b></li>
+				<li>player 0 (with a stack of $1000) : <b>BET 200</b></li>
 				<li>player 1 : <b>ALL-IN</b> $300 (not a proper raise since
 					the raise is $100 less the last raise $200)
 				</li>
@@ -83,15 +83,26 @@ table, td, th {
 		</td>
 	</tr>
 	<tr>
-		<td align="center"><b>BET</b></td>
+		<td align="center" rowspan="2"><b>BET</b></td>
 		<td align="center"><b>CALL</b></td>
-		<td align="left">The <b>BET</b> amount is less than the <b>CALL</b> amount.
+		<td align="left" rowspan="2">The <b>BET</b> amount is less than the <b>CALL</b> amount.
 		</td>
 		<td align="left">FLOP
 			<ol>
 				<li>player 0 : <b>BET 100</b>
 				</li>
 				<li>player 1 : <b>BET 50</b> replaced by <b>CALL</b> (same as <b>BET 100</b>).
+				</li>
+			</ol>
+		</td>
+	</tr>
+	<tr>
+		<td align="center"><b>ALL-IN</b></td>
+		<td align="left">FLOP
+			<ol>
+				<li>player 0 : <b>BET 100</b>
+				</li>
+				<li>player 1 (with a stack of $75) : <b>BET 50</b> replaced by <b>ALL-IN</b>.
 				</li>
 			</ol>
 		</td>
@@ -166,20 +177,6 @@ table, td, th {
 		</td>
 	</tr>
 	<tr>
-		<td align="center"><b>ALL-IN / BET / CALL</b></td>
-		<td align="center"><b>CHECK</b></td>
-		<td align="left">Player should <b>CHECK</b>.<br/> But he can <b>FOLD</b>.
-		</td>
-		<td align="left">PRE-FLOP (blinds $250 / $500)<br />
-			<ol>
-				<li>player 0 : directly all-in for $125</li>
-				<li>player 1 : directly all-in for $250</li>
-				<li>player 2 : directly all-in for $250</li>
-				<li>player 3 (big blind) : can only <b>CHECK</b> or <b>FOLD</b></li>
-			</ol>
-		</td>
-	</tr>
-	<tr>
 		<td align="center"><b>INVALID ACTION</b></td>
 		<td align="center"><b>FOLD</b></td>
 		<td align="left">Invalid action</td>
@@ -187,9 +184,15 @@ table, td, th {
 			<ol>
 				<li>player 0 : <b>RAISE 200</b> (RAISE is invalid)
 				</li>
-				<li>player 1 : <b>TOTO</b> (invalid)
+				<li>player 0 : <b>TOTO</b> (invalid)
 				</li>
-				<li>player 2 : <b>BET $200</b> (invalid)
+				<li>player 0 : <b>BET $200</b> (invalid)
+				</li>
+				<li>player 0 : <b>BET 0</b> (invalid amount)
+				</li>
+				<li>player 0 : <b>BET -20</b> (invalid amount)
+				</li>
+				<li>player 0 : <b>CALL 10</b> (invalid)
 				</li>
 			</ol>
 		</td>

@@ -1,0 +1,24 @@
+bet is less than call value => all-in
+
+KS KH KC TD AD
+
+player 3
+
+KD TC
+1000
+990
+
+AS 9D
+1000
+1005
+
+AH 9S
+1000
+1005
+
+bb 1
+
+2:ALL-IN
+0:CHECK:FOLD
+1:BET 750:ALL-IN
+

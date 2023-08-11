@@ -55,7 +55,7 @@ public class TestUtils {
     Set<Card> set = new HashSet<>();
     for (Card card : cards) {
       if (card != CardUtils.BURNED && !set.add(card)) {
-        throw new IllegalStateException();
+        throw new IllegalStateException(card.toString());
       }
     }
   }

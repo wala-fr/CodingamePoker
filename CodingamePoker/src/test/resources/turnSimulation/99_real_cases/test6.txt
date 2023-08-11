@@ -1,0 +1,28 @@
+nextPlayerId = -1
+
+KS KH KC TD AD
+
+player 4
+
+3H 7C
+1000
+960
+
+7S 7H
+1000
+1050
+
+8H 5C
+10
+0
+
+X X
+0
+0
+
+bb 1
+
+0:BET 30
+1:CALL
+
+0:FOLD

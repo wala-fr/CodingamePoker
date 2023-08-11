@@ -1,0 +1,16 @@
+directly all-in
+
+3C 7H 6H 7C TS
+
+player 2
+
+TH 9C
+1000
+1010
+
+QS JS
+10
+0
+
+bb 1
+

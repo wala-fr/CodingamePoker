@@ -166,10 +166,12 @@ public class BoardUI {
       }
       playerUI.update(game);
     }
+    game.commitWorldState();
+
     if (game.isEnd()) {
       highlightWinningCards();
     }
-
+    
     String potOver = "";
     for (int id = 0; id < playerUIS.length; id++) {
       PlayerUI playerUI = playerUIS[id];
@@ -194,8 +196,7 @@ public class BoardUI {
     }
     Point point = ViewUtils.getPlayerUICoordinates(board, board.getDealerId()).getButton();
     point.setPosition(button);
-
-    point = ViewUtils.getPlayerUICoordinates(board, board.getNextPlayerId()).getActionButton();
+    point = board.getNextPlayerId() == -1 ? ViewUtils.getNoActionButtonPosition() : ViewUtils.getPlayerUICoordinates(board, board.getNextPlayerId()).getActionButton();
     point.setPosition(actionButton);
     game.commitEntityState(0.1, button, actionButton);
   }
@@ -234,7 +235,7 @@ public class BoardUI {
         for (Card card : board.getBoardCards()) {
           deckUI.highlightCard(card, winCards.contains(card));
         }
-        game.commitWorldState();
+        game.commitWorldState(0.2); // so the last action appears before the hand values
       }
     }
   }

@@ -1,0 +1,36 @@
+must add blind to call ore flop
+
+3C 7H 6H 7C TS
+
+player 4
+
+5S JC
+100
+80
+
+TH 9C
+100
+140
+
+9S QD
+10
+0
+
+QS JS
+100
+90
+
+bb 2
+
+3:CHECK:FOLD
+0:CALL
+1:CALL
+
+1:CHECk
+0:CHECK
+
+1:CHECk
+0:CHECK
+
+1:CHECk
+0:CHECK

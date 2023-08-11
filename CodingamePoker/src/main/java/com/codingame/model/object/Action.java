@@ -47,12 +47,17 @@ public class Action {
     String[] tmp = str.split(" ", -1);
     ActionType type = ActionType.fromString(tmp[0]);
     int amount = 0;
-    if (tmp.length == 0 && tmp.length > 2) {
+    if (tmp.length == 0 || tmp.length > 2) {
       throw new InvalidMoveException(str);
     }
+    boolean bet = type == ActionType.BET;
     if (tmp.length > 1) {
-      amount = Integer.parseInt(tmp[1]);
-    } else if (type == ActionType.BET) {
+      if (bet) {
+        amount = Integer.parseInt(tmp[1]);
+      } else {
+        throw new InvalidMoveException(str);
+      }
+    } else if (bet) {
       throw new InvalidMoveException(str);
     }
     return create(type, amount);

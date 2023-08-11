@@ -95,7 +95,7 @@ public class SimulationInput {
 
   public void executeActions() {
     List<Card> cards = createDeckCards();
-    logger.debug("cards {}", cards);
+    logger.info("cards {}", cards);
     ActionTestUtils.initBoardTest(board, cards);
     logger.debug("deck {}", board.getDeck());
     logger.debug("dealerId {}", board.getDealerId());

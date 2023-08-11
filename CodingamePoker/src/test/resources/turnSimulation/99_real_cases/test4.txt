@@ -1,0 +1,28 @@
+case from real bug
+
+3C 7H 6H 7C TS
+
+player 2
+
+TH 9C
+1750
+3500
+
+QS JS
+2050
+300
+
+bb 0
+
+1:CALL
+0:BET 640
+1:CALL
+
+0:CHECk
+1:CHECK
+
+0:CHECk
+1:CHECK
+
+0:ALL-IN
+1:ALL-IN

@@ -33,6 +33,7 @@ All-on raise to 1000
 ################ BEFORE PUBLIC
 make github repo public
 check demo
+desactivate asserts and logs
 submit bot
 check message
 check error message

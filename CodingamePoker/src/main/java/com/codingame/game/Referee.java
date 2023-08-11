@@ -91,6 +91,7 @@ public class Referee extends AbstractReferee {
     logger.info("nextPlayerId {}", board.getNextPlayerId());
 
     int playerId = board.getNextPlayerId();
+    board.deal();
     if (playerId == -1) {
       logger.info("all players are all-in");
       inputSender.updateRoundInfo(board, null, turn);

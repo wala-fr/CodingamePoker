@@ -1,0 +1,28 @@
+wrong action
+
+KS KH KC TD AD
+
+player 4
+
+KD TC
+1000
+990
+
+AS 9D
+1000
+990
+
+AH 9S
+300
+330
+
+2H 3S
+1000
+990
+
+bb 2
+
+3:ALL-IN 990:FOLD
+0:BET:FOLD
+1:BET 100 0:FOLD
+

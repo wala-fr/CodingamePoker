@@ -1,6 +1,6 @@
-biggest is all-in and fold directly
+small blind is all-in
 
-X X X X X
+KS KH KC TD 2D
 
 player 2
 
@@ -14,5 +14,4 @@ player 2
 
 bb 0
 
-0:FOLD
 

@@ -9,6 +9,7 @@ import com.codingame.model.object.ActionInfo;
 import com.codingame.model.object.PlayerModel;
 import com.codingame.model.object.board.Board;
 import com.codingame.model.object.enumeration.ActionType;
+import com.codingame.model.variable.Parameter;
 
 public class ActionUtils {
 
@@ -17,7 +18,9 @@ public class ActionUtils {
   public static void doAction(Board board, ActionInfo action) {
     logger.info("action {}", action);
     board.assertStacks();
+    board.deal();
     calculatePossibleBet(board, action);
+    assertActionInfo(board, action);
     board.doAction(action);
   }
 
@@ -28,10 +31,11 @@ public class ActionUtils {
     PlayerModel player = board.getPlayer(playerId);
     int stack = player.getStack();
     int callAmount = board.calculateCallAmount(player);
-    if (player.getTotalBetAmount() != board.calculateMaxChipInAction() && callAmount < stack) {
+    if (callAmount > 0 && callAmount < stack) {
       possibleActions.add(Action.CALL);
     }
-    if (board.getLastRoundRaisePlayerId() != playerId && board.isBetPossible()) {
+    AssertUtils.test(!board.calculateNoMoreCanDoAction());
+    if (board.getLastRoundRaisePlayerId() != playerId) {
       possibleActions.add(Action.ALL_IN);
       int minRaise = board.isFirstBet() ? board.getBigBlind() : board.getLastRoundRaise();
       int minAmount = minRaise + board.getLastTotalRoundBet() - player.getRoundBetAmount();
@@ -44,6 +48,16 @@ public class ActionUtils {
     }
     possibleActions.add(Action.FOLD);
     return possibleActions;
+  }
+
+  public static void assertActionInfo(Board board, ActionInfo info) {
+    if (Parameter.ACTIVATE_ASSERTION) {
+      ActionInfo copy = info.copy();
+      logger.info("assertActionInfo {}", copy);
+      calculatePossibleBet(board, copy);
+      logger.info("assertActionInfo {}", copy);
+      AssertUtils.test(info.getAction().equals(copy.getAction()));
+    }
   }
 
   public static void calculatePossibleBet(Board board, ActionInfo info) {
@@ -62,73 +76,69 @@ public class ActionUtils {
     int callAmount = board.calculateCallAmount(player);
 
     Action newBet = bet;
-    if (!board.isBetPossible()) {
-      // particular case when player can only make a bad fold
-      if (type == ActionType.CALL || type == ActionType.ALL_IN || type == ActionType.BET) {
-        errorStr = MessageUtils.format("wrong.action.bet.is.impossible", playerId);
+    AssertUtils.test(!board.calculateNoMoreCanDoAction());
+    if (type == ActionType.CALL) {
+      if (board.isCheckPossible()) {
+        errorStr = MessageUtils.format("wrong.action.call.is.check", playerId);
         newBet = Action.CHECK;
+      } else if (callAmount >= stack) {
+        errorStr = MessageUtils.format("wrong.action.is.allin", playerId, stack, callAmount, bet);
+        newBet = Action.ALL_IN;
       }
-    } else {
-      if (type == ActionType.CALL) {
-        if (player.getTotalBetAmount() == board.calculateMaxChipInAction()) {
-          errorStr = MessageUtils.format("wrong.action.call.is.check", playerId);
-          newBet = Action.CHECK;
-        } else if (callAmount >= stack) {
-          errorStr = MessageUtils.format("wrong.action.is.allin", playerId, stack, callAmount, bet);
-          newBet = Action.ALL_IN;
-        }
-      } else if (type == ActionType.ALL_IN) {
-        logger.info("LastRoundRaisePlayerId : {} - playerId : {} {}",
-            board.getLastRoundRaisePlayerId(), playerId, board.getLastRoundRaise());
-        if (board.getLastRoundRaisePlayerId() == playerId) {
-          errorStr = MessageUtils.format("wrong.action.can.not.raise", playerId);
+    } else if (type == ActionType.ALL_IN) {
+      logger.info("LastRoundRaisePlayerId : {} - playerId : {} {}",
+          board.getLastRoundRaisePlayerId(), playerId, board.getLastRoundRaise());
+      if (board.getLastRoundRaisePlayerId() == playerId) {
+        if (callAmount < stack) {
           newBet = Action.CALL;
+          errorStr = MessageUtils.format("wrong.action.can.not.raise", playerId, newBet);
         }
-      } else if (type == ActionType.BET) {
-        if (board.getLastRoundRaisePlayerId() == playerId) {
-          errorStr = MessageUtils.format("wrong.action.can.not.raise", playerId);
-          newBet = Action.CALL;
-        } else if (bet.getAmount() >= stack) {
-          errorStr =
-              MessageUtils.format("wrong.action.is.allin", playerId, stack, bet.getAmount(), bet);
-          newBet = Action.ALL_IN;
-        } else {
-          levelError = true;
-          if (bet.getAmount() <= callAmount) {
-            errorStr = MessageUtils.format("wrong.action.raise.amount.less.than.call", playerId,
-                bet.getAmount(), callAmount);
-            newBet = Action.CALL;
+      }
+    } else if (type == ActionType.BET) {
+      if (bet.getAmount() <= 0) {
+        errorStr = MessageUtils.format("wrong.action.bet.wrong.amount", playerId, bet.getAmount());
+        levelError = true;
+        newBet = Action.FOLD;
+      } else if (bet.getAmount() <= callAmount) {
+        newBet = callAmount < stack ? Action.CALL : Action.ALL_IN;
+        errorStr = MessageUtils.format("wrong.action.raise.amount.less.than.call", playerId,
+            bet.getAmount(), callAmount, newBet);
+      } else if (board.getLastRoundRaisePlayerId() == playerId) {
+        newBet = callAmount < stack ? Action.CALL : Action.ALL_IN;
+        errorStr = MessageUtils.format("wrong.action.can.not.raise", playerId, newBet);
+      } else if (bet.getAmount() >= stack) {
+        errorStr =
+            MessageUtils.format("wrong.action.is.allin", playerId, stack, bet.getAmount(), bet);
+        newBet = Action.ALL_IN;
+      } else {
+        levelError = true;
+        int newTotalAmount = player.getRoundBetAmount() + bet.getAmount();
+        int raise = newTotalAmount - board.getLastTotalRoundBet();
+        int minRaise = board.isFirstBet() ? board.getBigBlind() : board.getLastRoundRaise();
+        logger.debug("minRaise : {} - LastTotalRoundBet : {}", minRaise,
+            board.getLastTotalRoundBet());
+        if (raise < minRaise) {
+          int newBetAmount = minRaise + board.getLastTotalRoundBet() - player.getRoundBetAmount();
+          if (newBetAmount >= player.getStack()) {
+            newBet = Action.ALL_IN;
           } else {
-            int newTotalAmount = player.getRoundBetAmount() + bet.getAmount();
-            int raise = newTotalAmount - board.getLastTotalRoundBet();
-            int minRaise = board.isFirstBet() ? board.getBigBlind() : board.getLastRoundRaise();
-            logger.debug("minRaise : {} - LastTotalRoundBet : {}", minRaise,
-                board.getLastTotalRoundBet());
-            if (raise < minRaise) {
-              int newBetAmount =
-                  minRaise + board.getLastTotalRoundBet() - player.getRoundBetAmount();
-              if (newBetAmount >= player.getStack()) {
-                newBet = Action.ALL_IN;
-              } else {
-                newBet = Action.create(ActionType.BET, newBetAmount);
-              }
-              if (board.isFirstBet()) {
-                errorStr = MessageUtils.format("wrong.action.raise.at.least.one.bigblind", playerId,
-                    newBet);
-              } else {
-                errorStr = MessageUtils.format("wrong.action.raise.at.least.twice", playerId,
-                    board.getLastRoundRaise(), raise, newBet);
-              }
-            }
+            newBet = Action.create(ActionType.BET, newBetAmount);
+          }
+          if (board.isFirstBet()) {
+            errorStr =
+                MessageUtils.format("wrong.action.raise.at.least.one.bigblind", playerId, newBet);
+          } else {
+            errorStr = MessageUtils.format("wrong.action.raise.at.least.twice", playerId,
+                board.getLastRoundRaise(), raise, newBet);
           }
         }
-      } else {
-        AssertUtils.test(type == ActionType.CHECK);
-        if (!board.isCheckPossible()) {
-          newBet = Action.FOLD;
-          errorStr = MessageUtils.format("wrong.action.check", playerId);
-          levelError = true;
-        }
+      }
+    } else {
+      AssertUtils.test(type == ActionType.CHECK);
+      if (!board.isCheckPossible()) {
+        newBet = Action.FOLD;
+        errorStr = MessageUtils.format("wrong.action.check", playerId);
+        levelError = true;
       }
     }
     info.setError(errorStr, levelError);

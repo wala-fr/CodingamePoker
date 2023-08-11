@@ -11,6 +11,13 @@ public class ActionInfo {
   private boolean levelError;
 
   private ActionInfo() {}
+  
+  public ActionInfo copy() {
+    ActionInfo ret = new ActionInfo();
+    ret.action = action;
+    ret.playerId = playerId;
+    return ret;
+  }
 
   public int getPlayerId() {
     return playerId;
@@ -54,6 +61,13 @@ public class ActionInfo {
 
   public static ActionInfo create(int playerId, ActionType type) {
     return create(playerId, type.toString());
+  }
+  
+  public static ActionInfo create(int playerId, Action action) {
+    ActionInfo info = new ActionInfo();
+    info.playerId = playerId;
+    info.action = action;
+    return info;
   }
 
   public static ActionInfo create(int playerId, String str) {

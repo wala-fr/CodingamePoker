@@ -23,6 +23,7 @@ public class PlayerModel {
   private boolean spoken;
   private boolean elimated;
   private boolean timeout;
+  private boolean allIn;
 
   private Action lastAction;
 
@@ -43,6 +44,7 @@ public class PlayerModel {
     // TODO useless
     elimated = stack == 0;
     bestPossibleHand = null;
+    allIn = false;
     resetEndTurn();
   }
 
@@ -60,7 +62,7 @@ public class PlayerModel {
     spoken = false;
     lastAction = null;
   }
-  
+
   public void resetEndTurnView() {
     totalBetAmount = 0;
     roundBetAmount = 0;
@@ -75,6 +77,9 @@ public class PlayerModel {
     totalBetAmount += delta;
     lastRoundBetAmount = roundBetAmount;
     roundBetAmount += delta;
+    if (stack == 0) {
+      allIn = true;
+    }
   }
 
   public void cancelCurrentHand() {
@@ -94,7 +99,11 @@ public class PlayerModel {
   }
 
   public boolean isAllIn() {
-    return stack == 0 && totalBetAmount > 0;
+    return allIn;
+  }
+
+  public void setAllIn(boolean allIn) {
+    this.allIn = allIn;
   }
 
   public boolean isEliminated() {
@@ -140,7 +149,7 @@ public class PlayerModel {
   public FiveCardHand getBestPossibleHand() {
     return bestPossibleHand;
   }
-  
+
   public int getBestPossibleHandValue() {
     return bestPossibleHand == null ? Integer.MIN_VALUE + 1 : bestPossibleHand.getValue();
   }
@@ -148,8 +157,8 @@ public class PlayerModel {
   public boolean isFolded() {
     return folded;
   }
-  
-  public boolean canSpeak() {
+
+  public boolean canStillDoAction() {
     return !folded && !isAllIn();
   }
 
@@ -164,7 +173,7 @@ public class PlayerModel {
   public void setSpoken(boolean spoken) {
     this.spoken = spoken;
   }
-  
+
   public boolean isCheck() {
     return lastAction != null && lastAction.getType() == ActionType.CHECK;
   }
@@ -200,15 +209,15 @@ public class PlayerModel {
   public void setElimated(boolean elimated) {
     this.elimated = elimated;
   }
-  
+
   public void setTimeout(boolean timeout) {
     this.timeout = timeout;
   }
-  
+
   public boolean isTimeout() {
     return timeout;
   }
-  
+
   public double getWinChance() {
     return winChance;
   }
@@ -234,8 +243,6 @@ public class PlayerModel {
       return MessageUtils.format("player.message.allin");
     }
     if (board.getLastRoundRaisePlayerId() == id) {
-      // AssertUtils.test(board.getLastTotalRoundBet() == roundBetAmount, this,
-      // board.getLastTotalRoundBet(), roundBetAmount);
       if (board.getRaiseNb() == 1) {
         return MessageUtils.format("player.message.bet", board.getLastTotalRoundBet());
       }
@@ -247,9 +254,15 @@ public class PlayerModel {
     } else if (lastAction != null) {
       if (lastAction.getType() == ActionType.CHECK) {
         return MessageUtils.format("player.message.check");
-      } else {
-        AssertUtils.test(lastAction.getType() == ActionType.CALL, lastAction.getType());
+      } else if (lastAction.getType() == ActionType.CALL) {
+        if (totalBetAmount > 0 ) {
+          // no end reset for view done
+          AssertUtils.test(roundBetAmount > lastRoundBetAmount, roundBetAmount, lastRoundBetAmount);
+        }
         return MessageUtils.format("player.message.call", roundBetAmount - lastRoundBetAmount);
+      } else {
+        // BET and FOLD have been dealt with already
+        AssertUtils.test(false);
       }
     }
     return "";

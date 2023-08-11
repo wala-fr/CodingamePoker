@@ -9,7 +9,7 @@ import com.codingame.model.object.board.Board;
 import com.codingame.model.object.enumeration.ActionType;
 
 public class ActionTestUtils {
-  
+
   public static void initBoardTest(Board board, List<Card> cards) {
     board.getDeck().initCards(cards);
     board.dealFirst();
@@ -19,6 +19,8 @@ public class ActionTestUtils {
 
   public static void endTurn(Board board) {
     board.endTurn();
-    board.calculateNextPlayer();
+    if (!board.isOver()) {
+      board.calculateNextPlayer();
+    }
   }
 }

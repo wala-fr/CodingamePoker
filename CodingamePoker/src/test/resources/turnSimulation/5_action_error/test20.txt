@@ -1,0 +1,35 @@
+last one to make a proper raise
+
+KS KH KC TD AD
+
+player 3
+
+KD TC
+400
+440
+
+AS 9D
+1000
+980
+
+AH 9S
+1000
+980
+
+bb 1
+
+2:CALL
+0:CALL
+1:CALL:CHECK
+
+0:CHECK
+1:CHECK
+2:CHECK
+
+0:CHECK
+1:CHECK
+2:CHECK
+
+0:CHECK
+1:CHECK
+2:CHECK

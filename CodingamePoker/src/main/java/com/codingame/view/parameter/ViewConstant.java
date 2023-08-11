@@ -47,7 +47,7 @@ public class ViewConstant {
 
   public static int DISCARD_CARD_X;
   public static int DISCARD_CARD_Y;
-  
+
   public static final int DISCARD_CARD_DELTA_X = 11;
   public static final int DISCARD_CARD_DELTA_Y = 8;
 
@@ -62,6 +62,9 @@ public class ViewConstant {
 
   public static int POT_X;
   public static int POT_Y;
+
+  public static int NO_ACTION_X;
+  public static int NO_ACTION_Y;
 
   public static int HEIGHT;
   public static int WIDTH;
@@ -92,7 +95,7 @@ public class ViewConstant {
 
     LEVEL_X = DELTA_BOARD_SIDE;
     LEVEL_Y = DELTA_BOARD_SIDE;
-    
+
     GAME_NB_X = LEVEL_X;
     GAME_NB_Y = LEVEL_Y + LABEL_HEIGHT;
 
@@ -101,6 +104,9 @@ public class ViewConstant {
 
     POT_X = middleX - POT_LABEL_WIDTH;// (POT_LABEL_WIDTH + POT_WIDTH) / 2;
     POT_Y = BOARD_CARD_Y - 110;
+
+    NO_ACTION_X = POT_X + POT_LABEL_WIDTH + POT_WIDTH + (ViewConstant.BUTTON_RADIUS + 50);
+    NO_ACTION_Y = POT_Y + (ViewConstant.BUTTON_RADIUS - 5);
 
     // int sideWidth = 2 * CARD_WIDTH + CARD_DELTA;
     int sideHeight = CARD_HEIGHT + CARD_DELTA + 3 * LABEL_HEIGHT;
