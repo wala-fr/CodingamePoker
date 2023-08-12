@@ -30,11 +30,23 @@ table, td, th {
 		</td>
 	</tr>
 	<tr>
+		<td align="center"><b>BET</b></td>
+		<td align="center"><b>ALL-IN</b></td>
+		<td align="left">Player hasn't enough chips to bet the given
+			amount.</td>
+		<td align="left">FLOP
+			<ol>
+				<li>player 0 : <b>BET 200</b> (with a stack of $100)
+				</li>
+			</ol>
+		</td>
+	</tr>
+	<tr>
 		<td align="center"><b>CALL</b></td>
 		<td align="center"><b>CHECK</b></td>
 		<td align="left">Player can only <b>CHECK</b> or <b>RAISE</b>.
 		</td>
-		<td align="left">PRE-FLOP with a big blind of $10
+		<td align="left">PREFLOP with a big blind of $10
 			<ol>
 				<li>player 1 : <b>CALL</b> $5
 				</li>
@@ -48,13 +60,13 @@ table, td, th {
 		<td align="center"><b>BET</b> / <b>ALL-IN</b></td>
 		<td align="center"><b>CALL</b></td>
 		<td align="left">Player can only <b>CALL</b> or <b>FOLD</b>,
-			since he was<br /> <b>the last one to make a 'proper' raise</b>.
+			since he was <b>the last one to make a "proper" raise</b>.
 		</td>
 		<td align="left">FLOP
 			<ol>
 				<li>player 0 (with a stack of $1000) : <b>BET 200</b></li>
 				<li>player 1 : <b>ALL-IN</b> $300 (not a proper raise since
-					the raise is $100 less the last raise $200)
+					the raise is $100 and less the last raise $200)
 				</li>
 				<li>player 2 : <b>CALL</b> $300
 				</li>
@@ -65,20 +77,8 @@ table, td, th {
 		</td>
 	</tr>
 	<tr>
-		<td align="center"><b>BET</b></td>
-		<td align="center"><b>ALL-IN</b></td>
-		<td align="left">Player hasn't enough chips to bet the given
-			amount.</td>
-		<td align="left">FLOP
-			<ol>
-				<li>player 0 : <b>BET 200</b> (with a stack of $100)
-				</li>
-			</ol>
-		</td>
-	</tr>
-	<tr>
 		<td align="left" colspan="4" height="80">The basic <b>BET</b>
-			rule is : if you put chip in the pot you <b style="color:red">can't take them back</b>.You
+			rule is : if you put chips in the pot you <b style="color:red">can't take them back</b>.You
 			have to complete the bet so it's legal.
 		</td>
 	</tr>
