@@ -1,7 +1,7 @@
 read smallBlind:int
 read bigBlind:int
 read handNbByLevel:int
-read levelBlindMultiplyCoeff:int
+read levelBlindMultiplier:int
 read buyIn:int
 read firstBigBlindId:int
 read playerNb:int

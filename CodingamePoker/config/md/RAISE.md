@@ -11,7 +11,7 @@ Example : FLOP / TURN / RIVER
 <li>player 1 : <b>CALL</b> (add $300)</li>
 </ul>
 </li>
-<li><b>If one ALL-IN is not enough to be considered as as a raise, it doesn't re-open the betting.</b><br/>
+<li><b>If one ALL-IN is not enough to be considered as a raise, it doesn't re-open the betting.</b><br/>
 Example : FLOP / TURN / RIVER
 <ul>
 <li>player 0 : <b>BET 200</b> (raise is $200)</li>
