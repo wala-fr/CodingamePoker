@@ -35,7 +35,7 @@ Example : FLOP / TURN / RIVER (blinds are $10 / $20)<br/>
 <li>player 1 : <b>CALL</b> (add only $10)</li>
 </ul>
 </li> 
-<li><b>If a player's stack is larger than the SB but smaller than the BB, he will be considered ALL-IN in any position other than the SB (assuming he folds).</b>
+<li><b>If a player's stack is larger than the SB (small blind) but smaller than the BB, he will be considered ALL-IN in any position other than the SB (assuming he folds).</b>
 </li> 
 </ol>
 

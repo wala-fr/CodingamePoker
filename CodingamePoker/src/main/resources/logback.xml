@@ -12,7 +12,7 @@
 
 <!-- 	<logger name="com.codingame" level="info" additivity="false"> <appender-ref 
 		ref="CONSOLE"/> </logger> -->
-	<root level="info">
+	<root level="off">
 		<appender-ref ref="CONSOLE" />
 	</root>
 

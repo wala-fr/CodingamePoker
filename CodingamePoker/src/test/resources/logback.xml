@@ -15,7 +15,7 @@
     <logger name="com.codingame.model.object.board.WinningCalculator" level="error" additivity="false">
         <appender-ref ref="CONSOLE"/>
     </logger> -->
-    <root level="debug">
+    <root level="off">
         <appender-ref ref="CONSOLE"/>
     </root>
 
