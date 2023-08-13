@@ -2,6 +2,7 @@ package com.codingame.model.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.codingame.model.object.Action;
@@ -31,12 +32,18 @@ public class ActionUtils {
     PlayerModel player = board.getPlayer(playerId);
     int stack = player.getStack();
     int callAmount = board.calculateCallAmount(player);
-    if (callAmount > 0 && callAmount < stack) {
-      possibleActions.add(Action.CALL);
+    if (callAmount > 0) {
+      if (callAmount < stack) {
+        possibleActions.add(Action.CALL);
+      } else {
+        possibleActions.add(Action.ALL_IN);
+      }
     }
     AssertUtils.test(!board.calculateNoMoreCanDoAction());
     if (board.getLastRoundRaisePlayerId() != playerId) {
-      possibleActions.add(Action.ALL_IN);
+      if (!possibleActions.contains(Action.ALL_IN)) {
+        possibleActions.add(Action.ALL_IN);
+      }
       int minRaise = board.isFirstBet() ? board.getBigBlind() : board.getLastRoundRaise();
       int minAmount = minRaise + board.getLastTotalRoundBet() - player.getRoundBetAmount();
       if (minAmount < stack) {
@@ -47,6 +54,7 @@ public class ActionUtils {
       possibleActions.add(Action.CHECK);
     }
     possibleActions.add(Action.FOLD);
+    assertPossibleActions(board, possibleActions);
     return possibleActions;
   }
 
@@ -56,7 +64,42 @@ public class ActionUtils {
       logger.info("assertActionInfo {}", copy);
       calculatePossibleBet(board, copy);
       logger.info("assertActionInfo {}", copy);
-      AssertUtils.test(info.getAction().equals(copy.getAction()));
+      Action action = info.getAction();
+      AssertUtils.test(action.equals(copy.getAction()));
+      
+      if (action.getType() == ActionType.TIMEOUT) {
+        return;
+      }
+      List<Action> possibleActions = calculatePossibleActions(board);
+      if (action.isBet()) {
+        Optional<Action> opt = possibleActions.stream().filter(a -> a.isBet()).findFirst();
+        AssertUtils.test(opt.isPresent());
+        AssertUtils.test(opt.get().getAmount() <= action.getAmount(), action, opt.get());
+      } else {
+        AssertUtils.test(possibleActions.contains(action), action, possibleActions);
+      }
+    }
+  }
+  
+  public static void assertPossibleActions(Board board, List<Action> possibleActions) {
+    if (Parameter.ACTIVATE_ASSERTION) {
+
+      for (Action action : possibleActions) {
+        ActionInfo info = ActionInfo.create(0, action);
+        calculatePossibleBet(board, info);
+        AssertUtils.test(!info.hasError(), action);
+      }
+      Action[] actions = {Action.FOLD, Action.CALL, Action.ALL_IN, Action.CHECK}; 
+      for (Action action : actions) {
+        if (possibleActions.contains(action)) {
+          continue;
+        }
+        ActionInfo info = ActionInfo.create(0, action);
+        calculatePossibleBet(board, info);
+        AssertUtils.test(info.hasError(), action);
+      }
+      AssertUtils.test(possibleActions.contains(Action.ALL_IN) || possibleActions.contains(Action.CALL));
+
     }
   }
 

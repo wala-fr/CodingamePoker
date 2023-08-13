@@ -70,6 +70,10 @@ public class Action {
     return create(type);
   }
 
+  public boolean isBet() {
+    return type == ActionType.BET;
+  }
+  
   public ActionType getType() {
     return type;
   }
