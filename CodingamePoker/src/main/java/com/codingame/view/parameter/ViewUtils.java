@@ -86,7 +86,7 @@ public class ViewUtils {
   public static PlayerUICoordinates getPlayerUICoordinates(Game graphics, int id) {
     return getPlayerUICoordinates(graphics.getBoard(), id);
   }
-  
+
   public static Point getNoActionButtonPosition() {
     return new Point(ViewConstant.NO_ACTION_X, ViewConstant.NO_ACTION_Y);
   }
@@ -118,8 +118,19 @@ public class ViewUtils {
     createTextRectangle(text, point.getX(), point.getY(), point.getWidth(), label, graphic, group);
   }
 
+  public static void createTextRectangleNoBorder(Text text, TextPoint point, boolean label,
+      Game graphic, Group group) {
+    createTextRectangle(text, point.getX(), point.getY(), point.getWidth(), label, graphic, group,
+        false);
+  }
+
   public static void createTextRectangle(Text text, int x, int y, int width, boolean label,
       Game graphic, Group group) {
+    createTextRectangle(text, x, y, width, label, graphic, group, true);
+  }
+
+  private static void createTextRectangle(Text text, int x, int y, int width, boolean label,
+      Game graphic, Group group, boolean border) {
     text.setX(x + 10)
       .setY(y + 5)
       .setZIndex(ViewConstant.Z_INDEX_BOARD)
@@ -130,16 +141,29 @@ public class ViewUtils {
       .setMaxWidth(width - ViewConstant.DELTA_RECTANGLE_TEXT_WIDTH)
       .setFillColor(ViewConstant.LABEL_TEXT_COLOR);
     group.add(text);
-    Rectangle rectangle = graphic.getGraphics()
-      .createRectangle()
-      .setX(x)
-      .setY(y)
-      .setZIndex(ViewConstant.Z_INDEX_BOARD - 1)
-      .setWidth(width)
-      .setHeight(ViewConstant.LABEL_HEIGHT)
-      .setLineWidth(ViewConstant.LABEL_FRAME_WIDTH)
-      .setLineColor(ViewConstant.LABEL_TEXT_COLOR)
-      .setFillColor(label ? ViewConstant.LABEL_COLOR : ViewConstant.LABEL_TEXT_BACK_GROUND_COLOR);
-    group.add(rectangle);
+    if (border) {
+      Rectangle rectangle = graphic.getGraphics()
+        .createRectangle()
+        .setX(x)
+        .setY(y)
+        .setZIndex(ViewConstant.Z_INDEX_BOARD - 1)
+        .setWidth(width)
+        .setHeight(ViewConstant.LABEL_HEIGHT)
+        .setLineWidth(ViewConstant.LABEL_FRAME_WIDTH)
+        .setLineColor(ViewConstant.LABEL_TEXT_COLOR)
+        .setFillColor(label ? ViewConstant.LABEL_COLOR : ViewConstant.LABEL_TEXT_BACK_GROUND_COLOR);
+      group.add(rectangle);
+    }
+  }
+
+  public static boolean isShowWinAmount(int winAmount, Board board) {
+    return winAmount >= ViewConstant.SHOW_WIN_AMOUNT_COEFF * board.getBigBlind();
+  }
+
+  public static String addSpaceBefore(String s, int length) {
+    while (s.length() < length) {
+      s = " " + s;
+    }
+    return s;
   }
 }

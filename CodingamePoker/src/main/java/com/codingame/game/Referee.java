@@ -25,6 +25,7 @@ import com.codingame.view.Viewer;
 import com.codingame.view.object.Game;
 import com.codingame.view.object.Phase;
 import com.codingame.view.parameter.ViewConstant;
+import com.codingame.view.parameter.ViewUtils;
 import com.google.inject.Inject;
 
 public class Referee extends AbstractReferee {
@@ -147,6 +148,8 @@ public class Referee extends AbstractReferee {
     viewer.update();
 
     eliminatePlayers();
+    addWinnings(turn);
+
     if (board.isGameOver()) {
       logger.info("GameOver {}", board.getPot());
       board.calculateFinalScores();
@@ -159,7 +162,24 @@ public class Referee extends AbstractReferee {
       viewer.update();
     }
   }
-
+  
+  private void addWinnings(int turn) {
+    if (board.isOver()) {
+      for (int i = 0; i < board.getPlayerNb(); i++) {
+        PlayerModel playerModel = board.getPlayer(i);
+        if (playerModel.isEliminated()) {
+          continue;
+        }
+        int winAmount = playerModel.getWinAmount();
+        if (ViewUtils.isShowWinAmount(winAmount, board)) {
+          Player player = gameManager.getPlayer(i);
+          String nickName = player.getNicknameToken();
+          gameManager.addTooltip(player, nickName + " wins " + winAmount);// +" turn " + turn+ " " + board.getHandNb());
+        }
+      }
+    }
+  }
+  
   private void initBoard(int turn) {
     if (board.isOver() || turn == 1) {
       game.setPhase(Phase.INIT_DECK);

@@ -20,6 +20,7 @@ public class PlayerUICoordinates {
   private TextPoint position;
   private TextPoint message;
   private TextPoint stack;
+  private TextPoint win;
 
   private Point buttonTop;
   private Point buttonBottom;
@@ -138,6 +139,9 @@ public class PlayerUICoordinates {
   private void initLabels(int x, int y) {
     position = new TextPoint(x, y, ViewConstant.POSITION_WIDTH);
     stack = new TextPoint(x + ViewConstant.POSITION_WIDTH, y, ViewConstant.STACK_WIDTH);
+    int stackWidth = (int) (0.53 * ViewConstant.STACK_WIDTH);
+    win = new TextPoint(x + ViewConstant.POSITION_WIDTH + stackWidth, y, ViewConstant.STACK_WIDTH - stackWidth);
+
     action = new TextPoint(x, y + ViewConstant.STACK_HEIGHT, ViewConstant.ACTION_WIDTH);
     message = new TextPoint(x, y + 2 * ViewConstant.STACK_HEIGHT, ViewConstant.ACTION_WIDTH);
   }
@@ -160,6 +164,10 @@ public class PlayerUICoordinates {
 
   public TextPoint getStack() {
     return stack;
+  }
+
+  public TextPoint getWin() {
+    return win;
   }
 
   public TextPoint getPosition() {

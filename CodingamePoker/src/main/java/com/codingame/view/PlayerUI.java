@@ -22,9 +22,10 @@ public class PlayerUI {
 
   private Player player;
   private int id;
-  
+
   private Text action;
   private Text stack;
+  private Text win;
   private Text position;
   private Text message;
 
@@ -58,9 +59,9 @@ public class PlayerUI {
     name.setText(nickname);
     name.setTextAlign(TextAlign.CENTER);
     avatarGroup.add(name);
-    
+
     avatarGroup.setZIndex(ViewConstant.Z_INDEX_BOARD);
-    
+
     game.getTooltips().setTooltipText(avatarGroup, " " + id + " ");// space otherwise id 0 bugs
   }
 
@@ -70,6 +71,10 @@ public class PlayerUI {
     ViewUtils.createTextRectangle(action, coordinates.getAction(), false, game, labelGroup);
     stack = game.createText();
     ViewUtils.createTextRectangle(stack, coordinates.getStack(), false, game, labelGroup);
+
+    win = game.createText();
+    ViewUtils.createTextRectangleNoBorder(win, coordinates.getWin(), false, game, labelGroup);
+
     position = game.createText();
     ViewUtils.createTextRectangle(position, coordinates.getPosition(), true, game, labelGroup);
     message = game.createText();
@@ -84,6 +89,15 @@ public class PlayerUI {
           board.getPot());
       ViewUtils.updateText(game, stack, "$ " + player.getStack(),
           "BET : $ " + player.getTotalBetAmount());
+      if (board.isOver()) {
+        int amount = player.getWinAmount();
+        boolean winner = amount >= 0;
+        String w = ViewUtils.addSpaceBefore((winner ? "+" : "") + amount, 5);
+        ViewUtils.updateText(game, win, w);
+        win.setFillColor(winner ? ViewConstant.WIN_COLOR : ViewConstant.LOSS_COLOR);
+      } else {
+        ViewUtils.clearText(game, win);
+      }
       updatePosition(game);
       if (game.isDeal()) {
         setLast(board);

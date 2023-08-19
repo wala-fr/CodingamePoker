@@ -16,7 +16,7 @@ public class PlayerModel {
   private int roundBetAmount;
   private int lastRoundBetAmount;
 
-  // private int roundLastRaise;
+  private int winAmount;
 
   private Hand hand = new Hand();
   private boolean folded;
@@ -29,8 +29,6 @@ public class PlayerModel {
 
   private int eliminationRank = -1;
   private int score = 0;
-
-  private double winChance = 0;
 
   private FiveCardHand bestPossibleHand;
 
@@ -51,6 +49,7 @@ public class PlayerModel {
   public void resetEndTurn() {
     folded = stack == 0;
     totalBetAmount = 0;
+    winAmount = 0;
     // roundBetAmount = 0;
     resetRound();
   }
@@ -217,13 +216,13 @@ public class PlayerModel {
   public boolean isTimeout() {
     return timeout;
   }
-
-  public double getWinChance() {
-    return winChance;
+  
+  public int getWinAmount() {
+    return winAmount;
   }
 
-  public void setWinChance(double winChance) {
-    this.winChance = winChance;
+  public void setWinAmount(int amount) {
+    winAmount = amount;
   }
 
   public String getMessage(Board board) {
@@ -255,7 +254,7 @@ public class PlayerModel {
       if (lastAction.getType() == ActionType.CHECK) {
         return MessageUtils.format("player.message.check");
       } else if (lastAction.getType() == ActionType.CALL) {
-        if (totalBetAmount > 0 ) {
+        if (totalBetAmount > 0) {
           // no end reset for view done
           AssertUtils.test(roundBetAmount > lastRoundBetAmount, roundBetAmount, lastRoundBetAmount);
         }

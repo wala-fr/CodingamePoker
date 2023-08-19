@@ -493,13 +493,25 @@ public class Board {
   private void calculatePlayerWinnings() {
     deal();
     int[] winnings = winningCalculator.calculateWinnings();
-    for (int i = 0; i < winnings.length; i++) {
+    for (int i = 0; i < playerNb; i++) {
       PlayerModel player = players.get(i);
       player.addToStack(winnings[i]);
+      player.setWinAmount(winnings[i] - player.getTotalBetAmount());
     }
+    assertPlayerWinnings();
     calculateEliminationRanks();
 
     over = true;
+  }
+  
+  private void assertPlayerWinnings() {
+    if (Parameter.ACTIVATE_ASSERTION) {
+      int sum = 0;
+      for (int i = 0; i < playerNb; i++) {
+        sum += getPlayer(i).getWinAmount();
+      }
+      AssertUtils.test(sum == 0);
+    }
   }
 
   /*

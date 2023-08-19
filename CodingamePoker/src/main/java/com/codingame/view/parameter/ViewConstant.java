@@ -147,7 +147,7 @@ public class ViewConstant {
 
   public static final int POSITION_WIDTH = 100;
 
-  public static final int ACTION_WIDTH = 340;
+  public static final int ACTION_WIDTH = 380;
 
   public static final int STACK_WIDTH = ACTION_WIDTH - POSITION_WIDTH;
 
@@ -167,5 +167,10 @@ public class ViewConstant {
   public static final int Z_INDEX_BUTTON = Z_INDEX_CARD_DEAL;
   public static final int Z_INDEX_ACTION_BUTTON = 1000;
 
+  public static final int WIN_COLOR = 0x46ff33;
+  public static final int LOSS_COLOR = 0xfe1304;
+
+  public static final int SHOW_WIN_AMOUNT_COEFF = 0;
+//  public static final int SHOW_WIN_AMOUNT_CHIPS = 500;
 
 }
