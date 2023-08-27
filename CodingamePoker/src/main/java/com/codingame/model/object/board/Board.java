@@ -63,6 +63,7 @@ public class Board {
   private boolean calculateWinChance;
 
   private boolean dealCard;
+  private int playerNotEliminatedNb;
 
   public Board(int playerNb, int bbId) {
     players = new ArrayList<>(playerNb);
@@ -106,6 +107,7 @@ public class Board {
       increaseLevel();
       initPositions();
     }
+    playerNotEliminatedNb = (int) players.stream().filter(p -> !p.isEliminated()).count();
   }
 
   private void resetRound() {
@@ -248,6 +250,9 @@ public class Board {
       lastRoundRaisePlayerId = player.getId();
       lastTotalRoundBet += raise;
       raiseNb++;
+      player.setRaiseNb(raiseNb);
+    } else {
+      player.setRaiseNb(0);
     }
     logger.info("lastRoundRaisePlayerId {} : ${}", lastRoundRaisePlayerId, lastRoundRaise);
     pot += value;
@@ -651,9 +656,9 @@ public class Board {
     return raiseNb;
   }
 
-  public void setRaiseNb(int raiseNb) {
-    this.raiseNb = raiseNb;
-  }
+//  public void setRaiseNb(int raiseNb) {
+//    this.raiseNb = raiseNb;
+//  }
 
   public int getSmallBlind() {
     return smallBlind;
@@ -718,6 +723,10 @@ public class Board {
     return playerNb;
   }
 
+  public int getPlayerNotEliminatedNb() {
+    return playerNotEliminatedNb;
+  }
+  
   public List<DealPosition> getDealPositions() {
     return dealPositions;
   }

@@ -157,7 +157,7 @@ public class ViewUtils {
   }
 
   public static boolean isShowWinAmount(int winAmount, Board board) {
-    return winAmount >= ViewConstant.SHOW_WIN_AMOUNT_COEFF * board.getBigBlind();
+    return winAmount >= (board.getPlayerNotEliminatedNb() - 1) * ViewConstant.SHOW_WIN_AMOUNT_COEFF * board.getBigBlind();
   }
 
   public static String addSpaceBefore(String s, int length) {

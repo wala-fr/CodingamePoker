@@ -29,6 +29,7 @@ public class PlayerModel {
 
   private int eliminationRank = -1;
   private int score = 0;
+  private int raiseNb;
 
   private FiveCardHand bestPossibleHand;
 
@@ -60,6 +61,8 @@ public class PlayerModel {
     // roundLastRaise = 0;
     spoken = false;
     lastAction = null;
+    
+    raiseNb = 0;
   }
 
   public void resetEndTurnView() {
@@ -225,6 +228,14 @@ public class PlayerModel {
     winAmount = amount;
   }
 
+  public int getRaiseNb() {
+    return raiseNb;
+  }
+
+  public void setRaiseNb(int raiseNb) {
+    this.raiseNb = raiseNb;
+  }
+
   public String getMessage(Board board) {
     if (timeout) {
       return MessageUtils.format("player.message.timeout");
@@ -237,20 +248,29 @@ public class PlayerModel {
     }
     if (isAllIn()) {
       if (roundBetAmount > 0) {
+        boolean raise = raiseNb > 1 && board.getPlayers().stream().anyMatch(p -> !p.isFolded() && !p.isAllIn() && p.getRoundBetAmount() < roundBetAmount);
+        if (raise) {
+          return MessageUtils.format("player.message.allin3", roundBetAmount);
+        }
         return MessageUtils.format("player.message.allin2", roundBetAmount);
       }
       return MessageUtils.format("player.message.allin");
     }
-    if (board.getLastRoundRaisePlayerId() == id) {
-      if (board.getRaiseNb() == 1) {
-        return MessageUtils.format("player.message.bet", board.getLastTotalRoundBet());
+    if (raiseNb > 0) {
+//      return raiseNb + " " + board.getRaiseNb();
+      if (raiseNb == 1) {
+        return MessageUtils.format("player.message.bet", roundBetAmount);
       }
-      return MessageUtils.format("player.message.raise", board.getLastTotalRoundBet());
+      if (raiseNb == 2) {
+        return MessageUtils.format("player.message.bet1", roundBetAmount);
+      }
+      return MessageUtils.format("player.message.bet2", raiseNb, roundBetAmount);
     }
-    if (roundBetAmount < board.getLastTotalRoundBet()) {
-      return MessageUtils.format("player.message.tocall",
-          board.getLastTotalRoundBet() - roundBetAmount);
-    } else if (lastAction != null) {
+//    if (roundBetAmount < board.getLastTotalRoundBet()) {
+//      return MessageUtils.format("player.message.tocall",
+//          board.getLastTotalRoundBet() - roundBetAmount);
+//    } else 
+    if (lastAction != null) {
       if (lastAction.getType() == ActionType.CHECK) {
         return MessageUtils.format("player.message.check");
       } else if (lastAction.getType() == ActionType.CALL) {
@@ -258,7 +278,10 @@ public class PlayerModel {
           // no end reset for view done
           AssertUtils.test(roundBetAmount > lastRoundBetAmount, roundBetAmount, lastRoundBetAmount);
         }
-        return MessageUtils.format("player.message.call", roundBetAmount - lastRoundBetAmount);
+        if (id == board.getNextPlayerId()) {
+          return MessageUtils.format("player.message.call", roundBetAmount - lastRoundBetAmount);
+        }
+        return MessageUtils.format("player.message.call1");
       } else {
         // BET and FOLD have been dealt with already
         AssertUtils.test(false);

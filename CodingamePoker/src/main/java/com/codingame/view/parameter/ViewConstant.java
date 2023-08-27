@@ -170,7 +170,7 @@ public class ViewConstant {
   public static final int WIN_COLOR = 0x46ff33;
   public static final int LOSS_COLOR = 0xfe1304;
 
-  public static final int SHOW_WIN_AMOUNT_COEFF = 0;
+  public static final int SHOW_WIN_AMOUNT_COEFF = 2;
 //  public static final int SHOW_WIN_AMOUNT_CHIPS = 500;
 
 }
