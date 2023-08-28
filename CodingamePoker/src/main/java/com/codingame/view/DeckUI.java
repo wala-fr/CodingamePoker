@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.codingame.gameengine.module.entities.Curve;
 import com.codingame.gameengine.module.entities.Sprite;
+import com.codingame.gameengine.module.toggle.ToggleModule;
 import com.codingame.model.object.Card;
 import com.codingame.model.object.DealPosition;
 import com.codingame.model.object.board.Board;
@@ -26,7 +27,11 @@ public class DeckUI {
   @Inject
   private Game game;
 
+  @Inject
+  private ToggleModule toggleModule;
+
   private Sprite[] cards;
+  private Sprite[] debugCards;
 
   private int nextCardIndex;
   private int discardCardIndex;
@@ -38,15 +43,22 @@ public class DeckUI {
   private void init() {
     if (cards == null) {
       cards = new Sprite[52];
-      for (int i = 0; i < cards.length; i++) {
-        cards[i] = game.getGraphics()
-          .createSprite()
-          .setImage(ViewUtils.getCardBackUrl())
-          .setX(0)
-          .setY(0)
-          .setBaseWidth(ViewConstant.CARD_WIDTH)
-          .setBaseHeight(ViewConstant.CARD_HEIGHT);
-      }
+      init(cards, false);
+      debugCards = new Sprite[52];
+      init(debugCards, true);
+    }
+  }
+
+  private void init(Sprite[] cards, boolean debug) {
+    for (int i = 0; i < cards.length; i++) {
+      cards[i] = game.getGraphics()
+        .createSprite()
+        .setImage(ViewUtils.getCardBackUrl())
+        .setX(0)
+        .setY(0)
+        .setBaseWidth(ViewConstant.CARD_WIDTH)
+        .setBaseHeight(ViewConstant.CARD_HEIGHT);
+      toggleModule.displayOnToggleState(cards[i], "debug", debug);
     }
   }
 
@@ -69,8 +81,13 @@ public class DeckUI {
   }
 
   private void resetCard(int i) {
+    resetCard(i, false);
+    resetCard(i, true);
+  }
+
+  private void resetCard(int i, boolean debug) {
+    Sprite card = getSpriteCard(i, debug);
     Board board = game.getBoard();
-    Sprite card = cards[i];
     card.setImage(ViewUtils.getCardBackUrl());
     Point position = ViewUtils.getDeckCardPosition(board.getDealerId(), i);
     position.setPosition(card);
@@ -100,18 +117,17 @@ public class DeckUI {
       }
       i++;
     }
-    game.setTime(0.95);
-    game.commitWorldState(0);
+    game.setTime(ViewConstant.MAX_TIME);
+    game.commitWorldState();
   }
 
   public void deal() {
     Board board = game.getBoard();
     List<DealPosition> dealPositions = board.getDealPositions();
     int cardNb = dealPositions.size() - nextCardIndex;
-    logger.debug("{} dealt cards {}", game.getTime(), cardNb);
-    
     // TO AVOID THAT THE LAST CARD BUG : WITH A TIME OF 1 IT MOVES FIRST
     double delta = (0.9 - game.getTime()) / cardNb;
+    logger.debug("delta {} {}", delta, cardNb);
     if (delta > 0.1) {
       delta = 0.1;
     }
@@ -126,11 +142,16 @@ public class DeckUI {
         position = ViewUtils.getCardPosition(game, dealPosition);
       }
       move(position, !dealPosition.isBurned(), card, nextCardIndex);
-      game.commitEntityState(cards[nextCardIndex], delta);
+      game.incrementTime(delta);
+      // commitCardState(cardNb, delta);
       logger.debug("time {}", game.getTime());
-
     }
   }
+
+  // private void commitCardState(int i, double delta) {
+  // game.commitEntityState(cards[i], delta);
+  // game.commitEntityState(debugCards[i], delta);
+  // }
 
   private Point calculateDiscardCardPosition() {
     discardCardIndex++;
@@ -139,14 +160,19 @@ public class DeckUI {
   }
 
   private void move(Point position, boolean visible, Card card, int index) {
-    Sprite sprite = cards[index];
+    move(position, visible, card, index, false);
+    move(position, visible, card, index, true);
+  }
+
+  private void move(Point position, boolean visible, Card card, int index, boolean debug) {
+    Sprite sprite = getSpriteCard(index, debug);
     if (visible) {
-      sprite.setImage(ViewUtils.getCardUrl(card));
+      sprite.setImage(ViewUtils.getCardUrl(card, debug));
     } else {
       sprite.setImage(ViewUtils.getCardBackUrl());
     }
     setZIndex(sprite);
-
+    
     if (visible) {
       game.getTooltips().setTooltipText(sprite, card.getLabel());
       cardToIndex.put(card, index);
@@ -154,17 +180,27 @@ public class DeckUI {
       cardToIndex.remove(card);
       game.getTooltips().setTooltipText(sprite, "");
     }
-
     game.commitEntityState(sprite);
-
+    
+    // put before commit state if only visible in position ???
     position.setPosition(sprite);
-
   }
+
 
   public void highlightCard(Card card, boolean win) {
     int index = cardToIndex.get(card);
-    Sprite sprite = cards[index];
+    tint(index, win, false);
+    tint(index, win, true);
+  }
+
+  private void tint(int index, boolean win, boolean debug) {
+    Sprite sprite = getSpriteCard(index, debug);
     sprite.setTint(win ? 0x82fc4c : 0xfa6f6f, Curve.LINEAR);
+  }
+
+  private Sprite getSpriteCard(int index, boolean debug) {
+    Sprite sprite = (debug ? debugCards : cards)[index];
+    return sprite;
   }
 
 }

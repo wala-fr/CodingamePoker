@@ -51,7 +51,7 @@ class Player {
             // Write an action using System.out.println()
             // To debug: System.err.println("Debug messages...");
 
-            System.out.println("CALL;I'M THE AI");
+            System.out.println("CALL;CALLING STATION");
         }
     }
 }

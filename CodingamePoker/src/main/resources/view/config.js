@@ -13,4 +13,13 @@ export const modules = [
 
 // The list of toggles displayed in the options of the viewer
 export const options = [
-];
+  ToggleModule.defineToggle({
+    toggle: 'debug',
+    title: 'DEBUG',
+    values: {
+      'ON': true,
+      'OFF': false
+    },
+    default: false
+  })
+]

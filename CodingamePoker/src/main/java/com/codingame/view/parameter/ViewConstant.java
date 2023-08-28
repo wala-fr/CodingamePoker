@@ -126,6 +126,7 @@ public class ViewConstant {
   public static final String ASSET_URL = "";
 
   public static final String CARD_URL = ASSET_URL + "cards4/";
+  public static final String DEBUG_CARD_URL = ASSET_URL + "cards3/";
 
   public static final int TEXT_DEFAULT_WIDTH = 300;
   public static final int NAME_WIDTH = 170;
@@ -171,6 +172,9 @@ public class ViewConstant {
   public static final int LOSS_COLOR = 0xfe1304;
 
   public static final int SHOW_WIN_AMOUNT_COEFF = 2;
+  
+  public static final double MAX_TIME = 0.9;
+
 //  public static final int SHOW_WIN_AMOUNT_CHIPS = 500;
 
 }

@@ -29,8 +29,8 @@ public class ViewUtils {
     return ViewConstant.ASSET_URL + "card_back.png";
   }
 
-  public static String getCardUrl(Card card) {
-    return ViewConstant.CARD_URL + card.toString() + ".png";
+  public static String getCardUrl(Card card, boolean debug) {
+    return (debug ? ViewConstant.DEBUG_CARD_URL : ViewConstant.CARD_URL) + card.toString() + ".png";
   }
 
   public static Point getCardPosition(Game graphics, DealPosition dealPosition) {

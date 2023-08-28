@@ -11,6 +11,7 @@ import com.codingame.gameengine.module.entities.Group;
 import com.codingame.gameengine.module.entities.Text;
 import com.codingame.gameengine.module.tooltip.TooltipModule;
 import com.codingame.model.object.board.Board;
+import com.codingame.view.parameter.ViewConstant;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -62,25 +63,28 @@ public class Game {
     time = 0;
   }
 
-  private void incrementTime(double timeIncrement) {
-    this.time += timeIncrement;
-    if (time > 1) {
-      logger.error("incrementTime error {}", timeIncrement);
-      time = 1;
-    }
+  public void incrementTime(double timeIncrement) {
+    setTime(time + timeIncrement);
   }
-
+  
+  public void setTime(double time) {
+    double oldTime = this.time;
+    if (time < this.time) {
+      return;
+    }
+    if (time >= ViewConstant.MAX_TIME) {
+      logger.error("incrementTime error {} {}", time, oldTime);
+      time = Math.max(ViewConstant.MAX_TIME, oldTime);
+    }
+    this.time = time;
+  }
+  
   public void commitWorldState(double timeIncrement) {
     incrementTime(timeIncrement);
     graphics.commitWorldState(time);
   }
 
-  public void setTime(double time) {
-    if (time < this.time) {
-      return;
-    }
-    this.time = time;
-  }
+
 
   // public void setEndTime() {
   // time = phase.getEndTime();
