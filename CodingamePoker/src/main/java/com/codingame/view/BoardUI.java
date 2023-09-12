@@ -95,6 +95,7 @@ public class BoardUI {
           ViewConstant.Z_INDEX_ACTION_BUTTON);
       updateButtons(board);
     }
+    deckUI.reset();
   }
 
   private void createButton(Group button, String text, String toolTipText, int fillcolor,

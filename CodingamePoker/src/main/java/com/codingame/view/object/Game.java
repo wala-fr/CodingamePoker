@@ -11,6 +11,8 @@ import com.codingame.gameengine.module.entities.Group;
 import com.codingame.gameengine.module.entities.Text;
 import com.codingame.gameengine.module.tooltip.TooltipModule;
 import com.codingame.model.object.board.Board;
+import com.codingame.view.data.FrameViewData;
+import com.codingame.view.data.GlobalViewData;
 import com.codingame.view.parameter.ViewConstant;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -26,6 +28,10 @@ public class Game {
   private GraphicEntityModule graphics;
   @Inject
   private TooltipModule tooltips;
+  @Inject
+  private FrameViewData frameViewData;
+  @Inject
+  private GlobalViewData globalViewData;
 
   private Board board;
 
@@ -66,7 +72,7 @@ public class Game {
   public void incrementTime(double timeIncrement) {
     setTime(time + timeIncrement);
   }
-  
+
   public void setTime(double time) {
     double oldTime = this.time;
     if (time < this.time) {
@@ -78,13 +84,11 @@ public class Game {
     }
     this.time = time;
   }
-  
+
   public void commitWorldState(double timeIncrement) {
     incrementTime(timeIncrement);
     graphics.commitWorldState(time);
   }
-
-
 
   // public void setEndTime() {
   // time = phase.getEndTime();
@@ -98,12 +102,12 @@ public class Game {
     graphics.commitEntityState(time, entities);
 
   }
-  
+
   public void commitEntityState(double timeIncrement, Entity<?>... entities) {
     incrementTime(timeIncrement);
     graphics.commitEntityState(time, entities);
   }
-  
+
   public void commitEntityState(Entity<?> entity, double timeIncrement) {
     incrementTime(timeIncrement);
     commitEntityState(entity);
@@ -144,13 +148,21 @@ public class Game {
   public void setTurn(int turn) {
     this.turn = turn;
   }
-  
+
   public boolean isFirstRound() {
     return turn == 1;
   }
 
   public boolean isMaxRound() {
     return turn == RefereeParameter.MAX_TURN;
+  }
+
+  public FrameViewData getFrameViewData() {
+    return frameViewData;
+  }
+
+  public GlobalViewData getGlobalViewData() {
+    return globalViewData;
   }
 
 }

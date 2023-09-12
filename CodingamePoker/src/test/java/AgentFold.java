@@ -45,7 +45,7 @@ public class AgentFold {
         // Write an action using System.out.println()
         // To debug: System.err.println("Debug messages...");
 
-        System.out.println("ALL-IN;MESSAGE");
+        System.out.println("FOLD;MESSAGE");
     }}
   
   private static void log(Object... obj) {

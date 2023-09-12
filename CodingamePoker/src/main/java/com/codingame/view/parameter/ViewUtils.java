@@ -2,6 +2,7 @@ package com.codingame.view.parameter;
 
 import com.codingame.gameengine.module.entities.Group;
 import com.codingame.gameengine.module.entities.Rectangle;
+import com.codingame.gameengine.module.entities.Sprite;
 import com.codingame.gameengine.module.entities.Text;
 import com.codingame.gameengine.module.entities.Text.FontWeight;
 import com.codingame.gameengine.module.entities.TextBasedEntity.TextAlign;
@@ -53,7 +54,7 @@ public class ViewUtils {
     return getCardPosition(ViewConstant.BOARD_CARD_X, ViewConstant.BOARD_CARD_Y, index).getPoint();
   }
 
-  public static Point getDeckCardPosition(int dealer, int index) {
+  public static Point getDeckCardPosition(int dealer) {
     return new Point(ViewConstant.DECK_CARD_X, ViewConstant.DECK_CARD_Y);
   }
 
@@ -165,5 +166,24 @@ public class ViewUtils {
       s = " " + s;
     }
     return s;
+  }
+  
+  public static Sprite createCard(Game game) {
+    Sprite ret = game.getGraphics()
+      .createSprite()
+      .setImage(ViewUtils.getCardBackUrl())
+      .setX(0)
+      .setY(0)
+      .setBaseWidth(ViewConstant.CARD_WIDTH)
+      .setBaseHeight(ViewConstant.CARD_HEIGHT);
+    return ret;
+  }
+  
+  public static void hide(Sprite card, Game game) {
+//    card.setAlpha(0, Curve.IMMEDIATE);
+    if (card != null) {
+      card.setZIndex(ViewConstant.Z_INDEX_INVISIBLE);
+      game.commitEntityState(card);
+    }
   }
 }

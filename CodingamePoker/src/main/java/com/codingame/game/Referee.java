@@ -9,8 +9,6 @@ import com.codingame.gameengine.core.GameManager;
 import com.codingame.gameengine.core.MultiplayerGameManager;
 import com.codingame.gameengine.module.endscreen.EndScreenModule;
 import com.codingame.gameengine.module.entities.GraphicEntityModule;
-import com.codingame.gameengine.module.toggle.ToggleModule;
-import com.codingame.gameengine.module.tooltip.TooltipModule;
 import com.codingame.input.InputSender;
 import com.codingame.model.object.ActionInfo;
 import com.codingame.model.object.PlayerModel;
@@ -20,8 +18,8 @@ import com.codingame.model.utils.ActionUtils;
 import com.codingame.model.utils.AssertUtils;
 import com.codingame.model.utils.MessageUtils;
 import com.codingame.model.utils.RandomUtils;
-import com.codingame.model.variable.Parameter;
 import com.codingame.view.Viewer;
+import com.codingame.view.data.PokerModule;
 import com.codingame.view.object.Game;
 import com.codingame.view.object.Phase;
 import com.codingame.view.parameter.ViewConstant;
@@ -37,13 +35,12 @@ public class Referee extends AbstractReferee {
   @Inject
   private GraphicEntityModule graphics;
   @Inject
-  private TooltipModule tooltips;
-  @Inject
-  private ToggleModule toggleModule;
-  @Inject
   private EndScreenModule endScreenModule;
   @Inject
   private Viewer viewer;
+  
+  @Inject 
+  private PokerModule pokerModule;
 
   @Inject
   private Game game;
@@ -76,7 +73,9 @@ public class Referee extends AbstractReferee {
     gameManager.setFirstTurnMaxTime(RefereeParameter.FIRST_ROUND_TIME_OUT);
     gameManager.setTurnMaxTime(RefereeParameter.TIME_OUT);
     gameManager.setFrameDuration(ViewConstant.FRAME_DURATION);
-
+    
+    gameManager.registerModule(pokerModule);
+    
     viewer.init();
 
     playerEliminatedNb = -1;

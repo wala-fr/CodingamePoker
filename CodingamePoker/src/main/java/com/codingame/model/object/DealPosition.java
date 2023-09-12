@@ -34,6 +34,10 @@ public class DealPosition {
   public boolean isBoard() {
     return id == BOARD;
   }
+  
+  public boolean isPlayer() {
+    return !isBoard() && !isBurned();
+  }
 
   public int getIndex() {
     return index;

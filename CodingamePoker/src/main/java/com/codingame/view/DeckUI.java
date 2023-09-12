@@ -5,9 +5,7 @@ import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.codingame.gameengine.module.entities.Curve;
 import com.codingame.gameengine.module.entities.Sprite;
-import com.codingame.gameengine.module.toggle.ToggleModule;
 import com.codingame.model.object.Card;
 import com.codingame.model.object.DealPosition;
 import com.codingame.model.object.board.Board;
@@ -27,11 +25,10 @@ public class DeckUI {
   @Inject
   private Game game;
 
-  @Inject
-  private ToggleModule toggleModule;
+  private CardSprite[] cards;
 
-  private Sprite[] cards;
-  private Sprite[] debugCards;
+  // cards to show / hide opponents cards (fog of war in settings panel)
+  private Sprite[] showCards;
 
   private int nextCardIndex;
   private int discardCardIndex;
@@ -42,23 +39,19 @@ public class DeckUI {
 
   private void init() {
     if (cards == null) {
-      cards = new Sprite[52];
-      init(cards, false);
-      debugCards = new Sprite[52];
-      init(debugCards, true);
-    }
-  }
-
-  private void init(Sprite[] cards, boolean debug) {
-    for (int i = 0; i < cards.length; i++) {
-      cards[i] = game.getGraphics()
-        .createSprite()
-        .setImage(ViewUtils.getCardBackUrl())
-        .setX(0)
-        .setY(0)
-        .setBaseWidth(ViewConstant.CARD_WIDTH)
-        .setBaseHeight(ViewConstant.CARD_HEIGHT);
-      toggleModule.displayOnToggleState(cards[i], "debug", debug);
+      cards = new CardSprite[ViewConstant.CARD_MIN_NB];
+      for (int i = 0; i < cards.length; i++) {
+        cards[i] = new CardSprite(game);
+        game.getGlobalViewData().addCard(cards[i]);
+      }
+      showCards = new Sprite[8];
+      for (int i = 0; i < showCards.length; i++) {
+        showCards[i] = ViewUtils.createCard(game);
+        ViewUtils.getDeckCardPosition(0).setPosition(showCards[i]);
+//        game.getTooltips().setTooltipText(showCards[i], "showCard " + i);
+        ViewUtils.hide(showCards[i], game);
+        game.getGlobalViewData().addShowOpponentCard(showCards[i]);
+      }
     }
   }
 
@@ -71,35 +64,14 @@ public class DeckUI {
       nextCardIndex = 0;
       discardCardIndex = 0;
       for (int i = cards.length - 1; i >= 0; i--) {
-        resetCard(i);
+        cards[i].reset(game, zIndex);
+        incrementZIndex();
       }
       zIndex = ViewConstant.Z_INDEX_CARD_DEAL;
 
       // TODO
       game.commitWorldState(game.isFirstRound() ? 0 : Phase.INIT_DECK.getEndTime());
     }
-  }
-
-  private void resetCard(int i) {
-    resetCard(i, false);
-    resetCard(i, true);
-  }
-
-  private void resetCard(int i, boolean debug) {
-    Sprite card = getSpriteCard(i, debug);
-    Board board = game.getBoard();
-    card.setImage(ViewUtils.getCardBackUrl());
-    Point position = ViewUtils.getDeckCardPosition(board.getDealerId(), i);
-    position.setPosition(card);
-    setZIndex(card);
-    card.setAlpha(1);
-    card.setTint(0xFFFFFF, Curve.IMMEDIATE);
-    game.getTooltips().setTooltipText(card, "");
-  }
-
-  private void setZIndex(Sprite card) {
-    card.setZIndex(zIndex);
-    zIndex++;
   }
 
   public void foldPlayerId(int playerId) {
@@ -113,7 +85,7 @@ public class DeckUI {
     for (DealPosition dealPosition : dealPositions) {
       if (dealPosition.getId() == playerId) {
         Point position = calculateDiscardCardPosition();
-        move(position, false, null, i);
+        move(position, null, null, i, 0);
       }
       i++;
     }
@@ -132,6 +104,15 @@ public class DeckUI {
       delta = 0.1;
     }
     logger.debug("delta {}", delta);
+    
+    // add show / hide opponent card
+    for (int i = nextCardIndex; i < dealPositions.size(); i++) {
+      DealPosition dealPosition = dealPositions.get(i);
+      if (dealPosition.isPlayer()) {
+        int showCardIndex = 2 * dealPosition.getId() + dealPosition.getIndex();
+        cards[i].setShowCard(showCards[showCardIndex], game);
+      }
+    }
     for (; nextCardIndex < dealPositions.size(); nextCardIndex++) {
       DealPosition dealPosition = dealPositions.get(nextCardIndex);
       Card card = board.getCard(dealPosition);
@@ -141,17 +122,10 @@ public class DeckUI {
       } else {
         position = ViewUtils.getCardPosition(game, dealPosition);
       }
-      move(position, !dealPosition.isBurned(), card, nextCardIndex);
-      game.incrementTime(delta);
-      // commitCardState(cardNb, delta);
+      move(position, dealPosition, card, nextCardIndex, delta);
       logger.debug("time {}", game.getTime());
     }
   }
-
-  // private void commitCardState(int i, double delta) {
-  // game.commitEntityState(cards[i], delta);
-  // game.commitEntityState(debugCards[i], delta);
-  // }
 
   private Point calculateDiscardCardPosition() {
     discardCardIndex++;
@@ -159,48 +133,24 @@ public class DeckUI {
     return ViewUtils.getDiscardCardPosition(board.getDealerId(), discardCardIndex);
   }
 
-  private void move(Point position, boolean visible, Card card, int index) {
-    move(position, visible, card, index, false);
-    move(position, visible, card, index, true);
-  }
-
-  private void move(Point position, boolean visible, Card card, int index, boolean debug) {
-    Sprite sprite = getSpriteCard(index, debug);
-    if (visible) {
-      sprite.setImage(ViewUtils.getCardUrl(card, debug));
-    } else {
-      sprite.setImage(ViewUtils.getCardBackUrl());
-    }
-    setZIndex(sprite);
-    
-    if (visible) {
-      game.getTooltips().setTooltipText(sprite, card.getLabel());
+  private void move(Point position, DealPosition dealPosition, Card card, int index, double delta) {
+    CardSprite sprite = cards[index];
+    sprite.move(position, dealPosition, card, zIndex, delta, game);
+    if (dealPosition != null && !dealPosition.isBurned()) {
       cardToIndex.put(card, index);
     } else {
       cardToIndex.remove(card);
-      game.getTooltips().setTooltipText(sprite, "");
     }
-    game.commitEntityState(sprite);
-    
-    // put before commit state if only visible in position ???
-    position.setPosition(sprite);
+    incrementZIndex();
   }
 
+  private void incrementZIndex() {
+    zIndex += 4;
+  }
 
   public void highlightCard(Card card, boolean win) {
     int index = cardToIndex.get(card);
-    tint(index, win, false);
-    tint(index, win, true);
-  }
-
-  private void tint(int index, boolean win, boolean debug) {
-    Sprite sprite = getSpriteCard(index, debug);
-    sprite.setTint(win ? 0x82fc4c : 0xfa6f6f, Curve.LINEAR);
-  }
-
-  private Sprite getSpriteCard(int index, boolean debug) {
-    Sprite sprite = (debug ? debugCards : cards)[index];
-    return sprite;
+    cards[index].tint(win, game);
   }
 
 }
