@@ -49,6 +49,6 @@ actionBoardCards:board cards when the action is done (example : AD_QH_2S_4H_X)
 showDownNb:number of hands that ended since your last turn
 showDownHandNb:hand number
 showDownBoardCards:board cards at the showdown
-showDownPlayerCards:players cards shown at the end of the hand (example : AD_QH_E_E_X_X_8S_8H player0's cards, followed by player1's cards ...)
+showDownPlayerCards:players cards (example : QH_3S_E_E_5C_H_7D_KC player0's cards, followed by player1's cards ...)
 possibleActionNb:number of actions you can do
 possibleAction:your possible action (BET_240 means 240 is the minimum raise but you can bet more)

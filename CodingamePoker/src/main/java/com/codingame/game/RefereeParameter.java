@@ -9,6 +9,8 @@ public class RefereeParameter {
   
   public static final boolean POSSIBLE_ACTION_INPUT = true;
 
+  public static final boolean SHOW_FOLDED_CARDS = true;
+
   
   public static final String WORD_DELIMITER = "_";
   public static final String NONE = "NONE";

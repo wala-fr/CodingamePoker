@@ -6,6 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.codingame.game.Player;
+import com.codingame.game.RefereeParameter;
 import com.codingame.model.object.Card;
 import com.codingame.model.object.PlayerModel;
 import com.codingame.model.object.board.Board;
@@ -46,7 +47,7 @@ public class ShowDownInfo {
     for (int i = 0; i < board.getPlayerNb(); i++) {
       PlayerModel player = board.getPlayer(i);
       logger.debug("{} ShowDownInfo {} isFolded {}", i, handNb, player.isFolded());
-      playerShow[i] = !player.isFolded() && !showNone;
+      playerShow[i] = (!player.isFolded() && !showNone) || (!player.isEliminated() && RefereeParameter.SHOW_FOLDED_CARDS);
     }
     boardCard = new ArrayList<>(board.getBoardCards());
   }
