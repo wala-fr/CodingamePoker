@@ -11,8 +11,10 @@ import com.codingame.gameengine.core.AbstractMultiplayerPlayer;
 import com.codingame.model.object.Action;
 import com.codingame.model.object.ActionInfo;
 import com.codingame.model.object.Card;
+import com.codingame.model.object.board.Board;
 import com.codingame.model.utils.AssertUtils;
 import com.codingame.model.utils.CardUtils;
+import com.codingame.view.object.Game;
 
 public class Player extends AbstractMultiplayerPlayer {
 
@@ -42,5 +44,16 @@ public class Player extends AbstractMultiplayerPlayer {
     sendInputLine2(Integer.toString(line));
   }
 
+  public void deactivate(Board board, String msg) {
+    deactivate(formatTooltipMessage(board, msg));
+  }
+  
+  public void addTooltip(Game game, String msg) {
+    game.getGameManager().addTooltip(this, formatTooltipMessage(game.getBoard(), msg));
+  }
+  
+  private String formatTooltipMessage(Board board, String msg) {
+    return board.getHandNb() + " : " + getNicknameToken() + " " + msg + ".";
+  }
 
 }

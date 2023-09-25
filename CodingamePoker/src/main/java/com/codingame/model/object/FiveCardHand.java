@@ -201,6 +201,43 @@ public class FiveCardHand {
     return ret.toString().toUpperCase().trim();
   }
 
+  public String getShortLabel() {
+    StringBuilder ret = new StringBuilder();
+    if (handType == HandType.HIGH_CARD || handType == HandType.PAIR) {
+      return getLabel();
+    } else  if (handType == HandType.FOUR_OF_A_KIND || handType == HandType.THREE_OF_A_KIND) {
+      ret.append(handType.getShortName());
+      ret.append(' ');
+      Card card = cards.get(4);
+      ret.append(card.getRank().getName());
+      ret.append('s');
+    } else if (handType == HandType.TWO_PAIR) {
+      ret.append(handType.getShortName());
+      ret.append(' ');
+      Card card0 = cards.get(4);
+      ret.append(card0.getRank().getName());
+      ret.append(" AND ");
+      Card card1 = cards.get(2);
+      ret.append(card1.getRank().getName());
+    } else if (handType == HandType.STRAIGHT || handType == HandType.FLUSH
+        || handType == HandType.STRAIGHT_FLUSH) {
+      Card card = cards.get(4);
+      ret.append(card.getRank().getName());
+      ret.append("-HIGH ");
+      ret.append(handType.getShortName());
+    } else {
+      AssertUtils.test(handType == HandType.FULL_HOUSE);
+      ret.append(handType.getShortName());
+      ret.append(' ');
+      Card card0 = cards.get(4);
+      ret.append(card0.getRank().getName());
+      ret.append(" OVER ");
+      Card card1 = cards.get(1);
+      ret.append(card1.getRank().getName());
+    }
+    return ret.toString().trim();
+  }
+
   @Override
   public String toString() {
     return "FullHand [cards=" + cards + ", handType=" + handType + ", value=" + value

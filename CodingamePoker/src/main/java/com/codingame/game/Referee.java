@@ -117,7 +117,7 @@ public class Referee extends AbstractReferee {
         logger.info("TimeoutException {}", playerId);
         gameManager
           .addToGameSummary(GameManager.formatErrorMessage(nickName + " did not output in time!"));
-        currentPlayer.deactivate(nickName + " timeout.");
+        currentPlayer.deactivate(board, "timeout");
 
         actionInfo = ActionInfo.create(playerId, ActionType.TIMEOUT);
         String errorStr = MessageUtils.format("wrong.action.timeout", playerId);
@@ -172,8 +172,7 @@ public class Referee extends AbstractReferee {
         int winAmount = playerModel.getWinAmount();
         if (ViewUtils.isShowWinAmount(winAmount, board)) {
           Player player = gameManager.getPlayer(i);
-          String nickName = player.getNicknameToken();
-          gameManager.addTooltip(player, nickName + " wins " + winAmount);// +" turn " + turn+ " " + board.getHandNb());
+          player.addTooltip(game, "wins " + winAmount);
         }
       }
     }
@@ -219,8 +218,7 @@ public class Referee extends AbstractReferee {
           Player player = gameManager.getPlayer(i);
           player.setScore(playerModel.getScore());
           if (player.isActive()) {
-            String nickName = gameManager.getPlayer(i).getNicknameToken();
-            player.deactivate(nickName + " has no more chips.");
+            player.deactivate(board, "has no more chips");
           }
           nb++;
         }

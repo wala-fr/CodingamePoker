@@ -17,37 +17,35 @@ public class FiveCardHandTest {
 
   @Test
   public void testHandType() {
-    FiveCardHand hand = createHand("2D 4D 3D 5D 6D");
-    assertEquals(HandType.STRAIGHT_FLUSH, hand.getHandType());
+    doAssert(HandType.STRAIGHT_FLUSH, "2D 4D 3D 5D 6D");
     
-    hand = createHand("2D 4D 3D 5D AD");
-    assertEquals(HandType.STRAIGHT_FLUSH, hand.getHandType());
+    doAssert(HandType.STRAIGHT_FLUSH, "2D 4D 3D 5D AD");
     
-    hand = createHand("2D 4D 3D 5S 6D");
-    assertEquals(HandType.STRAIGHT, hand.getHandType());
+    doAssert(HandType.STRAIGHT, "2D 4D 3D 5S 6D");
     
-    hand = createHand("2D 4D 3D QD 6D");
-    assertEquals(HandType.FLUSH, hand.getHandType());
+    doAssert(HandType.FLUSH, "2D 4D 3D QD 6D");
     
-    hand = createHand("2D 2S 3D 2C 2H");
-    assertEquals(HandType.FOUR_OF_A_KIND, hand.getHandType());
+    doAssert(HandType.FOUR_OF_A_KIND, "2D 2S 3D 2C 2H");
     
-    hand = createHand("2D QS 3D 2C 2H");
-    assertEquals(HandType.THREE_OF_A_KIND, hand.getHandType());
+    doAssert(HandType.THREE_OF_A_KIND, "2D QS 3D 2C 2H");
     
-    hand = createHand("2D 3S 3D 2C 2H");
-    assertEquals(HandType.FULL_HOUSE, hand.getHandType());
+    doAssert(HandType.FULL_HOUSE, "2D 3S 3D 2C 2H");
     
-    hand = createHand("2D 3S 3D JC 2H");
-    assertEquals(HandType.TWO_PAIR, hand.getHandType());
+    doAssert(HandType.TWO_PAIR, "2D 3S 3D JC 2H");
     
-    hand = createHand("2D 3S 3D JC 5H");
-    assertEquals(HandType.PAIR, hand.getHandType());
+    doAssert(HandType.PAIR, "2D 3S 3D JC 5H");
     
-    hand = createHand("2D KS 3D JC 5H");
-    assertEquals(HandType.HIGH_CARD, hand.getHandType());
+    doAssert(HandType.HIGH_CARD, "2D KS 3D JC 5H");
   }
   
+  private void doAssert(HandType handType, String handStr) {
+    FiveCardHand hand = createHand(handStr);
+    System.out.println("###########");
+    System.out.println(hand.getLabel());
+    System.out.println(hand.getShortLabel());
+
+    assertEquals(handType, hand.getHandType());
+  }
   private FiveCardHand createHand(String cards) {
     List<Card> tmp = new ArrayList<>();
     for (String card : cards.split(" ")) {
