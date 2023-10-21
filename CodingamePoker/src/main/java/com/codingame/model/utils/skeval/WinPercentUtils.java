@@ -9,7 +9,6 @@ import com.codingame.model.object.PlayerModel;
 import com.codingame.model.object.board.Board;
 import com.codingame.model.utils.AssertUtils;
 import com.codingame.model.utils.CardUtils;
-import com.codingame.model.utils.cactus.WinPercentKevUtils;
 
 public class WinPercentUtils {
 
@@ -18,16 +17,23 @@ public class WinPercentUtils {
   private static final int[][] playerCards = new int[4][];
 
   private static final int[] boardCards = new int[7];
-  private static long usedCards;
+  private static final boolean[] usedCards = new boolean[52];
   private static long totalTime;
   private static final double[] winPercents = new double[4];
+  private static final double[] splitPercents = new double[4];
+
   private static final boolean[] folded = new boolean[4];
   private static final int[] winBoardNb = new int[4];
+  private static final int[] splitBoardNb = new int[4];
+
   private static int totalBoardNb;
+  private static int splitTotalBoardNb;
+  private static double splitPercent;
 
   public static void proceed(Board board, int turn) {
     logger.error("{} {}", turn, !board.isCalculateWinChance());
-    if (RefereeParameter.CALCULATE_WIN_PERCENT && !board.isCalculateWinChance() && !board.isOver()) {
+    if (RefereeParameter.CALCULATE_WIN_PERCENT && !board.isCalculateWinChance()
+        && !board.isOver()) {
       // recalculate only when card are dealt or players fold
       long timeStart = System.currentTimeMillis();
       init(board);
@@ -36,17 +42,8 @@ public class WinPercentUtils {
       long timeEnd = System.currentTimeMillis();
       long deltaTime = timeEnd - timeStart;
       totalTime += deltaTime;
-      logger.error("{} {}", Arrays.toString(winBoardNb), totalBoardNb);
+      logger.info("{} {}", Arrays.toString(winBoardNb), totalBoardNb);
       logger.info("calculatePercent SK time {} ms total {} ms", deltaTime, totalTime);
-      
-      board.setCalculateWinChance(false);
-      WinPercentKevUtils.proceed(board);
-      for (int i = 0; i < 4; i++) {
-        AssertUtils.test(winBoardNb[i] == WinPercentKevUtils.winBoardNb[i], i, winBoardNb[i], WinPercentKevUtils.winBoardNb[i]);
-        AssertUtils.test(getWinPercent(i) == WinPercentKevUtils.getWinPercent(i));
-
-      }
-      AssertUtils.test(totalBoardNb == WinPercentKevUtils.totalBoardNb);
     }
   }
 
@@ -56,11 +53,16 @@ public class WinPercentUtils {
         playerCards[i] = new int[2];
       }
     }
-    usedCards = 0;
+    for (int i = 0; i < usedCards.length; i++) {
+      usedCards[i] = false;
+    }
     totalBoardNb = 0;
+    splitTotalBoardNb = 0;
     int notFoldedNb = 0;
     for (int i = 0; i < board.getPlayerNb(); i++) {
       winBoardNb[i] = 0;
+      splitBoardNb[i] = 0;
+
       PlayerModel player = board.getPlayer(i);
       folded[i] = player.isFolded();
       winPercents[i] = 0;
@@ -70,7 +72,7 @@ public class WinPercentUtils {
           Card card = player.getHand().getCard(cardIndex);
           int tmp = CardUtils.calculateCardSK(card);
           playerCards[i][cardIndex] = tmp;
-          usedCards = usedCards | (1l << tmp);
+          usedCards[tmp] = true;
         }
       }
     }
@@ -79,7 +81,7 @@ public class WinPercentUtils {
     for (Card card : board.getBoardCards()) {
       int tmp = CardUtils.calculateCardSK(card);
       boardCards[cardNb++] = tmp;
-      usedCards = usedCards | (1l << tmp);
+      usedCards[tmp] = true;
     }
   }
 
@@ -94,40 +96,44 @@ public class WinPercentUtils {
     } else {
       calculateRiverWinPercents(board);
     }
-//    logger.error(Arrays.toString(winBoardNb));
+    // logger.error(Arrays.toString(winBoardNb));
     for (int i = 0; i < board.getPlayerNb(); i++) {
       winPercents[i] = 100.0 * winBoardNb[i] / totalBoardNb;
+      splitPercents[i] = 100.0 * splitBoardNb[i] / totalBoardNb;
     }
-//    logger.error("{} {}", Arrays.toString(winBoardNb), totalBoardNb);
-//    logger.error(Arrays.toString(winPercents));
+    splitPercent = 100.0 * splitTotalBoardNb / totalBoardNb;
+    // logger.error("{} {}", Arrays.toString(winBoardNb), totalBoardNb);
+    // logger.error(Arrays.toString(winPercents));
   }
 
   private static void calculatePreFlopWinPercents(Board board) {
+    int playerNb = board.getPlayerNb();
     for (int i0 = 0; i0 < 52; i0++) {
-      if ((usedCards & (1l << i0)) == 0) {
-        boardCards[0] = i0;
-        for (int i1 = i0 + 1; i1 < 52; i1++) {
-          if ((usedCards & (1l << i1)) == 0) {
-            boardCards[1] = i1;
-            for (int i2 = i1 + 1; i2 < 52; i2++) {
-              if ((usedCards & (1l << i2)) == 0) {
-                boardCards[2] = i2;
-                for (int i3 = i2 + 1; i3 < 52; i3++) {
-                  if ((usedCards & (1l << i3)) == 0) {
-                    boardCards[3] = i3;
-                    for (int i4 = i3 + 1; i4 < 52; i4++) {
-                      if ((usedCards & (1l << i4)) == 0) {
-                        boardCards[4] = i4;
-                        int winId = calculateWinner(boardCards, board);
-                        totalBoardNb++;
-                        if (winId >= 0) {
-                          winBoardNb[winId]++;
-                        }
-                      }
-                    }
-                  }
-                }
+      if (usedCards[i0]) {
+        continue;
+      }
+      boardCards[0] = i0;
+      for (int i1 = i0 + 1; i1 < 52; i1++) {
+        if (usedCards[i1]) {
+          continue;
+        }
+        boardCards[1] = i1;
+        for (int i2 = i1 + 1; i2 < 52; i2++) {
+          if (usedCards[i2]) {
+            continue;
+          }
+          boardCards[2] = i2;
+          for (int i3 = i2 + 1; i3 < 52; i3++) {
+            if (usedCards[i3]) {
+              continue;
+            }
+            boardCards[3] = i3;
+            for (int i4 = i3 + 1; i4 < 52; i4++) {
+              if (usedCards[i4]) {
+                continue;
               }
+              boardCards[4] = i4;
+              calculateWinner(boardCards, playerNb);
             }
           }
         }
@@ -136,47 +142,49 @@ public class WinPercentUtils {
   }
 
   private static void calculateFlopWinPercents(Board board) {
+    int playerNb = board.getPlayerNb();
     for (int i3 = 0; i3 < 52; i3++) {
-      if ((usedCards & (1l << i3)) == 0) {
-        boardCards[3] = i3;
-        for (int i4 = i3 + 1; i4 < 52; i4++) {
-          if ((usedCards & (1l << i4)) == 0) {
-            boardCards[4] = i4;
-            int winId = calculateWinner(boardCards, board);
-            totalBoardNb++;
-            if (winId >= 0) {
-              winBoardNb[winId]++;
-            }
-          }
+      if (usedCards[i3]) {
+        continue;
+      }
+      boardCards[3] = i3;
+      for (int i4 = i3 + 1; i4 < 52; i4++) {
+        if (usedCards[i4]) {
+          continue;
         }
+        boardCards[4] = i4;
+        calculateWinner(boardCards, playerNb);
       }
     }
   }
 
   private static void calculateTurnWinPercents(Board board) {
+    int playerNb = board.getPlayerNb();
     for (int i4 = 0; i4 < 52; i4++) {
-      if ((usedCards & (1l << i4)) == 0) {
-        boardCards[4] = i4;
-        int winId = calculateWinner(boardCards, board);
-        totalBoardNb++;
-        if (winId >= 0) {
-          winBoardNb[winId]++;
-        }
+      if (usedCards[i4]) {
+        continue;
       }
+      boardCards[4] = i4;
+      calculateWinner(boardCards, playerNb);
     }
   }
 
   private static void calculateRiverWinPercents(Board board) {
-    int winId = calculateWinner(boardCards, board);
-    totalBoardNb++;
-    if (winId >= 0) {
-      winBoardNb[winId]++;
+    int playerNb = board.getPlayerNb();
+    calculateWinner(boardCards, playerNb);
+  }
+
+  private static final int[] winnerIds = new int[4];
+
+  private static void calculateWinner(int[] boardCards, int playerNb) {
+    if (RefereeParameter.CALCULATE_SPLIT_PERCENT) {
+      calculateWinnerSplit(boardCards, playerNb);
+    } else {
+      calculateWinnerNoSplit(boardCards, playerNb);
     }
   }
 
-  private static int calculateWinner(int[] boardCards, Board board) {
-    int playerNb = board.getPlayerNb();
-    int winnerId = -1;
+  private static void calculateWinnerSplit(int[] boardCards, int playerNb) {
     int winNb = 0;
     int bestScore = Integer.MIN_VALUE;
     for (int i = 0; i < playerNb; i++) {
@@ -184,9 +192,38 @@ public class WinPercentUtils {
         boardCards[5] = playerCards[i][0];
         boardCards[6] = playerCards[i][1];
         int score = SKPokerEvalUtils.calculateBestPossibleScore(boardCards);
-
         if (score > bestScore) {
-          winnerId = i;
+          winnerIds[0] = i;
+          bestScore = score;
+          winNb = 1;
+        } else if (score == bestScore) {
+          winnerIds[winNb] = i;
+          winNb++;
+        }
+      }
+    }
+    totalBoardNb++;
+    if (winNb == 1) {
+      winBoardNb[winnerIds[0]]++;
+    } else {
+      splitTotalBoardNb++;
+      for (int i = 0; i < winNb; i++) {
+        splitBoardNb[winnerIds[i]]++;
+      }
+    }
+  }
+
+  private static void calculateWinnerNoSplit(int[] boardCards, int playerNb) {
+    int winNb = 0;
+    int winId = -1;
+    int bestScore = Integer.MIN_VALUE;
+    for (int i = 0; i < playerNb; i++) {
+      if (!folded[i]) {
+        boardCards[5] = playerCards[i][0];
+        boardCards[6] = playerCards[i][1];
+        int score = SKPokerEvalUtils.calculateBestPossibleScore(boardCards);
+        if (score > bestScore) {
+          winId = i;
           bestScore = score;
           winNb = 1;
         } else if (score == bestScore) {
@@ -194,7 +231,12 @@ public class WinPercentUtils {
         }
       }
     }
-    return winNb == 1 ? winnerId : -2;
+    totalBoardNb++;
+    if (winNb == 1) {
+      winBoardNb[winId]++;
+    } else {
+      splitTotalBoardNb++;
+    }
   }
 
   public static long getTotalTime() {
@@ -204,7 +246,13 @@ public class WinPercentUtils {
   public static double getWinPercent(int id) {
     return winPercents[id];
   }
-  
-  
+
+  public static double getSplitPercent(int id) {
+    return splitPercents[id];
+  }
+
+  public static double getSplitPercent() {
+    return splitPercent;
+  }
 
 }

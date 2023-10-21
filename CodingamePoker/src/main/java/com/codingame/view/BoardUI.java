@@ -19,6 +19,7 @@ import com.codingame.model.utils.AssertUtils;
 import com.codingame.model.utils.skeval.WinPercentUtils;
 import com.codingame.view.object.Game;
 import com.codingame.view.object.Point;
+import com.codingame.view.parameter.Color;
 import com.codingame.view.parameter.ViewConstant;
 import com.codingame.view.parameter.ViewUtils;
 import com.google.inject.Inject;
@@ -40,6 +41,7 @@ public class BoardUI {
   private Text percentWinTime;
 
   private Text pot;
+  private Text tie;
 
   private PlayerUI[] playerUIS;
 
@@ -48,6 +50,8 @@ public class BoardUI {
 
   private Group levelGroup;
   private Group potGroup;
+  private Group tieGroup;
+
 
   public void init() {
     Board board = game.getBoard();
@@ -71,6 +75,14 @@ public class BoardUI {
       pot = game.createText();
       createPot(pot, ViewConstant.POT_X, ViewConstant.POT_Y);
       pot.setTextAlign(TextAlign.CENTER);
+
+      if (RefereeParameter.CALCULATE_WIN_PERCENT) {
+        tieGroup = game.getGraphics().createGroup();
+        tie = game.createText();
+        createTie(tie, ViewConstant.TIE_X, ViewConstant.TIE_Y);
+        tie.setTextAlign(TextAlign.CENTER);
+        updateTie();
+      }
 
       button = game.getGraphics().createGroup();
       Circle buttonCircle = game.getGraphics()
@@ -121,7 +133,7 @@ public class BoardUI {
 
   private void updatePercentWintime() {
     if (RefereeParameter.SHOW_WIN_PERCENT_TIME) {
-      percentWinTime.setText(WinPercentUtils.getTotalTime() +" ms");
+      percentWinTime.setText(WinPercentUtils.getTotalTime() + " ms");
       game.getTooltips().setTooltipText(percentWinTime, "Time to calculate winning probability");
     }
   }
@@ -151,30 +163,50 @@ public class BoardUI {
 
   private void createLabelAndText(Text text, int x, int y, String label) {
     Text labeltext = game.createText();
-    ViewUtils.createTextRectangle(labeltext, x, y, ViewConstant.LABEL_WIDTH, true, game,
+    ViewUtils.createTextRectangle(labeltext, x, y, ViewConstant.LABEL_WIDTH, Color.RED, game,
         levelGroup);
     labeltext.setText(label);
     ViewUtils.createTextRectangle(text, x + ViewConstant.LABEL_WIDTH, y,
-        ViewConstant.LABEL_TEXT_WIDTH, false, game, levelGroup);
+        ViewConstant.LABEL_TEXT_WIDTH, Color.BLACK, game, levelGroup);
   }
 
   private void createPot(Text text, int x, int y) {
     Text labeltext = game.createText();
-    ViewUtils.createTextRectangle(labeltext, x, y, ViewConstant.POT_LABEL_WIDTH, true, game,
+    ViewUtils.createTextRectangle(labeltext, x, y, ViewConstant.POT_LABEL_WIDTH,  Color.RED, game,
         potGroup);
     labeltext.setText("POT");
     ViewUtils.createTextRectangle(text, x + ViewConstant.POT_LABEL_WIDTH, y, ViewConstant.POT_WIDTH,
-        false, game, potGroup);
+        Color.BLACK, game, potGroup);
   }
 
+  private void createTie(Text text, int x, int y) {
+    Text labeltext = game.createText();
+    ViewUtils.createTextRectangle(labeltext, x, y, ViewConstant.TIE_LABEL_WIDTH,  Color.BLUE, game,
+        tieGroup);
+    labeltext.setText("TIE");
+    ViewUtils.createTextRectangle(text, x + ViewConstant.TIE_LABEL_WIDTH, y, ViewConstant.TIE_WIDTH,
+        Color.BLACK, game, tieGroup);
+  }
+
+  private void updateTie() {
+    int split = (int) Math.round(WinPercentUtils.getSplitPercent());
+    if (!RefereeParameter.CALCULATE_WIN_PERCENT || !game.getBoard().isCalculateWinChance() || split == 0) {
+      tieGroup.setVisible(false);
+    } else {
+      tieGroup.setVisible(true);
+      tie.setText(ViewUtils.addSpaceBefore(split +"%", 4));
+    }
+  }
 
   public void update() {
     Board board = game.getBoard();
-    
+
     updatePercentWintime();
     ViewUtils.updateText(game, level, Integer.toString(board.getLevel()));
     ViewUtils.updateText(game, blinds, "$ " + board.getSmallBlind() + " / " + board.getBigBlind());
     ViewUtils.updateText(game, gameNb, Integer.toString(board.getHandNb()));
+    updateTie();
+
     for (int id = 0; id < playerUIS.length; id++) {
       PlayerUI playerUI = playerUIS[id];
       playerUI.setEliminated(game);
@@ -201,7 +233,7 @@ public class BoardUI {
     if (game.isEnd()) {
       highlightWinningCards();
     }
-    
+
     String potOver = "";
     for (int id = 0; id < playerUIS.length; id++) {
       PlayerUI playerUI = playerUIS[id];

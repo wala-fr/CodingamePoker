@@ -114,47 +114,45 @@ public class ViewUtils {
         ViewConstant.CARD_WIDTH, ViewConstant.CARD_HEIGHT);
   }
 
-  public static void createTextRectangle(Text text, TextPoint point, boolean label, Game graphic,
+  public static void createTextRectangle(Text text, TextPoint point, Color color, Game graphic,
       Group group) {
-    createTextRectangle(text, point.getX(), point.getY(), point.getWidth(), label, graphic, group);
+    createTextRectangle(text, point.getX(), point.getY(), point.getWidth(), color, graphic, group);
   }
 
-  public static void createTextRectangleNoBorder(Text text, TextPoint point, boolean label,
+  // public static void createTextRectangleNoBorder(Text text, TextPoint point, boolean label,
+  // Game graphic, Group group) {
+  // createTextRectangle(text, point.getX(), point.getY(), point.getWidth(), label, graphic, group,
+  // false);
+  // }
+
+//  public static void createTextRectangle(Text text, int x, int y, int width, boolean label,
+//      Game graphic, Group group) {
+//    createTextRectangle(text, x, y, width, label, graphic, group, true);
+//  }
+
+  public static void createTextRectangle(Text text, int x, int y, int width, Color color,
       Game graphic, Group group) {
-    createTextRectangle(text, point.getX(), point.getY(), point.getWidth(), label, graphic, group,
-        false);
-  }
-
-  public static void createTextRectangle(Text text, int x, int y, int width, boolean label,
-      Game graphic, Group group) {
-    createTextRectangle(text, x, y, width, label, graphic, group, true);
-  }
-
-  private static void createTextRectangle(Text text, int x, int y, int width, boolean label,
-      Game graphic, Group group, boolean border) {
     text.setX(x + 10)
       .setY(y + 5)
       .setZIndex(ViewConstant.Z_INDEX_BOARD)
       .setFontSize(ViewConstant.LABEL_FONT_SIZE)
-      .setFontWeight(label ? FontWeight.BOLD : FontWeight.BOLD)
+      .setFontWeight(FontWeight.BOLD)
       .setFontFamily(ViewConstant.FONT)
       .setTextAlign(TextAlign.RIGHT)
       .setMaxWidth(width - ViewConstant.DELTA_RECTANGLE_TEXT_WIDTH)
       .setFillColor(ViewConstant.LABEL_TEXT_COLOR);
     group.add(text);
-    if (border) {
-      Rectangle rectangle = graphic.getGraphics()
-        .createRectangle()
-        .setX(x)
-        .setY(y)
-        .setZIndex(ViewConstant.Z_INDEX_BOARD - 1)
-        .setWidth(width)
-        .setHeight(ViewConstant.LABEL_HEIGHT)
-        .setLineWidth(ViewConstant.LABEL_FRAME_WIDTH)
-        .setLineColor(ViewConstant.LABEL_TEXT_COLOR)
-        .setFillColor(label ? ViewConstant.LABEL_COLOR : ViewConstant.LABEL_TEXT_BACK_GROUND_COLOR);
-      group.add(rectangle);
-    }
+    Rectangle rectangle = graphic.getGraphics()
+      .createRectangle()
+      .setX(x)
+      .setY(y)
+      .setZIndex(ViewConstant.Z_INDEX_BOARD - 1)
+      .setWidth(width)
+      .setHeight(ViewConstant.LABEL_HEIGHT)
+      .setLineWidth(ViewConstant.LABEL_FRAME_WIDTH)
+      .setLineColor(ViewConstant.LABEL_TEXT_COLOR)
+      .setFillColor(color == Color.RED ? ViewConstant.LABEL_COLOR : color == Color.BLUE ? ViewConstant.TIE_COLOR : ViewConstant.LABEL_TEXT_BACK_GROUND_COLOR);
+    group.add(rectangle);
   }
 
   public static boolean isShowWinAmount(int winAmount, Board board) {
@@ -168,7 +166,7 @@ public class ViewUtils {
     }
     return s;
   }
-  
+
   public static Sprite createCard(Game game) {
     Sprite ret = game.getGraphics()
       .createSprite()
@@ -179,7 +177,7 @@ public class ViewUtils {
       .setBaseHeight(ViewConstant.CARD_HEIGHT);
     return ret;
   }
-  
+
   public static void hide(Sprite card, Game game) {
     // card.setAlpha(0, Curve.IMMEDIATE);
     if (card != null) {

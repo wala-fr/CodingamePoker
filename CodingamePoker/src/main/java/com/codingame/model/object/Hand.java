@@ -3,8 +3,6 @@ package com.codingame.model.object;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.ToIntFunction;
-import com.codingame.model.utils.AssertUtils;
-import com.codingame.model.variable.Parameter;
 
 public class Hand {
 
@@ -26,10 +24,6 @@ public class Hand {
 
   public FiveCardHand calculateBestFiveCardhand(List<Card> commonCards) {
     FiveCardHand ret = calculateBestFiveCardhand(commonCards, FiveCardHand.naiveValue);
-    if (Parameter.ACTIVATE_ASSERTION) {
-      FiveCardHand kevHand = calculateBestFiveCardhand(commonCards, FiveCardHand.cactusKevValue);
-      AssertUtils.test(ret.equals(kevHand), ret, kevHand);
-    }
     return ret;
   }
 

@@ -14,6 +14,7 @@ import com.codingame.model.object.enumeration.Position;
 import com.codingame.model.utils.AssertUtils;
 import com.codingame.model.utils.skeval.WinPercentUtils;
 import com.codingame.view.object.Game;
+import com.codingame.view.parameter.Color;
 import com.codingame.view.parameter.ViewConstant;
 import com.codingame.view.parameter.ViewUtils;
 
@@ -70,17 +71,17 @@ public class PlayerUI {
   private void createLabel(Game game, PlayerUICoordinates coordinates) {
     labelGroup = game.createGroup();
     action = game.createText();
-    ViewUtils.createTextRectangle(action, coordinates.getAction(), false, game, labelGroup);
+    ViewUtils.createTextRectangle(action, coordinates.getAction(), Color.BLACK, game, labelGroup);
     stack = game.createText();
-    ViewUtils.createTextRectangle(stack, coordinates.getStack(), false, game, labelGroup);
+    ViewUtils.createTextRectangle(stack, coordinates.getStack(), Color.BLACK, game, labelGroup);
 
     win = game.createText();
-    ViewUtils.createTextRectangle(win, coordinates.getWin(), false, game, labelGroup);
+    ViewUtils.createTextRectangle(win, coordinates.getWin(), Color.BLACK, game, labelGroup);
 
     position = game.createText();
-    ViewUtils.createTextRectangle(position, coordinates.getPosition(), true, game, labelGroup);
+    ViewUtils.createTextRectangle(position, coordinates.getPosition(), Color.RED, game, labelGroup);
     message = game.createText();
-    ViewUtils.createTextRectangle(message, coordinates.getMessage(), false, game, labelGroup);
+    ViewUtils.createTextRectangle(message, coordinates.getMessage(), Color.BLACK, game, labelGroup);
   }
 
   void update(Game game) {
@@ -98,12 +99,19 @@ public class PlayerUI {
         ViewUtils.updateText(game, win, w);
         win.setFillColor(winner ? ViewConstant.WIN_COLOR : ViewConstant.LOSS_COLOR);
       } else {
-        if (player.isFolded() || !RefereeParameter.CALCULATE_WIN_PERCENT || !game.getBoard().isCalculateWinChance()) {
+        if (player.isFolded() || !RefereeParameter.CALCULATE_WIN_PERCENT
+            || !game.getBoard().isCalculateWinChance()) {
           ViewUtils.clearText(game, win);
         } else {
-          int percent = (int) Math.round(WinPercentUtils.getWinPercent(id)) ;
-          String w = ViewUtils.addSpaceBefore(percent +"%", 5);
-          ViewUtils.updateText(game, win, w, "Winning probability");
+          int percent = (int) Math.round(WinPercentUtils.getWinPercent(id));
+          double split = WinPercentUtils.getSplitPercent(id);
+          int splitPercent = (int) Math.round(WinPercentUtils.getSplitPercent(id));
+
+          String w = ViewUtils.addSpaceBefore(percent + "%", 5);
+          String toolTipMessage = RefereeParameter.CALCULATE_SPLIT_PERCENT
+              ? "WIN " + percent + "%" + (split > 0 ? " - SPLIT " + splitPercent + "%" : "")
+              : "Winning probability";
+          ViewUtils.updateText(game, win, w, toolTipMessage);
           win.setFillColor(ViewConstant.LABEL_TEXT_COLOR);
         }
       }

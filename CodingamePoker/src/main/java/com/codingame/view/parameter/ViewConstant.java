@@ -62,6 +62,9 @@ public class ViewConstant {
 
   public static int POT_X;
   public static int POT_Y;
+  
+  public static int TIE_X;
+  public static int TIE_Y;
 
   public static int NO_ACTION_X;
   public static int NO_ACTION_Y;
@@ -104,7 +107,10 @@ public class ViewConstant {
 
     POT_X = middleX - POT_LABEL_WIDTH;// (POT_LABEL_WIDTH + POT_WIDTH) / 2;
     POT_Y = BOARD_CARD_Y - 110;
-
+    
+    TIE_X = POT_X + (ViewConstant.POT_LABEL_WIDTH + ViewConstant.POT_WIDTH + 50);
+    TIE_Y = POT_Y;
+    
     NO_ACTION_X = POT_X + POT_LABEL_WIDTH + POT_WIDTH + (ViewConstant.BUTTON_RADIUS + 50);
     NO_ACTION_Y = POT_Y + (ViewConstant.BUTTON_RADIUS - 5);
 
@@ -157,6 +163,9 @@ public class ViewConstant {
 
   public static final int POT_LABEL_WIDTH = 100;
   public static final int POT_WIDTH = 200;
+  
+  public static final int TIE_LABEL_WIDTH = 90;
+  public static final int TIE_WIDTH = 130;
 
   public static final int DELTA_RECTANGLE_TEXT_WIDTH = 10;
 
@@ -179,6 +188,7 @@ public class ViewConstant {
   public static final double MAX_TIME = 0.9;
   
   public static final int CARD_MIN_NB = 4 * 2 + 5 + 3 + 1;
+  public static final int TIE_COLOR = 0x4486ea;
 
 //  public static final int SHOW_WIN_AMOUNT_CHIPS = 500;
 

@@ -12,12 +12,10 @@ import com.codingame.model.object.enumeration.HandType;
 import com.codingame.model.object.enumeration.Rank;
 import com.codingame.model.object.enumeration.Suit;
 import com.codingame.model.utils.AssertUtils;
-import com.codingame.model.utils.cactus.CactusKevUtils;
 
 public class FiveCardHand {
 
   public static final ToIntFunction<FiveCardHand> naiveValue = h -> h.getValue();
-  public static final ToIntFunction<FiveCardHand> cactusKevValue = h -> CactusKevUtils.getHandRank(h);
   
   private List<Card> cards;
   private HandType handType;
