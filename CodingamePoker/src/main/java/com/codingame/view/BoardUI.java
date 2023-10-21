@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.codingame.game.RefereeParameter;
 import com.codingame.gameengine.module.entities.Circle;
 import com.codingame.gameengine.module.entities.Group;
 import com.codingame.gameengine.module.entities.Text;
@@ -15,6 +16,7 @@ import com.codingame.model.object.FiveCardHand;
 import com.codingame.model.object.PlayerModel;
 import com.codingame.model.object.board.Board;
 import com.codingame.model.utils.AssertUtils;
+import com.codingame.model.utils.skeval.WinPercentUtils;
 import com.codingame.view.object.Game;
 import com.codingame.view.object.Point;
 import com.codingame.view.parameter.ViewConstant;
@@ -35,6 +37,7 @@ public class BoardUI {
   private Text level;
   private Text gameNb;
   private Text blinds;
+  private Text percentWinTime;
 
   private Text pot;
 
@@ -93,9 +96,34 @@ public class BoardUI {
       actionButton = game.getGraphics().createGroup();
       createButton(actionButton, "A", "ACTION", ViewConstant.ACTION_BUTTON_FILL_COLOR,
           ViewConstant.Z_INDEX_ACTION_BUTTON);
+
+      initPercentWintime();
+
       updateButtons(board);
     }
     deckUI.reset();
+  }
+
+  private void initPercentWintime() {
+    if (RefereeParameter.SHOW_WIN_PERCENT_TIME) {
+      percentWinTime = game.createText();
+      percentWinTime.setX(ViewConstant.WIDTH - 300)
+        .setY(20)
+        .setZIndex(ViewConstant.Z_INDEX_BOARD)
+        .setFontSize((int) (1.2 * ViewConstant.LABEL_FONT_SIZE))
+        .setFontWeight(FontWeight.BOLD)
+        .setFontFamily(ViewConstant.FONT)
+        .setTextAlign(TextAlign.RIGHT)
+        .setMaxWidth(200)
+        .setFillColor(ViewConstant.LABEL_TEXT_COLOR);
+    }
+  }
+
+  private void updatePercentWintime() {
+    if (RefereeParameter.SHOW_WIN_PERCENT_TIME) {
+      percentWinTime.setText(WinPercentUtils.getTotalTime() +" ms");
+      game.getTooltips().setTooltipText(percentWinTime, "Time to calculate winning probability");
+    }
   }
 
   private void createButton(Group button, String text, String toolTipText, int fillcolor,
@@ -142,7 +170,8 @@ public class BoardUI {
 
   public void update() {
     Board board = game.getBoard();
-
+    
+    updatePercentWintime();
     ViewUtils.updateText(game, level, Integer.toString(board.getLevel()));
     ViewUtils.updateText(game, blinds, "$ " + board.getSmallBlind() + " / " + board.getBigBlind());
     ViewUtils.updateText(game, gameNb, Integer.toString(board.getHandNb()));
@@ -197,7 +226,8 @@ public class BoardUI {
     }
     Point point = ViewUtils.getPlayerUICoordinates(board, board.getDealerId()).getButton();
     point.setPosition(button);
-    point = board.getNextPlayerId() == -1 ? ViewUtils.getNoActionButtonPosition() : ViewUtils.getPlayerUICoordinates(board, board.getNextPlayerId()).getActionButton();
+    point = board.getNextPlayerId() == -1 ? ViewUtils.getNoActionButtonPosition()
+        : ViewUtils.getPlayerUICoordinates(board, board.getNextPlayerId()).getActionButton();
     point.setPosition(actionButton);
     game.commitEntityState(0.1, button, actionButton);
   }

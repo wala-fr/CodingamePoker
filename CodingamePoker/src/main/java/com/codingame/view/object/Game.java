@@ -132,6 +132,10 @@ public class Game {
   public boolean isEnd() {
     return phase == Phase.END;
   }
+  
+  public boolean isLastHandCanceled() {
+    return isEnd() && isMaxRound() && !getBoard().isOver();
+  }
 
   public boolean isAction() {
     return phase == Phase.ACTION;

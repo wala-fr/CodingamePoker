@@ -18,6 +18,7 @@ import com.codingame.model.utils.ActionUtils;
 import com.codingame.model.utils.AssertUtils;
 import com.codingame.model.utils.MessageUtils;
 import com.codingame.model.utils.RandomUtils;
+import com.codingame.model.utils.skeval.WinPercentUtils;
 import com.codingame.view.Viewer;
 import com.codingame.view.data.PokerModule;
 import com.codingame.view.object.Game;
@@ -92,6 +93,9 @@ public class Referee extends AbstractReferee {
 
     int playerId = board.getNextPlayerId();
     board.deal();
+    
+    WinPercentUtils.proceed(board, game.getTurn());
+
     if (playerId == -1) {
       logger.info("all players are all-in");
       inputSender.updateRoundInfo(board, null, turn);

@@ -206,11 +206,15 @@ public class Board {
   }
 
   public void increaseLevel() {
-    if (handNb % Parameter.HAND_NB_BY_LEVEL == 0) {
+    if (isIncreaseLevel()) {
       level++;
       smallBlind *= Parameter.LEVEL_BLIND_MULTIPLIER;
       bigBlind *= Parameter.LEVEL_BLIND_MULTIPLIER;
     }
+  }
+  
+  public boolean isIncreaseLevel() {
+    return handNb % Parameter.HAND_NB_BY_LEVEL == 0;
   }
 
   public void calculateNextPlayer() {

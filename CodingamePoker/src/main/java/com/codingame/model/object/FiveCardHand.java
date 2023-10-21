@@ -12,11 +12,13 @@ import com.codingame.model.object.enumeration.HandType;
 import com.codingame.model.object.enumeration.Rank;
 import com.codingame.model.object.enumeration.Suit;
 import com.codingame.model.utils.AssertUtils;
+import com.codingame.model.utils.cactus.CactusKevUtils;
 
 public class FiveCardHand {
 
   public static final ToIntFunction<FiveCardHand> naiveValue = h -> h.getValue();
-
+  public static final ToIntFunction<FiveCardHand> cactusKevValue = h -> CactusKevUtils.getHandRank(h);
+  
   private List<Card> cards;
   private HandType handType;
   private int value;
@@ -209,8 +211,8 @@ public class FiveCardHand {
       ret.append(handType.getShortName());
       ret.append(' ');
       Card card = cards.get(4);
-      ret.append(card.getRank().getName());
-      ret.append('s');
+      ret.append(card.getRank().toString());
+      ret.append('S');
     } else if (handType == HandType.TWO_PAIR) {
       ret.append(handType.getShortName());
       ret.append(' ');

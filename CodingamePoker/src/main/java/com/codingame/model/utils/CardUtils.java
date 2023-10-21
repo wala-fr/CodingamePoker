@@ -53,5 +53,29 @@ public class CardUtils {
   public static List<Card> calculateHandFromString(String str) {
     return Arrays.stream(str.split(" ")).map(s -> fromString(s)).collect(Collectors.toList());
   }
+  
+  public static int calculateCardKev(Card card) {
+    return calculateCardKev(card.getRank(), card.getSuit());
+  }
+  
+  public static int calculateCardKev(Rank rank, Suit suit) {
+    return calculateCardKev(rank.getIndex() - 2, suit.ordinal());
+  }
+
+  public static int calculateCardKev(int rank, int suit) {
+    return 4 * rank + suit;
+  }
+  
+  public static int calculateCardSK(Card card) {
+    return CardUtils.calculateCardSK(card.getRank(), card.getSuit());
+  }
+  
+  public static int calculateCardSK(Rank rank, Suit suit) {
+    return calculateCardSK(rank.getIndex() - 2, suit.ordinal());
+  }
+  
+  public static int calculateCardSK(int rank, int suit) {
+    return 4 * (12 - rank) + suit;
+  }
 
 }

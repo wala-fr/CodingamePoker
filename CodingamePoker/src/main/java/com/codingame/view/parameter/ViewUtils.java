@@ -158,7 +158,8 @@ public class ViewUtils {
   }
 
   public static boolean isShowWinAmount(int winAmount, Board board) {
-    return winAmount >= (board.getPlayerNotEliminatedNb() - 1) * ViewConstant.SHOW_WIN_AMOUNT_COEFF * board.getBigBlind();
+    return winAmount >= (board.getPlayerNotEliminatedNb() - 1) * ViewConstant.SHOW_WIN_AMOUNT_COEFF
+        * board.getBigBlind() || (board.isIncreaseLevel() && winAmount > 0);
   }
 
   public static String addSpaceBefore(String s, int length) {
@@ -180,7 +181,7 @@ public class ViewUtils {
   }
   
   public static void hide(Sprite card, Game game) {
-//    card.setAlpha(0, Curve.IMMEDIATE);
+    // card.setAlpha(0, Curve.IMMEDIATE);
     if (card != null) {
       card.setZIndex(ViewConstant.Z_INDEX_INVISIBLE);
       game.commitEntityState(card);

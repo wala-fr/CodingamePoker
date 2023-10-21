@@ -11,7 +11,9 @@ public class RefereeParameter {
 
   public static final boolean SHOW_FOLDED_CARDS = true;
 
-  
+  public static final boolean CALCULATE_WIN_PERCENT = true;
+  public static final boolean SHOW_WIN_PERCENT_TIME = CALCULATE_WIN_PERCENT && true;
+
   public static final String WORD_DELIMITER = "_";
   public static final String NONE = "NONE";
 

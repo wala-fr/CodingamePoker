@@ -26,6 +26,10 @@ public class Hand {
 
   public FiveCardHand calculateBestFiveCardhand(List<Card> commonCards) {
     FiveCardHand ret = calculateBestFiveCardhand(commonCards, FiveCardHand.naiveValue);
+    if (Parameter.ACTIVATE_ASSERTION) {
+      FiveCardHand kevHand = calculateBestFiveCardhand(commonCards, FiveCardHand.cactusKevValue);
+      AssertUtils.test(ret.equals(kevHand), ret, kevHand);
+    }
     return ret;
   }
 

@@ -1,6 +1,7 @@
 package com.codingame.view;
 
 import com.codingame.game.Player;
+import com.codingame.game.RefereeParameter;
 import com.codingame.gameengine.module.entities.Group;
 import com.codingame.gameengine.module.entities.RoundedRectangle;
 import com.codingame.gameengine.module.entities.Sprite;
@@ -11,6 +12,7 @@ import com.codingame.model.object.PlayerModel;
 import com.codingame.model.object.board.Board;
 import com.codingame.model.object.enumeration.Position;
 import com.codingame.model.utils.AssertUtils;
+import com.codingame.model.utils.skeval.WinPercentUtils;
 import com.codingame.view.object.Game;
 import com.codingame.view.parameter.ViewConstant;
 import com.codingame.view.parameter.ViewUtils;
@@ -73,7 +75,7 @@ public class PlayerUI {
     ViewUtils.createTextRectangle(stack, coordinates.getStack(), false, game, labelGroup);
 
     win = game.createText();
-    ViewUtils.createTextRectangleNoBorder(win, coordinates.getWin(), false, game, labelGroup);
+    ViewUtils.createTextRectangle(win, coordinates.getWin(), false, game, labelGroup);
 
     position = game.createText();
     ViewUtils.createTextRectangle(position, coordinates.getPosition(), true, game, labelGroup);
@@ -96,7 +98,14 @@ public class PlayerUI {
         ViewUtils.updateText(game, win, w);
         win.setFillColor(winner ? ViewConstant.WIN_COLOR : ViewConstant.LOSS_COLOR);
       } else {
-        ViewUtils.clearText(game, win);
+        if (player.isFolded() || !RefereeParameter.CALCULATE_WIN_PERCENT || !game.getBoard().isCalculateWinChance()) {
+          ViewUtils.clearText(game, win);
+        } else {
+          int percent = (int) Math.round(WinPercentUtils.getWinPercent(id)) ;
+          String w = ViewUtils.addSpaceBefore(percent +"%", 5);
+          ViewUtils.updateText(game, win, w, "Winning probability");
+          win.setFillColor(ViewConstant.LABEL_TEXT_COLOR);
+        }
       }
       updatePosition(game);
       if (game.isDeal()) {
@@ -106,7 +115,7 @@ public class PlayerUI {
         ViewUtils.updateText(game, action, player.getMessage(board));
         folded = player.isFolded();
       }
-      if (game.isEnd() && game.isMaxRound() && !board.isOver()) {
+      if (game.isLastHandCanceled()) {
         ViewUtils.clearText(game, action);
       }
       ViewUtils.updateText(game, message, this.player.getMessage());
