@@ -94,8 +94,6 @@ public class Referee extends AbstractReferee {
     int playerId = board.getNextPlayerId();
     board.deal();
     
-    WinPercentUtils.proceed(board, game.getTurn());
-
     if (playerId == -1) {
       logger.info("all players are all-in");
       inputSender.updateRoundInfo(board, null, turn);
@@ -139,6 +137,7 @@ public class Referee extends AbstractReferee {
         logger.info("actionInfo {}", actionInfo.getError());
       }
     }
+    WinPercentUtils.proceed(board, game.getTurn());
 
     game.setPhase(Phase.ACTION);
     viewer.update();

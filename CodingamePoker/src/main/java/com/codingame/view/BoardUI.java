@@ -189,12 +189,14 @@ public class BoardUI {
   }
 
   private void updateTie() {
-    int split = (int) Math.round(WinPercentUtils.getSplitPercent());
-    if (!RefereeParameter.CALCULATE_WIN_PERCENT || !game.getBoard().isCalculateWinChance() || split == 0) {
+    double splitPercent = WinPercentUtils.getSplitPercent();
+    int split = ViewUtils.round(splitPercent);
+    if (!RefereeParameter.CALCULATE_WIN_PERCENT || !game.getBoard().isCalculateWinChance() || splitPercent == 0) {
       tieGroup.setVisible(false);
     } else {
       tieGroup.setVisible(true);
-      tie.setText(ViewUtils.addSpaceBefore(split +"%", 4));
+      String w = ViewUtils.addSpaceBefore(split +"%", 4);
+      ViewUtils.updateText(game, tie, w, "SPLIT " + ViewUtils.roundTwoDecimal(splitPercent));
     }
   }
 

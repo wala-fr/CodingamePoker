@@ -7,7 +7,6 @@ import com.codingame.game.RefereeParameter;
 import com.codingame.model.object.Card;
 import com.codingame.model.object.PlayerModel;
 import com.codingame.model.object.board.Board;
-import com.codingame.model.utils.AssertUtils;
 import com.codingame.model.utils.CardUtils;
 
 public class WinPercentUtils {
@@ -29,6 +28,7 @@ public class WinPercentUtils {
   private static int totalBoardNb;
   private static int splitTotalBoardNb;
   private static double splitPercent;
+  private static int notFoldedNb;
 
   public static void proceed(Board board, int turn) {
     logger.error("{} {}", turn, !board.isCalculateWinChance());
@@ -58,7 +58,7 @@ public class WinPercentUtils {
     }
     totalBoardNb = 0;
     splitTotalBoardNb = 0;
-    int notFoldedNb = 0;
+    notFoldedNb = 0;
     for (int i = 0; i < board.getPlayerNb(); i++) {
       winBoardNb[i] = 0;
       splitBoardNb[i] = 0;
@@ -76,7 +76,6 @@ public class WinPercentUtils {
         }
       }
     }
-    AssertUtils.test(notFoldedNb > 1);
     int cardNb = 0;
     for (Card card : board.getBoardCards()) {
       int tmp = CardUtils.calculateCardSK(card);
@@ -86,16 +85,26 @@ public class WinPercentUtils {
   }
 
   private static void calculateWinPercents(Board board) {
-    int cardNb = board.getBoardCards().size();
-    if (cardNb == 0) {
-      calculatePreFlopWinPercents(board);
-    } else if (cardNb == 3) {
-      calculateFlopWinPercents(board);
-    } else if (cardNb == 4) {
-      calculateTurnWinPercents(board);
+    if (notFoldedNb == 1) {
+      for (int i = 0; i < board.getPlayerNb(); i++) {
+        if (!folded[i]) {
+          winBoardNb[i] = 1;
+        }
+      }
+      totalBoardNb = 1;
     } else {
-      calculateRiverWinPercents(board);
+      int cardNb = board.getBoardCards().size();
+      if (cardNb == 0) {
+        calculatePreFlopWinPercents(board);
+      } else if (cardNb == 3) {
+        calculateFlopWinPercents(board);
+      } else if (cardNb == 4) {
+        calculateTurnWinPercents(board);
+      } else {
+        calculateRiverWinPercents(board);
+      }
     }
+ 
     // logger.error(Arrays.toString(winBoardNb));
     for (int i = 0; i < board.getPlayerNb(); i++) {
       winPercents[i] = 100.0 * winBoardNb[i] / totalBoardNb;
@@ -237,6 +246,14 @@ public class WinPercentUtils {
     } else {
       splitTotalBoardNb++;
     }
+  }
+  
+  public static boolean isSureWin(int id) {
+    return winBoardNb[id] == totalBoardNb || splitBoardNb[id] == totalBoardNb;
+  }
+  
+  public static boolean isSureLose(int id) {
+    return winBoardNb[id] == 0 && splitBoardNb[id] == 0;
   }
 
   public static long getTotalTime() {

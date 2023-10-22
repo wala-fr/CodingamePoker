@@ -125,10 +125,10 @@ public class ViewUtils {
   // false);
   // }
 
-//  public static void createTextRectangle(Text text, int x, int y, int width, boolean label,
-//      Game graphic, Group group) {
-//    createTextRectangle(text, x, y, width, label, graphic, group, true);
-//  }
+  // public static void createTextRectangle(Text text, int x, int y, int width, boolean label,
+  // Game graphic, Group group) {
+  // createTextRectangle(text, x, y, width, label, graphic, group, true);
+  // }
 
   public static void createTextRectangle(Text text, int x, int y, int width, Color color,
       Game graphic, Group group) {
@@ -151,7 +151,9 @@ public class ViewUtils {
       .setHeight(ViewConstant.LABEL_HEIGHT)
       .setLineWidth(ViewConstant.LABEL_FRAME_WIDTH)
       .setLineColor(ViewConstant.LABEL_TEXT_COLOR)
-      .setFillColor(color == Color.RED ? ViewConstant.LABEL_COLOR : color == Color.BLUE ? ViewConstant.TIE_COLOR : ViewConstant.LABEL_TEXT_BACK_GROUND_COLOR);
+      .setFillColor(color == Color.RED ? ViewConstant.LABEL_COLOR
+          : color == Color.BLUE ? ViewConstant.TIE_COLOR
+              : ViewConstant.LABEL_TEXT_BACK_GROUND_COLOR);
     group.add(rectangle);
   }
 
@@ -184,5 +186,13 @@ public class ViewUtils {
       card.setZIndex(ViewConstant.Z_INDEX_INVISIBLE);
       game.commitEntityState(card);
     }
+  }
+
+  public static String roundTwoDecimal(double value) {
+    return String.format("%.2f", value);
+  }
+
+  public static int round(double value) {
+    return (int) Math.round(value);
   }
 }
