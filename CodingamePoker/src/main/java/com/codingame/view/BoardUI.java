@@ -134,7 +134,7 @@ public class BoardUI {
   private void updatePercentWintime() {
     if (RefereeParameter.SHOW_WIN_PERCENT_TIME) {
       percentWinTime.setText(WinPercentUtils.getTotalTime() + " ms");
-      game.getTooltips().setTooltipText(percentWinTime, "Time to calculate winning probability");
+      game.getTooltips().setTooltipText(percentWinTime, "Time to calculate winning probabilities in milliseconds");
     }
   }
 
