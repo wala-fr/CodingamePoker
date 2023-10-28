@@ -36,6 +36,8 @@ Example : FLOP / TURN / RIVER (blinds are $10 / $20)<br/>
 </ul>
 </li> 
 <li><b>If a player's stack is larger than the SB (small blind) but smaller than the BB, he will be considered ALL-IN in any position other than the SB (assuming he folds).</b>
-</li> 
+</li>
+<li>To avoid <b>'infinite' raises</b> (every player raises by one BB). There's a <b>"cap"</b> (limit) of 10 raises by betting round.
+</li>
 </ol>
 

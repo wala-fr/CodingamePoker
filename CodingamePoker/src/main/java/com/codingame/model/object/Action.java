@@ -112,5 +112,9 @@ public class Action {
     return ret;
   }
 
+  public Action copy() {
+    return create(type, amount);
+  }
+
 
 }

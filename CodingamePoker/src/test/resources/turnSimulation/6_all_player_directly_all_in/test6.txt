@@ -19,4 +19,4 @@ QH KS
 bb 1
 
 2:FOLD
-0:CALL
+0:CALL:ALL-IN

@@ -1,0 +1,37 @@
+mare than cape raise
+
+7D 6D QD 2D AH
+
+player 2
+
+7S QC
+1000
+1240
+
+8S 2H
+1000
+760
+
+bb 1
+
+0:CALL
+1:CHECK
+ 
+1:BET 20
+0:BET 40
+1:BET 40
+0:BET 40
+1:BET 40
+0:BET 40
+1:BET 40
+0:BET 40
+1:BET 40
+0:BET 40
+1:BET 40
+0:ALL-IN:CALL
+
+1:CHECK
+0:CHECK
+
+1:CHECK
+0:CHECK

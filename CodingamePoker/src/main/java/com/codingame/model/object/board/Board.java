@@ -599,6 +599,10 @@ public class Board {
       }
     }
   }
+  
+  public boolean isRaiseCap() {
+    return raiseNb > Parameter.RAISE_CAP;
+  }
 
   public int getNextPlayerId() {
     return nextPlayerId;

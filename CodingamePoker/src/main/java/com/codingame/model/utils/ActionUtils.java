@@ -32,15 +32,17 @@ public class ActionUtils {
     PlayerModel player = board.getPlayer(playerId);
     int stack = player.getStack();
     int callAmount = board.calculateCallAmount(player);
+    boolean raiseCap = board.isRaiseCap();
+    
     if (callAmount > 0) {
       if (callAmount < stack) {
         possibleActions.add(Action.CALL);
-      } else {
+      } else if (!raiseCap) {
         possibleActions.add(Action.ALL_IN);
       }
     }
     AssertUtils.test(!board.calculateNoMoreCanDoAction());
-    if (board.getLastRoundRaisePlayerId() != playerId) {
+    if (board.getLastRoundRaisePlayerId() != playerId && !raiseCap) {
       if (!possibleActions.contains(Action.ALL_IN)) {
         possibleActions.add(Action.ALL_IN);
       }
@@ -58,7 +60,7 @@ public class ActionUtils {
     return possibleActions;
   }
 
-  public static void assertActionInfo(Board board, ActionInfo info) {
+  private static void assertActionInfo(Board board, ActionInfo info) {
     if (Parameter.ACTIVATE_ASSERTION) {
       ActionInfo copy = info.copy();
       logger.info("assertActionInfo {}", copy);
@@ -81,7 +83,7 @@ public class ActionUtils {
     }
   }
   
-  public static void assertPossibleActions(Board board, List<Action> possibleActions) {
+  private static void assertPossibleActions(Board board, List<Action> possibleActions) {
     if (Parameter.ACTIVATE_ASSERTION) {
 
       for (Action action : possibleActions) {
@@ -117,7 +119,11 @@ public class ActionUtils {
     int stack = player.getStack();
     boolean levelError = false;
     int callAmount = board.calculateCallAmount(player);
-
+    boolean raiseCap = board.isRaiseCap();
+    
+    // in case the new action is a call
+    Action callAction = callAmount < stack ? Action.CALL : Action.ALL_IN;
+        
     Action newBet = bet;
     AssertUtils.test(!board.calculateNoMoreCanDoAction());
     if (type == ActionType.CALL) {
@@ -137,18 +143,25 @@ public class ActionUtils {
           errorStr = MessageUtils.format("wrong.action.can.not.raise", playerId, newBet);
         }
       }
+      if (raiseCap) {
+        newBet = callAction;
+        errorStr = MessageUtils.format("wrong.action.can.not.raise.cap", playerId, newBet, Parameter.RAISE_CAP);
+      }
     } else if (type == ActionType.BET) {
       if (bet.getAmount() <= 0) {
         errorStr = MessageUtils.format("wrong.action.bet.wrong.amount", playerId, bet.getAmount());
         levelError = true;
         newBet = Action.FOLD;
       } else if (bet.getAmount() <= callAmount) {
-        newBet = callAmount < stack ? Action.CALL : Action.ALL_IN;
+        newBet = callAction;
         errorStr = MessageUtils.format("wrong.action.raise.amount.less.than.call", playerId,
             bet.getAmount(), callAmount, newBet);
       } else if (board.getLastRoundRaisePlayerId() == playerId) {
-        newBet = callAmount < stack ? Action.CALL : Action.ALL_IN;
+        newBet = callAction;
         errorStr = MessageUtils.format("wrong.action.can.not.raise", playerId, newBet);
+      } else if (raiseCap) {
+        newBet = callAction;
+        errorStr = MessageUtils.format("wrong.action.can.not.raise.cap", playerId, newBet, Parameter.RAISE_CAP);
       } else if (bet.getAmount() >= stack) {
         errorStr =
             MessageUtils.format("wrong.action.is.allin", playerId, stack, bet.getAmount(), bet);
@@ -187,4 +200,5 @@ public class ActionUtils {
     info.setError(errorStr, levelError);
     info.setAction(newBet);
   }
+  
 }

@@ -21,6 +21,7 @@ public class TestUtils {
   public static void initParameter() {
     Parameter.BIG_BLINB = TestParameter.BIG_BLINB;
     Parameter.SMALL_BLINB = TestParameter.SMALL_BLINB;
+    Parameter.RAISE_CAP = TestParameter.RAISE_CAP;
     Parameter.ACTIVATE_ASSERTION = true;
   }
 

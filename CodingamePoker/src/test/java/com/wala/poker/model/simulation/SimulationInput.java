@@ -1,23 +1,20 @@
 package com.wala.poker.model.simulation;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.codingame.model.object.Action;
 import com.codingame.model.object.ActionInfo;
 import com.codingame.model.object.Card;
 import com.codingame.model.object.PlayerModel;
 import com.codingame.model.object.board.Board;
-import com.codingame.model.object.enumeration.HandType;
 import com.codingame.model.utils.ActionUtils;
 import com.codingame.model.utils.CardUtils;
 import com.wala.poker.model.TestUtils;
@@ -111,6 +108,7 @@ public class SimulationInput {
         assertFalse(board.isOver());
         assertEquals(actionInput.getPlayerId(), board.getNextPlayerId());
         ActionInfo actionInfo = actionInput.getActionInfo();
+        Action realAction = actionInput.getRealAction().copy();
         ActionUtils.doAction(board, actionInfo);
         if (actionInfo.hasError()) {
           logger.info("ERRRRRRRRRRRRRRRROR : {} {}", actionInfo.getError(), actionInfo.isLevelError());
@@ -118,8 +116,8 @@ public class SimulationInput {
 //          System.err.println(actionInfo.getError() +" "+ actionInfo.isLevelError());
         }
         logger.debug("{}", board.toPlayerStatesString());
-        assertEquals(actionInput.getRealAction(), actionInfo.getAction());
-
+        logger.debug("{} {}", actionInfo.getAction(), realAction);
+        assertEquals(realAction, actionInfo.getAction());
         ActionTestUtils.endTurn(board);
       }
     }

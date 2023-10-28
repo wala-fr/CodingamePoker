@@ -60,7 +60,7 @@ table, td, th {
 		<td align="center"><b>BET</b> / <b>ALL-IN</b></td>
 		<td align="center"><b>CALL</b></td>
 		<td align="left">Player can only <b>CALL</b> or <b>FOLD</b>,
-			since he was <b>the last one to make a "proper" raise</b>.
+			since he was <b>the last one to make a "proper" raise</b> or <b>the limit of raises by betting round</b> has been reached.
 		</td>
 		<td align="left">FLOP
 			<ol>
