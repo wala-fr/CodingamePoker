@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import com.codingame.gameengine.module.entities.Entity;
 import com.codingame.gameengine.module.entities.Sprite;
-import com.codingame.gameengine.module.entities.Text;
 import com.codingame.view.CardSprite;
 
 public class GlobalViewData {
