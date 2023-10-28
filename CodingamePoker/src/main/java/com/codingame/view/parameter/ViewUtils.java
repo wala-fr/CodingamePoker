@@ -1,5 +1,7 @@
 package com.codingame.view.parameter;
 
+import com.codingame.gameengine.module.entities.BlendableEntity.BlendMode;
+import com.codingame.gameengine.module.entities.Entity;
 import com.codingame.gameengine.module.entities.Group;
 import com.codingame.gameengine.module.entities.Rectangle;
 import com.codingame.gameengine.module.entities.Sprite;
@@ -155,6 +157,22 @@ public class ViewUtils {
           : color == Color.BLUE ? ViewConstant.TIE_COLOR
               : ViewConstant.LABEL_TEXT_BACK_GROUND_COLOR);
     group.add(rectangle);
+  }
+
+  public static void copy(Text source, Text destination) {
+    destination.setX(source.getX())
+      .setY(source.getY())
+      .setZIndex(source.getZIndex())
+      .setFontSize(source.getFontSize())
+      .setFontWeight(source.getFontWeight())
+      .setFontFamily(source.getFontFamily())
+      .setTextAlign(source.getTextAlign())
+      .setMaxWidth(source.getMaxWidth())
+      .setFillColor(source.getFillColor());
+  }
+
+  public static void increaseZIndex(Entity e) {
+    e.setZIndex(e.getZIndex() + 1);
   }
 
   public static boolean isShowWinAmount(int winAmount, Board board) {

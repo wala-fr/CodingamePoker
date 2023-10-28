@@ -1,4 +1,4 @@
-package com.codingame.model.utils.skeval.table.hash;
+package com.codingame.win_percent.skeval.table.hash;
 
 public class RankHash6 {
   public static final short[] table = {5823, 7247, 5568, 2804, 5857, 4357, 4434, 3905, 7234, 0,

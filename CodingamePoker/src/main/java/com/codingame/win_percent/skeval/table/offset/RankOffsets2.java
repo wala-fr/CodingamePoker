@@ -1,4 +1,4 @@
-package com.codingame.model.utils.skeval.table.offset;
+package com.codingame.win_percent.skeval.table.offset;
 
 public class RankOffsets2 {
   public static final int[] table = {24518, 24379, 34571, 26328, 84, 24071, 23866, 39725, 0, 288, 0,

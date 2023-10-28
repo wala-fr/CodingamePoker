@@ -1,4 +1,4 @@
-package com.codingame.model.utils.skeval;
+package com.codingame.win_percent.skeval;
 
 import java.util.Arrays;
 import org.slf4j.Logger;
@@ -7,7 +7,9 @@ import com.codingame.game.RefereeParameter;
 import com.codingame.model.object.Card;
 import com.codingame.model.object.PlayerModel;
 import com.codingame.model.object.board.Board;
+import com.codingame.model.utils.AssertUtils;
 import com.codingame.model.utils.CardUtils;
+import com.codingame.win_percent.naive_eval.WinPercentNaiveUtils;
 
 public class WinPercentUtils {
 
@@ -16,6 +18,8 @@ public class WinPercentUtils {
   private static final int[][] playerCards = new int[4][];
 
   private static final int[] boardCards = new int[7];
+  
+  private static int usedCardNb;
   private static final boolean[] usedCards = new boolean[52];
   private static long totalTime;
   private static final double[] winPercents = new double[4];
@@ -29,9 +33,9 @@ public class WinPercentUtils {
   private static int splitTotalBoardNb;
   private static double splitPercent;
   private static int notFoldedNb;
+  private static final int[] notFoldedIds = new int[4];
 
   public static void proceed(Board board, int turn) {
-    logger.error("{} {}", turn, !board.isCalculateWinChance());
     if (RefereeParameter.CALCULATE_WIN_PERCENT && !board.isCalculateWinChance()
         && !board.isOver()) {
       // recalculate only when card are dealt or players fold
@@ -44,6 +48,8 @@ public class WinPercentUtils {
       totalTime += deltaTime;
       logger.info("{} {}", Arrays.toString(winBoardNb), totalBoardNb);
       logger.info("calculatePercent SK time {} ms total {} ms", deltaTime, totalTime);
+      // to check the values
+      WinPercentNaiveUtils.proceed(board);
     }
   }
 
@@ -59,6 +65,7 @@ public class WinPercentUtils {
     totalBoardNb = 0;
     splitTotalBoardNb = 0;
     notFoldedNb = 0;
+    usedCardNb = 0;
     for (int i = 0; i < board.getPlayerNb(); i++) {
       winBoardNb[i] = 0;
       splitBoardNb[i] = 0;
@@ -67,12 +74,13 @@ public class WinPercentUtils {
       folded[i] = player.isFolded();
       winPercents[i] = 0;
       if (!player.isFolded()) {
+        notFoldedIds[notFoldedNb] = i;
         notFoldedNb++;
         for (int cardIndex = 0; cardIndex < 2; cardIndex++) {
           Card card = player.getHand().getCard(cardIndex);
           int tmp = CardUtils.calculateCardSK(card);
           playerCards[i][cardIndex] = tmp;
-          usedCards[tmp] = true;
+          addUsedCard(tmp);
         }
       }
     }
@@ -80,8 +88,13 @@ public class WinPercentUtils {
     for (Card card : board.getBoardCards()) {
       int tmp = CardUtils.calculateCardSK(card);
       boardCards[cardNb++] = tmp;
-      usedCards[tmp] = true;
+      addUsedCard(tmp);
     }
+  }
+  
+  private static void addUsedCard(int card) {
+    usedCards[card] = true;
+    usedCardNb++;
   }
 
   private static void calculateWinPercents(Board board) {
@@ -104,13 +117,14 @@ public class WinPercentUtils {
         calculateRiverWinPercents(board);
       }
     }
- 
+
     // logger.error(Arrays.toString(winBoardNb));
     for (int i = 0; i < board.getPlayerNb(); i++) {
       winPercents[i] = 100.0 * winBoardNb[i] / totalBoardNb;
       splitPercents[i] = 100.0 * splitBoardNb[i] / totalBoardNb;
     }
     splitPercent = 100.0 * splitTotalBoardNb / totalBoardNb;
+    
     // logger.error("{} {}", Arrays.toString(winBoardNb), totalBoardNb);
     // logger.error(Arrays.toString(winPercents));
   }
@@ -148,6 +162,8 @@ public class WinPercentUtils {
         }
       }
     }
+    int cardNb = 52 - usedCardNb;
+    totalBoardNb = cardNb * (cardNb - 1) * (cardNb - 2) * (cardNb - 3) * (cardNb - 4) / 120;
   }
 
   private static void calculateFlopWinPercents(Board board) {
@@ -165,6 +181,8 @@ public class WinPercentUtils {
         calculateWinner(boardCards, playerNb);
       }
     }
+    int cardNb = 52 - usedCardNb;
+    totalBoardNb = cardNb * (cardNb - 1) / 2;
   }
 
   private static void calculateTurnWinPercents(Board board) {
@@ -176,11 +194,14 @@ public class WinPercentUtils {
       boardCards[4] = i4;
       calculateWinner(boardCards, playerNb);
     }
+    int cardNb = 52 - usedCardNb;
+    totalBoardNb = cardNb;
   }
 
   private static void calculateRiverWinPercents(Board board) {
     int playerNb = board.getPlayerNb();
     calculateWinner(boardCards, playerNb);
+    totalBoardNb = 1;
   }
 
   private static final int[] winnerIds = new int[4];
@@ -196,22 +217,20 @@ public class WinPercentUtils {
   private static void calculateWinnerSplit(int[] boardCards, int playerNb) {
     int winNb = 0;
     int bestScore = Integer.MIN_VALUE;
-    for (int i = 0; i < playerNb; i++) {
-      if (!folded[i]) {
-        boardCards[5] = playerCards[i][0];
-        boardCards[6] = playerCards[i][1];
-        int score = SKPokerEvalUtils.calculateBestPossibleScore(boardCards);
-        if (score > bestScore) {
-          winnerIds[0] = i;
-          bestScore = score;
-          winNb = 1;
-        } else if (score == bestScore) {
-          winnerIds[winNb] = i;
-          winNb++;
-        }
+    for (int i = 0; i < notFoldedNb; i++) {
+      int id = notFoldedIds[i];
+      boardCards[5] = playerCards[id][0];
+      boardCards[6] = playerCards[id][1];
+      int score = SKPokerEvalUtils.calculateBestPossibleScore(boardCards);
+      if (score > bestScore) {
+        winnerIds[0] = id;
+        bestScore = score;
+        winNb = 1;
+      } else if (score == bestScore) {
+        winnerIds[winNb] = id;
+        winNb++;
       }
     }
-    totalBoardNb++;
     if (winNb == 1) {
       winBoardNb[winnerIds[0]]++;
     } else {
@@ -226,18 +245,17 @@ public class WinPercentUtils {
     int winNb = 0;
     int winId = -1;
     int bestScore = Integer.MIN_VALUE;
-    for (int i = 0; i < playerNb; i++) {
-      if (!folded[i]) {
-        boardCards[5] = playerCards[i][0];
-        boardCards[6] = playerCards[i][1];
-        int score = SKPokerEvalUtils.calculateBestPossibleScore(boardCards);
-        if (score > bestScore) {
-          winId = i;
-          bestScore = score;
-          winNb = 1;
-        } else if (score == bestScore) {
-          winNb++;
-        }
+    for (int j = 0; j < notFoldedNb; j++) {
+      int id = notFoldedIds[j];
+      boardCards[5] = playerCards[id][0];
+      boardCards[6] = playerCards[id][1];
+      int score = SKPokerEvalUtils.calculateBestPossibleScore(boardCards);
+      if (score > bestScore) {
+        winId = id;
+        bestScore = score;
+        winNb = 1;
+      } else if (score == bestScore) {
+        winNb++;
       }
     }
     totalBoardNb++;
@@ -247,11 +265,11 @@ public class WinPercentUtils {
       splitTotalBoardNb++;
     }
   }
-  
+
   public static boolean isSureWin(int id) {
     return winBoardNb[id] == totalBoardNb || splitBoardNb[id] == totalBoardNb;
   }
-  
+
   public static boolean isSureLose(int id) {
     return winBoardNb[id] == 0 && splitBoardNb[id] == 0;
   }
@@ -270,6 +288,22 @@ public class WinPercentUtils {
 
   public static double getSplitPercent() {
     return splitPercent;
+  }
+
+  public static int[] getWinBoardNb() {
+    return winBoardNb;
+  }
+
+  public static int[] getSplitBoardNb() {
+    return splitBoardNb;
+  }
+
+  public static int getTotalBoardNb() {
+    return totalBoardNb;
+  }
+
+  public static int getSplitTotalBoardNb() {
+    return splitTotalBoardNb;
   }
 
 }

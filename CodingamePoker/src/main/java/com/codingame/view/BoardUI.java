@@ -16,12 +16,12 @@ import com.codingame.model.object.FiveCardHand;
 import com.codingame.model.object.PlayerModel;
 import com.codingame.model.object.board.Board;
 import com.codingame.model.utils.AssertUtils;
-import com.codingame.model.utils.skeval.WinPercentUtils;
 import com.codingame.view.object.Game;
 import com.codingame.view.object.Point;
 import com.codingame.view.parameter.Color;
 import com.codingame.view.parameter.ViewConstant;
 import com.codingame.view.parameter.ViewUtils;
+import com.codingame.win_percent.skeval.WinPercentUtils;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -186,6 +186,7 @@ public class BoardUI {
     labeltext.setText("TIE");
     ViewUtils.createTextRectangle(text, x + ViewConstant.TIE_LABEL_WIDTH, y, ViewConstant.TIE_WIDTH,
         Color.BLACK, game, tieGroup);
+    game.getGlobalViewData().addWinText(tieGroup);
   }
 
   private void updateTie() {

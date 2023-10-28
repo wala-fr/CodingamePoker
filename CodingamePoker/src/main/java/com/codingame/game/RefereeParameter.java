@@ -15,6 +15,8 @@ public class RefereeParameter {
   public static final boolean CALCULATE_SPLIT_PERCENT = CALCULATE_WIN_PERCENT && true;
 
   public static final boolean SHOW_WIN_PERCENT_TIME = CALCULATE_WIN_PERCENT && true;
+  public static final boolean ASSERT_WIN_PERCENT = CALCULATE_WIN_PERCENT && false;
+
 
   public static final String WORD_DELIMITER = "_";
   public static final String NONE = "NONE";

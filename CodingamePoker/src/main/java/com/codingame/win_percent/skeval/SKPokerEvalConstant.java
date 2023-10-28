@@ -1,4 +1,4 @@
-package com.codingame.model.utils.skeval;
+package com.codingame.win_percent.skeval;
 
 public class SKPokerEvalConstant {
 

@@ -1,11 +1,11 @@
-package com.codingame.model.utils.skeval.table;
+package com.codingame.win_percent.skeval.table;
 
-import com.codingame.model.utils.skeval.table.hash.RankHash1;
-import com.codingame.model.utils.skeval.table.hash.RankHash2;
-import com.codingame.model.utils.skeval.table.hash.RankHash3;
-import com.codingame.model.utils.skeval.table.hash.RankHash4;
-import com.codingame.model.utils.skeval.table.hash.RankHash5;
-import com.codingame.model.utils.skeval.table.hash.RankHash6;
+import com.codingame.win_percent.skeval.table.hash.RankHash1;
+import com.codingame.win_percent.skeval.table.hash.RankHash2;
+import com.codingame.win_percent.skeval.table.hash.RankHash3;
+import com.codingame.win_percent.skeval.table.hash.RankHash4;
+import com.codingame.win_percent.skeval.table.hash.RankHash5;
+import com.codingame.win_percent.skeval.table.hash.RankHash6;
 
 public class RankHash {
   public static final short[] TABLE = new short[42077];

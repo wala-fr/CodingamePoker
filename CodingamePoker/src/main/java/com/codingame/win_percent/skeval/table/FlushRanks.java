@@ -1,4 +1,4 @@
-package com.codingame.model.utils.skeval.table;
+package com.codingame.win_percent.skeval.table;
 
 public class FlushRanks {
 

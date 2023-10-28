@@ -1,7 +1,7 @@
-package com.codingame.model.utils.skeval.table;
+package com.codingame.win_percent.skeval.table;
 
-import com.codingame.model.utils.skeval.table.offset.RankOffsets1;
-import com.codingame.model.utils.skeval.table.offset.RankOffsets2;
+import com.codingame.win_percent.skeval.table.offset.RankOffsets1;
+import com.codingame.win_percent.skeval.table.offset.RankOffsets2;
 
 public class RankOffsets {
   public static final int[] TABLE = new int[16384];

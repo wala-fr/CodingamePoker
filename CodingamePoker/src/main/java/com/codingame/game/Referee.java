@@ -18,13 +18,13 @@ import com.codingame.model.utils.ActionUtils;
 import com.codingame.model.utils.AssertUtils;
 import com.codingame.model.utils.MessageUtils;
 import com.codingame.model.utils.RandomUtils;
-import com.codingame.model.utils.skeval.WinPercentUtils;
 import com.codingame.view.Viewer;
 import com.codingame.view.data.PokerModule;
 import com.codingame.view.object.Game;
 import com.codingame.view.object.Phase;
 import com.codingame.view.parameter.ViewConstant;
 import com.codingame.view.parameter.ViewUtils;
+import com.codingame.win_percent.skeval.WinPercentUtils;
 import com.google.inject.Inject;
 
 public class Referee extends AbstractReferee {

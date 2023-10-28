@@ -17,6 +17,12 @@ const apiPoker = {
 			return;
 		}
 		const showOpponentCards = apiPoker.options.showOpponentCards;
+		let winTextIds = apiPoker.globalData.winTextIds;
+		// the last winTextIds corresponds to the tie common group
+		// [winTextId0, winTextHideId0, winTextId1, winTextHideId1, ..., tiegoupId]
+		for (let i = 0; i < winTextIds.length; i++) {
+			api.entities.get(winTextIds[i++]).setHidden(i % 2 == 0 ? showOpponentCards : !showOpponentCards);
+		}
 		for (let i = 0; i < cardIds.length; i++) {
 			api.entities.get(cardIds[i]).setHidden(showOpponentCards);
 		}
@@ -63,6 +69,8 @@ export class PokerModule {
 			const globalData = parseGlobalData(data);
 			this.globalData.cardIds = globalData.cardIds;
 			this.globalData.debugCardIds = globalData.debugCardIds;
+			this.globalData.winTextIds = globalData.winTextIds;
+			
 			const showOpponentCardIds = [];
 			players.filter(p => !filter(p)).map(p => { addShowCard(p, globalData, showOpponentCardIds) })
 			this.globalData.showOpponentCardIds = showOpponentCardIds;

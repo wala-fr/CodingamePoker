@@ -1,4 +1,4 @@
-package com.codingame.model.utils.skeval.table;
+package com.codingame.win_percent.skeval.table;
 
 public class FlushCheck {
   public static final byte[] TABLE = {0, 0, 0, -1, -1, 1, 1, 1, 0, 0, -1, -1, -1, 1, 1, -1, 0, -1,

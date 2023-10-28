@@ -6,17 +6,18 @@ import com.codingame.gameengine.module.entities.Group;
 import com.codingame.gameengine.module.entities.RoundedRectangle;
 import com.codingame.gameengine.module.entities.Sprite;
 import com.codingame.gameengine.module.entities.Text;
+import com.codingame.gameengine.module.entities.BlendableEntity.BlendMode;
 import com.codingame.gameengine.module.entities.TextBasedEntity.TextAlign;
 import com.codingame.model.object.FiveCardHand;
 import com.codingame.model.object.PlayerModel;
 import com.codingame.model.object.board.Board;
 import com.codingame.model.object.enumeration.Position;
 import com.codingame.model.utils.AssertUtils;
-import com.codingame.model.utils.skeval.WinPercentUtils;
 import com.codingame.view.object.Game;
 import com.codingame.view.parameter.Color;
 import com.codingame.view.parameter.ViewConstant;
 import com.codingame.view.parameter.ViewUtils;
+import com.codingame.win_percent.skeval.WinPercentUtils;
 
 public class PlayerUI {
 
@@ -29,6 +30,9 @@ public class PlayerUI {
   private Text action;
   private Text stack;
   private Text win;
+  // to print the win amount even when the opponent card are hidden in settings panel
+  private Text winHide;
+
   private Text position;
   private Text message;
 
@@ -77,6 +81,12 @@ public class PlayerUI {
 
     win = game.createText();
     ViewUtils.createTextRectangle(win, coordinates.getWin(), Color.BLACK, game, labelGroup);
+    game.getGlobalViewData().addWinText(win);
+
+    winHide = game.createText();
+    ViewUtils.copy(win, winHide);
+    labelGroup.add(winHide);
+    game.getGlobalViewData().addWinText(winHide);
 
     position = game.createText();
     ViewUtils.createTextRectangle(position, coordinates.getPosition(), Color.RED, game, labelGroup);
@@ -93,16 +103,18 @@ public class PlayerUI {
       ViewUtils.updateText(game, stack, "$ " + player.getStack(),
           "BET : $ " + player.getTotalBetAmount());
       if (board.isOver()) {
+        // add colored win amount at the end of each hand
         int amount = player.getWinAmount();
         boolean winner = amount >= 0;
         String w = ViewUtils.addSpaceBefore((winner ? "+" : "") + amount, 5);
-        ViewUtils.updateText(game, win, w);
-        win.setFillColor(winner ? ViewConstant.WIN_COLOR : ViewConstant.LOSS_COLOR);
+        updateWin(game, win, w, winner);
+        updateWin(game, winHide, w, winner);
       } else {
+        // add (eventually colored) winning percent
+        clearWin(game, winHide);
         if (player.isFolded() || !RefereeParameter.CALCULATE_WIN_PERCENT
             || !game.getBoard().isCalculateWinChance()) {
-          ViewUtils.clearText(game, win);
-          win.setFillColor(ViewConstant.LABEL_TEXT_COLOR);
+          clearWin(game, win);
         } else {
           double winPercent = WinPercentUtils.getWinPercent(id);
           int winPercentRounded = ViewUtils.round(winPercent);
@@ -134,6 +146,17 @@ public class PlayerUI {
 
     }
   }
+  
+  private void clearWin(Game game, Text text) {
+    ViewUtils.clearText(game, text);
+    text.setFillColor(ViewConstant.LABEL_TEXT_COLOR);
+  }
+  
+  private void updateWin(Game game, Text text, String w, boolean winner) {
+    ViewUtils.updateText(game, text, w);
+    text.setFillColor(winner ? ViewConstant.WIN_COLOR : ViewConstant.LOSS_COLOR);
+  }
+
 
   private void updatePosition(Game game) {
     Position pos = game.getBoard().getPosition(id);
