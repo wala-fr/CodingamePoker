@@ -23,6 +23,35 @@ public class Deck {
   public void shuffle() {
     Collections.shuffle(cards, RandomUtils.RANDOM);
   }
+  
+  public void cheat() {
+    // FOR DEMO :)
+    int i = 0;
+    cards.set(i++, CardUtils.fromString("KD"));
+    cards.set(i++, CardUtils.fromString("QH"));
+    cards.set(i++, CardUtils.fromString("AS"));
+    cards.set(i++, CardUtils.fromString("JC"));
+    
+    cards.set(i++, CardUtils.fromString("KS"));
+    cards.set(i++, CardUtils.fromString("QS"));
+    cards.set(i++, CardUtils.fromString("AH"));
+    cards.set(i++, CardUtils.fromString("JH"));
+
+    cards.set(i++, CardUtils.fromString("2H"));
+    
+    cards.set(i++, CardUtils.fromString("AC"));
+    cards.set(i++, CardUtils.fromString("AD"));
+    cards.set(i++, CardUtils.fromString("KC"));
+
+    cards.set(i++, CardUtils.fromString("2C"));
+
+    cards.set(i++, CardUtils.fromString("QC"));
+
+    cards.set(i++, CardUtils.fromString("2S"));
+
+    cards.set(i++, CardUtils.fromString("JS"));
+
+  }
 
   public Card dealCard() {
     return cards.get(index++);

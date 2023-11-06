@@ -13,6 +13,7 @@ public class GlobalViewData {
   private List<Integer> debugCardIds = new ArrayList<>();
   private List<Integer> showOpponentCardIds = new ArrayList<>();
   private List<Integer> winTextIds = new ArrayList<>();
+  private List<Integer> percentTimeIds = new ArrayList<>();
 
   public void addCard(CardSprite card) {
     cardIds.add(card.getCardId());
@@ -26,12 +27,17 @@ public class GlobalViewData {
   public void addWinText(Entity text) {
     winTextIds.add(text.getId());
   }
+  
+  public void addPercentTime(Entity text) {
+    percentTimeIds.add(text.getId());
+  }
 
   public String serialize() {
     List<String> lines = new ArrayList<>();
     lines.add(SerializeUtils.serialize(cardIds));
     lines.add(SerializeUtils.serialize(debugCardIds));
     lines.add(SerializeUtils.serialize(showOpponentCardIds));
+    lines.add(SerializeUtils.serialize(percentTimeIds));
     lines.add(SerializeUtils.serialize(winTextIds));
     return lines.stream().collect(Collectors.joining("\n"));
   }

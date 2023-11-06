@@ -59,5 +59,19 @@ export const options = [{
 		'HIDE': false
 	},
 	default: false
-}]
+}, {
+	title: 'PERCENT TIME',
+	get: function() {
+		return apiPoker.options.showPercentTime
+	},
+	set: function(value) {
+		apiPoker.options.showPercentTime = value
+		apiPoker.showPercentTime();
+	},
+	values: {
+		'SHOW': true,
+		'HIDE': false
+	},
+	default: false
+},]
 

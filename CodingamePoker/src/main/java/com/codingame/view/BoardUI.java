@@ -117,25 +117,23 @@ public class BoardUI {
   }
 
   private void initPercentWintime() {
-    if (RefereeParameter.SHOW_WIN_PERCENT_TIME) {
-      percentWinTime = game.createText();
-      percentWinTime.setX(ViewConstant.WIDTH - 300)
-        .setY(20)
-        .setZIndex(ViewConstant.Z_INDEX_BOARD)
-        .setFontSize((int) (1.2 * ViewConstant.LABEL_FONT_SIZE))
-        .setFontWeight(FontWeight.BOLD)
-        .setFontFamily(ViewConstant.FONT)
-        .setTextAlign(TextAlign.RIGHT)
-        .setMaxWidth(200)
-        .setFillColor(ViewConstant.LABEL_TEXT_COLOR);
-    }
+    percentWinTime = game.createText();
+    percentWinTime.setX(ViewConstant.WIDTH - 300)
+      .setY(20)
+      .setZIndex(ViewConstant.Z_INDEX_BOARD)
+      .setFontSize((int) (1.2 * ViewConstant.LABEL_FONT_SIZE))
+      .setFontWeight(FontWeight.BOLD)
+      .setFontFamily(ViewConstant.FONT)
+      .setTextAlign(TextAlign.RIGHT)
+      .setMaxWidth(200)
+      .setFillColor(ViewConstant.LABEL_TEXT_COLOR);
+    game.getGlobalViewData().addPercentTime(percentWinTime);
   }
 
   private void updatePercentWintime() {
-    if (RefereeParameter.SHOW_WIN_PERCENT_TIME) {
-      percentWinTime.setText(WinPercentUtils.getTotalTime() + " ms");
-      game.getTooltips().setTooltipText(percentWinTime, "Time to calculate winning probabilities in milliseconds");
-    }
+    percentWinTime.setText(WinPercentUtils.getTotalTime() + " ms");
+    game.getTooltips()
+      .setTooltipText(percentWinTime, "Time to calculate winning probabilities in milliseconds");
   }
 
   private void createButton(Group button, String text, String toolTipText, int fillcolor,
@@ -172,7 +170,7 @@ public class BoardUI {
 
   private void createPot(Text text, int x, int y) {
     Text labeltext = game.createText();
-    ViewUtils.createTextRectangle(labeltext, x, y, ViewConstant.POT_LABEL_WIDTH,  Color.RED, game,
+    ViewUtils.createTextRectangle(labeltext, x, y, ViewConstant.POT_LABEL_WIDTH, Color.RED, game,
         potGroup);
     labeltext.setText("POT");
     ViewUtils.createTextRectangle(text, x + ViewConstant.POT_LABEL_WIDTH, y, ViewConstant.POT_WIDTH,
@@ -181,7 +179,7 @@ public class BoardUI {
 
   private void createTie(Text text, int x, int y) {
     Text labeltext = game.createText();
-    ViewUtils.createTextRectangle(labeltext, x, y, ViewConstant.TIE_LABEL_WIDTH,  Color.BLUE, game,
+    ViewUtils.createTextRectangle(labeltext, x, y, ViewConstant.TIE_LABEL_WIDTH, Color.BLUE, game,
         tieGroup);
     labeltext.setText("TIE");
     ViewUtils.createTextRectangle(text, x + ViewConstant.TIE_LABEL_WIDTH, y, ViewConstant.TIE_WIDTH,
@@ -192,11 +190,12 @@ public class BoardUI {
   private void updateTie() {
     double splitPercent = WinPercentUtils.getSplitPercent();
     int split = ViewUtils.round(splitPercent);
-    if (!RefereeParameter.CALCULATE_WIN_PERCENT || !game.getBoard().isCalculateWinChance() || splitPercent == 0) {
+    if (!RefereeParameter.CALCULATE_WIN_PERCENT || !game.getBoard().isCalculateWinChance()
+        || splitPercent == 0) {
       tieGroup.setVisible(false);
     } else {
       tieGroup.setVisible(true);
-      String w = ViewUtils.addSpaceBefore(split +"%", 4);
+      String w = ViewUtils.addSpaceBefore(split + "%", 4);
       ViewUtils.updateText(game, tie, w, "SPLIT " + ViewUtils.roundTwoDecimal(splitPercent));
     }
   }

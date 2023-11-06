@@ -13,6 +13,7 @@ export function parseGlobalData(raw) {
 	data.cardIds = parseIntList(lines[idx++]);
 	data.debugCardIds = parseIntList(lines[idx++]);
 	data.showOpponentCardIds = parseIntList(lines[idx++]);
+	data.percentTimeIds = parseIntList(lines[idx++]);
 	if (idx < lines.length) {
 		data.winTextIds = parseIntList(lines[idx++]);
 	}

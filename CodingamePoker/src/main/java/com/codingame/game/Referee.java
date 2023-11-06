@@ -65,6 +65,7 @@ public class Referee extends AbstractReferee {
     // so the button is rightly placed at the begining
     board.resetHand();
     board.initDeck();
+    board.initDemoBoard();
     board.initBlind();
     board.calculateNextPlayer();
     
@@ -187,6 +188,7 @@ public class Referee extends AbstractReferee {
       if (turn > 1) {
         board.resetHand();
         board.initDeck();
+        board.initDemoBoard();
       }
       viewer.update();
       if (turn > 1) {

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.codingame.game.RefereeParameter;
 import com.codingame.model.object.Action;
 import com.codingame.model.object.ActionInfo;
 import com.codingame.model.object.Card;
@@ -188,6 +189,15 @@ public class Board {
     }
   }
 
+  public void initDemoBoard() {
+    if (Parameter.DEMO_BOARD) {
+      sbId = 2;
+      bbId = 3;
+      nextPlayerId = bbId;
+      dealerId = 1;
+      deck.cheat();
+    }
+  }
 
   public void initBlind() {
     for (int i = 0; i < players.size(); i++) {
@@ -212,7 +222,7 @@ public class Board {
       bigBlind *= Parameter.LEVEL_BLIND_MULTIPLIER;
     }
   }
-  
+
   public boolean isIncreaseLevel() {
     return handNb % Parameter.HAND_NB_BY_LEVEL == 0;
   }
@@ -512,7 +522,7 @@ public class Board {
 
     over = true;
   }
-  
+
   private void assertPlayerWinnings() {
     if (Parameter.ACTIVATE_ASSERTION) {
       int sum = 0;
@@ -599,7 +609,7 @@ public class Board {
       }
     }
   }
-  
+
   public boolean isRaiseCap() {
     return raiseNb > Parameter.RAISE_CAP;
   }
@@ -664,9 +674,9 @@ public class Board {
     return raiseNb;
   }
 
-//  public void setRaiseNb(int raiseNb) {
-//    this.raiseNb = raiseNb;
-//  }
+  // public void setRaiseNb(int raiseNb) {
+  // this.raiseNb = raiseNb;
+  // }
 
   public int getSmallBlind() {
     return smallBlind;
@@ -734,7 +744,7 @@ public class Board {
   public int getPlayerNotEliminatedNb() {
     return playerNotEliminatedNb;
   }
-  
+
   public List<DealPosition> getDealPositions() {
     return dealPositions;
   }
