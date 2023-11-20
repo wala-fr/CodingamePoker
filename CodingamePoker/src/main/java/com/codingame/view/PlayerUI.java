@@ -112,23 +112,34 @@ public class PlayerUI {
       } else {
         // add (eventually colored) winning percent
         clearWin(game, winHide);
-        if (player.isFolded() || !RefereeParameter.CALCULATE_WIN_PERCENT
-            || !game.getBoard().isCalculateWinChance()) {
+        if (!RefereeParameter.CALCULATE_WIN_PERCENT || !game.getBoard().isCalculateWinChance()) {
           clearWin(game, win);
         } else {
-          double winPercent = WinPercentUtils.getWinPercent(id);
-          int winPercentRounded = ViewUtils.round(winPercent);
-          double splitPercent = WinPercentUtils.getSplitPercent(id);
+          boolean sureWin;
+          boolean sureLose;
+          String w;
+          String toolTipMessage;
+          if (player.isFolded()) {
+            w = ViewUtils.addSpaceBefore("0%", 5);
+            toolTipMessage = "FOLDED";
+            sureWin = false;
+            sureLose = true;
+          } else {
+            double winPercent = WinPercentUtils.getWinPercent(id);
+            int winPercentRounded = ViewUtils.round(winPercent);
+            double splitPercent = WinPercentUtils.getSplitPercent(id);
 
-          String w = ViewUtils.addSpaceBefore(winPercentRounded + "%", 5);
-          String toolTipMessage = "WIN " + ViewUtils.roundTwoDecimal(winPercent) + "%"
-              + ((RefereeParameter.CALCULATE_SPLIT_PERCENT && splitPercent > 0)
-                  ? " - SPLIT " + ViewUtils.roundTwoDecimal(splitPercent) + "%"
-                  : "");
+            w = ViewUtils.addSpaceBefore(winPercentRounded + "%", 5);
+            toolTipMessage = "WIN " + ViewUtils.roundTwoDecimal(winPercent) + "%"
+                + ((RefereeParameter.CALCULATE_SPLIT_PERCENT && splitPercent > 0)
+                    ? " - SPLIT " + ViewUtils.roundTwoDecimal(splitPercent) + "%"
+                    : "");
+            sureWin = WinPercentUtils.isSureWin(id);
+            sureLose = WinPercentUtils.isSureLose(id);
+          }
           ViewUtils.updateText(game, win, w, toolTipMessage);
-          win.setFillColor(WinPercentUtils.isSureWin(id) ? ViewConstant.WIN_COLOR
-              : WinPercentUtils.isSureLose(id) ? ViewConstant.LOSS_COLOR
-                  : ViewConstant.LABEL_TEXT_COLOR);
+          win.setFillColor(sureWin ? ViewConstant.WIN_COLOR
+              : sureLose ? ViewConstant.LOSS_COLOR : ViewConstant.LABEL_TEXT_COLOR);
         }
       }
       updatePosition(game);
@@ -146,12 +157,12 @@ public class PlayerUI {
 
     }
   }
-  
+
   private void clearWin(Game game, Text text) {
     ViewUtils.clearText(game, text);
     text.setFillColor(ViewConstant.LABEL_TEXT_COLOR);
   }
-  
+
   private void updateWin(Game game, Text text, String w, boolean winner) {
     ViewUtils.updateText(game, text, w);
     text.setFillColor(winner ? ViewConstant.WIN_COLOR : ViewConstant.LOSS_COLOR);

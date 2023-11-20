@@ -73,5 +73,19 @@ export const options = [{
 		'HIDE': false
 	},
 	default: false*/
+},{
+	title: 'FOLDED CARDS',
+	get: function() {
+		return apiPoker.options.showFoldCards
+	},
+	set: function(value) {
+		apiPoker.options.showFoldCards = value
+		apiPoker.showFoldCards()
+	},
+	values: {
+		'SHOW': true,
+		'HIDE': false
+	},
+	default: false
 },]
 

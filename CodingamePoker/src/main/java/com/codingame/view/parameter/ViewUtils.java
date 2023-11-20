@@ -44,7 +44,7 @@ public class ViewUtils {
     return getPlayerCardPosition(graphics, dealPosition.getId(), dealPosition.getIndex());
   }
 
-  private static Point getPlayerCardPosition(Game graphics, int playerId, int index) {
+  public static Point getPlayerCardPosition(Game graphics, int playerId, int index) {
     return getPlayerUICoordinates(graphics, playerId).getCard(index).getPoint();
   }
 

@@ -9,6 +9,7 @@ import com.codingame.gameengine.module.entities.Sprite;
 import com.codingame.model.object.Card;
 import com.codingame.model.object.DealPosition;
 import com.codingame.model.object.board.Board;
+import com.codingame.view.data.GlobalViewData;
 import com.codingame.view.object.Game;
 import com.codingame.view.object.Phase;
 import com.codingame.view.object.Point;
@@ -29,6 +30,9 @@ public class DeckUI {
 
   // cards to show / hide opponents cards (fog of war in settings panel)
   private Sprite[] showCards;
+  
+  // to allows to show the cards even when they've been folded
+  private CardSprite[] foldCards;
 
   private int nextCardIndex;
   private int discardCardIndex;
@@ -39,10 +43,11 @@ public class DeckUI {
 
   private void init() {
     if (cards == null) {
+      GlobalViewData globalViewData = game.getGlobalViewData();
       cards = new CardSprite[ViewConstant.CARD_MIN_NB];
       for (int i = 0; i < cards.length; i++) {
         cards[i] = new CardSprite(game);
-        game.getGlobalViewData().addCard(cards[i]);
+        globalViewData.addCard(cards[i]);
       }
       showCards = new Sprite[8];
       for (int i = 0; i < showCards.length; i++) {
@@ -50,7 +55,20 @@ public class DeckUI {
         ViewUtils.getDeckCardPosition(0).setPosition(showCards[i]);
 //        game.getTooltips().setTooltipText(showCards[i], "showCard " + i);
         ViewUtils.hide(showCards[i], game);
-        game.getGlobalViewData().addShowOpponentCard(showCards[i]);
+        globalViewData.addShowOpponentCard(showCards[i], i / 2);
+      }
+      foldCards = new CardSprite[8];
+      for (int i = 0; i < foldCards.length; i++) {
+        CardSprite foldCard = new CardSprite(game);
+        foldCards[i] = foldCard;
+        Sprite showCard = ViewUtils.createCard(game);
+        foldCard.setShowCard(showCard, game);
+        foldCard.setPosition(ViewUtils.getPlayerCardPosition(game, i / 2, i % 2));
+        foldCard.hide(game);
+        foldCard.tintFoldedCard();
+        globalViewData.addFoldCard(foldCard);
+        globalViewData.addShowOpponentCard(showCard, i / 2);
+        globalViewData.addCard(foldCard);
       }
     }
   }
@@ -68,7 +86,9 @@ public class DeckUI {
         incrementZIndex();
       }
       zIndex = ViewConstant.Z_INDEX_CARD_DEAL;
-
+      for (int i = 0; i < foldCards.length; i++) {
+        foldCards[i].hide(game);
+      }
       // TODO
       game.commitWorldState(game.isFirstRound() ? 0 : Phase.INIT_DECK.getEndTime());
     }
@@ -80,6 +100,11 @@ public class DeckUI {
     }
     Board board = game.getBoard();
 
+    // to keep showing the folded cards
+    for (int j = 0; j < 2; j++) {
+      foldCards[2 * playerId + j].showFoldedCard(game);;
+    }
+    game.commitWorldState();
     List<DealPosition> dealPositions = board.getDealPositions();
     int i = 0;
     for (DealPosition dealPosition : dealPositions) {
@@ -89,6 +114,7 @@ public class DeckUI {
       }
       i++;
     }
+
     game.setTime(ViewConstant.MAX_TIME);
     game.commitWorldState();
   }
@@ -111,6 +137,7 @@ public class DeckUI {
       if (dealPosition.isPlayer()) {
         int showCardIndex = 2 * dealPosition.getId() + dealPosition.getIndex();
         cards[i].setShowCard(showCards[showCardIndex], game);
+        foldCards[i].setCard(board.getCard(dealPosition));
       }
     }
     for (; nextCardIndex < dealPositions.size(); nextCardIndex++) {
@@ -151,6 +178,12 @@ public class DeckUI {
   public void highlightCard(Card card, boolean win) {
     int index = cardToIndex.get(card);
     cards[index].tint(win, game);
+  }
+
+  public void revealOpponentFoldCard() {
+    for (int i = 0; i < foldCards.length; i++) {
+      foldCards[i].revealOpponentCard(game);;
+    }    
   }
 
 }

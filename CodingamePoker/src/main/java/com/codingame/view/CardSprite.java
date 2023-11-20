@@ -8,6 +8,7 @@ import com.codingame.model.object.board.Board;
 import com.codingame.model.utils.AssertUtils;
 import com.codingame.view.object.Game;
 import com.codingame.view.object.Point;
+import com.codingame.view.parameter.ViewConstant;
 import com.codingame.view.parameter.ViewUtils;
 
 public class CardSprite {
@@ -48,9 +49,13 @@ public class CardSprite {
 
   private void removeShowCard(Game game) {
     if (showCard != null) {
-      ViewUtils.hide(showCard, game);
+      revealOpponentCard(game);
       showCard = null;
     }
+  }
+
+  public void revealOpponentCard(Game game) {
+    ViewUtils.hide(showCard, game);
   }
 
   public void setShowCard(Sprite card, Game game) {
@@ -68,17 +73,38 @@ public class CardSprite {
   public void tint(boolean win, Game game) {
     int color = win ? 0x82fc4c : 0xfa6f6f;
     AssertUtils.test(!hiddenCard.isVisible());
-    ViewUtils.hide(showCard, game);
+    revealOpponentCard(game);
+    tint(color);
+  }
+
+  private void tint(int color) {
     card.setTint(color, Curve.LINEAR);
     debugCard.setTint(color, Curve.LINEAR);
   }
 
+  public void tintFoldedCard() {
+    int color = ViewConstant.FOLD_COLOR;
+    tint(color);
+    showCard.setTint(color);
+    hiddenCard.setTint(color); // useless (hidden card is always hidden for folded card)
+  }
+
+  public void showFoldedCard(Game game) {
+    // hiddenCard isn't useful for the card that allows to show the folded cards
+    hiddenCard.setVisible(false);
+    setZIndex(ViewConstant.Z_INDEX_CARD - 10);
+  }
+
+  public void hide(Game game) {
+    ViewUtils.hide(card, game);
+    ViewUtils.hide(debugCard, game);
+    ViewUtils.hide(hiddenCard, game);
+    ViewUtils.hide(showCard, game);
+  }
+
   public void move(Point position, DealPosition dealPosition, Card cardModel, int zIndex,
       double delta, Game game) {
-    if (cardModel != null) {
-      card.setImage(ViewUtils.getCardUrl(cardModel, false));
-      debugCard.setImage(ViewUtils.getCardUrl(cardModel, true));
-    }
+    setCard(cardModel);
 
     boolean visible = dealPosition != null && !dealPosition.isBurned();
     hiddenCard.setVisible(!visible);
@@ -96,12 +122,19 @@ public class CardSprite {
     commitEntityState(delta / 2, game);
   }
 
+  public void setCard(Card cardModel) {
+    if (cardModel != null) {
+      card.setImage(ViewUtils.getCardUrl(cardModel, false));
+      debugCard.setImage(ViewUtils.getCardUrl(cardModel, true));
+    }
+  }
+
   public void setTooltipText(String str, Game game) {
     game.getTooltips().setTooltipText(card, str);
     game.getTooltips().setTooltipText(debugCard, str);
   }
 
-  private void setPosition(Point position) {
+  public void setPosition(Point position) {
     position.setPosition(card);
     position.setPosition(debugCard);
     position.setPosition(hiddenCard);
@@ -123,6 +156,10 @@ public class CardSprite {
 
   public int getDebugCardId() {
     return debugCard.getId();
+  }
+
+  public int getShowCardId() {
+    return showCard.getId();
   }
 
 }

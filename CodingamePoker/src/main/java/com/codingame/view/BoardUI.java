@@ -286,7 +286,7 @@ public class BoardUI {
           }
           playerUIS[player.getId()].setWinOrLose(game, win);
         }
-
+        deckUI.revealOpponentFoldCard();
         // highlight players cards
         for (PlayerModel player : board.getPlayers()) {
           if (!player.isFolded()) {

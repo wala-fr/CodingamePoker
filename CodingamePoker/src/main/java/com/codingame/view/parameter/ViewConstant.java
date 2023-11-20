@@ -172,10 +172,10 @@ public class ViewConstant {
   public static final int Z_INDEX_BACK = -100;
   public static final int Z_INDEX_BOARD = 0;
   public static final int Z_INDEX_CARD = 100;
-  public static final int Z_INDEX_CARD_DEAL = 200;
+  public static final int Z_INDEX_CARD_DEAL = Z_INDEX_CARD + 100;
   // so the button goes over the deck
   public static final int Z_INDEX_BUTTON = Z_INDEX_CARD_DEAL;
-  public static final int Z_INDEX_ACTION_BUTTON = 1000;
+  public static final int Z_INDEX_ACTION_BUTTON = Z_INDEX_CARD + 1000;
   
   // if value to -101 there's a bug as if the zIndex change slowly ????
   public static final int Z_INDEX_INVISIBLE = -10000;
@@ -189,6 +189,8 @@ public class ViewConstant {
   
   public static final int CARD_MIN_NB = 4 * 2 + 5 + 3 + 1;
   public static final int TIE_COLOR = 0x4486ea;
+  
+  public static final int FOLD_COLOR = 0x9c8136;
 
 //  public static final int SHOW_WIN_AMOUNT_CHIPS = 500;
 
