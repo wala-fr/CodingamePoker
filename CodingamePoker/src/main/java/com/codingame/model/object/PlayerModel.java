@@ -40,7 +40,6 @@ public class PlayerModel {
 
   public void reset() {
     hand.reset();
-    // TODO useless
     elimated = stack == 0;
     bestPossibleHand = null;
     allIn = false;

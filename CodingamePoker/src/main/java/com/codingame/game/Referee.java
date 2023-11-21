@@ -39,8 +39,8 @@ public class Referee extends AbstractReferee {
   private EndScreenModule endScreenModule;
   @Inject
   private Viewer viewer;
-  
-  @Inject 
+
+  @Inject
   private PokerModule pokerModule;
 
   @Inject
@@ -68,33 +68,55 @@ public class Referee extends AbstractReferee {
     board.initDemoBoard();
     board.initBlind();
     board.calculateNextPlayer();
-    
+
     game.setBoard(board);
 
-    gameManager.setMaxTurns(RefereeParameter.MAX_TURN);
+    gameManager.setMaxTurns(RefereeParameter.MAX_REFEREE_TURN);
     gameManager.setFirstTurnMaxTime(RefereeParameter.FIRST_ROUND_TIME_OUT);
     gameManager.setTurnMaxTime(RefereeParameter.TIME_OUT);
     gameManager.setFrameDuration(ViewConstant.FRAME_DURATION);
-    
+
     gameManager.registerModule(pokerModule);
-    
+
     viewer.init();
 
     playerEliminatedNb = -1;
   }
 
-  @Override
-  public void gameTurn(int turn) {
-    logger.info("########################### {}", turn);
-    viewer.resetTurn(turn);
-    initBoard(turn);
-    logger.info("{}", board.toPlayerStatesString());
+  int turn = 1;
+  int initBoarTurn = 0;
+  int dealTurn = 0;
 
-    logger.info("nextPlayerId {}", board.getNextPlayerId());
+  @Override
+  public void gameTurn(int t) {
+    logger.info("########################### {} {}", t, turn);
+    viewer.resetTurn(turn);
+    if  (RefereeParameter.MULTILE_FRAME_BY_TURN) {
+      if (turn != initBoarTurn) {
+        initBoarTurn = turn;
+        if (initBoard(t == 1)) {
+          WinPercentUtils.proceed(board);
+          viewer.update();
+          return;
+        }
+      }
+      if (turn != dealTurn) {
+        dealTurn = turn;
+        if (board.deal() && board.getNextPlayerId() != -1) {
+          WinPercentUtils.proceed(board);
+          viewer.update();
+          return;
+        }
+      }
+    } else {
+      initBoard(t == 1);
+      board.deal();
+    }
 
     int playerId = board.getNextPlayerId();
-    board.deal();
-    
+    logger.info("{}", board.toPlayerStatesString());
+    logger.info("nextPlayerId {}", board.getNextPlayerId());
+
     if (playerId == -1) {
       logger.info("all players are all-in");
       inputSender.updateRoundInfo(board, null, turn);
@@ -138,7 +160,7 @@ public class Referee extends AbstractReferee {
         logger.info("actionInfo {}", actionInfo.getError());
       }
     }
-    WinPercentUtils.proceed(board, game.getTurn());
+    WinPercentUtils.proceed(board);
 
     game.setPhase(Phase.ACTION);
     viewer.update();
@@ -158,14 +180,16 @@ public class Referee extends AbstractReferee {
       board.calculateFinalScores();
       gameManager.endGame();
       return;
-    }
+    } 
     if (game.isMaxRound()) {
       board.cancelCurrentHand();
       board.calculateFinalScores();
       viewer.update();
+      gameManager.endGame();
     }
+    turn++;
   }
-  
+
   private void addWinnings(int turn) {
     if (board.isOver()) {
       for (int i = 0; i < board.getPlayerNb(); i++) {
@@ -181,17 +205,17 @@ public class Referee extends AbstractReferee {
       }
     }
   }
-  
-  private void initBoard(int turn) {
-    if (board.isOver() || turn == 1) {
+
+  private boolean initBoard(boolean first) {
+    if (board.isOver() || first) {
       game.setPhase(Phase.INIT_DECK);
-      if (turn > 1) {
+      if (!first) {
         board.resetHand();
         board.initDeck();
         board.initDemoBoard();
       }
       viewer.update();
-      if (turn > 1) {
+      if (!first) {
         board.initBlind();
         board.calculateNextPlayer();
       }
@@ -200,11 +224,13 @@ public class Referee extends AbstractReferee {
       game.setPhase(Phase.DEAL);
       board.dealFirst();
       viewer.update();
+      return true;
 
     } else {
       game.setPhase(Phase.DEAL);
       board.calculateNextPlayer();
       viewer.update();
+      return false;
     }
 
   }

@@ -69,6 +69,10 @@ public class ViewUtils {
   public static void clearText(Game graphics, Text text) {
     updateText(graphics, text, "");
   }
+  
+  public static void updateText(Game graphics, Text text, int n) {
+    updateText(graphics, text, Integer.toString(n));
+  }
 
   public static void updateText(Game graphics, Text text, String str) {
     updateText(graphics, text, str, null);

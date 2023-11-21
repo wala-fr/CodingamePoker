@@ -90,7 +90,7 @@ public class DeckUI {
         foldCards[i].hide(game);
       }
       // TODO
-      game.commitWorldState(game.isFirstRound() ? 0 : Phase.INIT_DECK.getEndTime());
+      game.commitWorldState(game.isFirstRound() ? 0 : 0.1);
     }
   }
 

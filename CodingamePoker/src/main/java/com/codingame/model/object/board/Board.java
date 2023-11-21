@@ -341,11 +341,13 @@ public class Board {
   }
 
 
-  public void deal() {
+  public boolean deal() {
+    boolean ret = dealCard;
     if (dealCard) {
       dealBoardCards();
     }
     dealCard = false;
+    return ret;
   }
 
   public void dealAllBoardCards() {

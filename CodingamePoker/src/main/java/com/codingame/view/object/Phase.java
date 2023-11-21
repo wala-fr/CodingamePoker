@@ -9,9 +9,9 @@ public enum Phase {
     this.endTime = endTime;
   }
 
-  public double getEndTime() {
-    return endTime;
-  }
+//  public double getEndTime() {
+//    return endTime;
+//  }
 
 
 

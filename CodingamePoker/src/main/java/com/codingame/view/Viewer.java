@@ -39,7 +39,8 @@ public class Viewer {
     game.setTurn(turn);
   }
 
-  public void resetHAnd() {
+  
+  public void resetHand() {
     boardUI.resetHand();
   }
 

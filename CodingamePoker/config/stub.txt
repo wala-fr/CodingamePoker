@@ -34,7 +34,7 @@ buyIn:initial stack for each player
 firstBigBlindId:id of the first big blind player 
 playerNb:number of players (2 to 4)
 playerId:your id
-round:referee round (starts at 1-game ends when it reaches 600)
+round:round (starts at 1-game ends when it reaches 600)
 handNb:hand number (starts at 1)
 stack:number of chips in the player's stack
 chipInPot:number of player's chips in the pot

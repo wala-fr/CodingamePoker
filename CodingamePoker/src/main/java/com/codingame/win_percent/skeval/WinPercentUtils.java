@@ -35,7 +35,7 @@ public class WinPercentUtils {
   private static int notFoldedNb;
   private static final int[] notFoldedIds = new int[4];
 
-  public static void proceed(Board board, int turn) {
+  public static void proceed(Board board) {
     if (RefereeParameter.CALCULATE_WIN_PERCENT && !board.isCalculateWinChance()
         && !board.isOver()) {
       // recalculate only when card are dealt or players fold

@@ -37,6 +37,7 @@ public class BoardUI {
 
   private Text level;
   private Text gameNb;
+  private Text turnNb;
   private Text blinds;
   private Text percentWinTime;
 
@@ -70,6 +71,9 @@ public class BoardUI {
 
       gameNb = game.createText();
       createLabelAndText(gameNb, ViewConstant.GAME_NB_X, ViewConstant.GAME_NB_Y, "HAND");
+      
+      turnNb = game.createText();
+      createLabelAndText(turnNb, ViewConstant.TURN_NB_X, ViewConstant.TURN_NB_Y, "ROUND");
 
       potGroup = game.getGraphics().createGroup();
       pot = game.createText();
@@ -204,9 +208,11 @@ public class BoardUI {
     Board board = game.getBoard();
 
     updatePercentWintime();
-    ViewUtils.updateText(game, level, Integer.toString(board.getLevel()));
+    ViewUtils.updateText(game, level, board.getLevel());
     ViewUtils.updateText(game, blinds, "$ " + board.getSmallBlind() + " / " + board.getBigBlind());
-    ViewUtils.updateText(game, gameNb, Integer.toString(board.getHandNb()));
+    ViewUtils.updateText(game, gameNb, board.getHandNb());
+    ViewUtils.updateText(game, turnNb, game.getTurn());
+
     updateTie();
 
     for (int id = 0; id < playerUIS.length; id++) {
@@ -225,7 +231,7 @@ public class BoardUI {
       PlayerUI playerUI = playerUIS[id];
       PlayerModel player = board.getPlayer(id);
       // TODO put if in method
-      if (!playerUI.isFolded() && player.isFolded()) {
+      if (!playerUI.isFolded() && player.isFolded() && !player.isEliminated()) {
         deckUI.foldPlayerId(id);
       }
       playerUI.update(game);

@@ -59,6 +59,9 @@ public class ViewConstant {
 
   public static int GAME_NB_X;
   public static int GAME_NB_Y;
+  
+  public static int TURN_NB_X;
+  public static int TURN_NB_Y;
 
   public static int POT_X;
   public static int POT_Y;
@@ -101,9 +104,12 @@ public class ViewConstant {
 
     GAME_NB_X = LEVEL_X;
     GAME_NB_Y = LEVEL_Y + LABEL_HEIGHT;
+    
+    TURN_NB_X = LEVEL_X;
+    TURN_NB_Y = GAME_NB_Y + LABEL_HEIGHT;
 
     BLIND_X = LEVEL_X;
-    BLIND_Y = GAME_NB_Y + LABEL_HEIGHT;
+    BLIND_Y = TURN_NB_Y + LABEL_HEIGHT;
 
     POT_X = middleX - POT_LABEL_WIDTH;// (POT_LABEL_WIDTH + POT_WIDTH) / 2;
     POT_Y = BOARD_CARD_Y - 110;
