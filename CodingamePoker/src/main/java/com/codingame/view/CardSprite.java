@@ -104,7 +104,7 @@ public class CardSprite {
 
   public void move(Point position, DealPosition dealPosition, Card cardModel, int zIndex,
       double delta, Game game) {
-    setCard(cardModel);
+    setCard(cardModel, game);
 
     boolean visible = dealPosition != null && !dealPosition.isBurned();
     hiddenCard.setVisible(!visible);
@@ -122,10 +122,11 @@ public class CardSprite {
     commitEntityState(delta / 2, game);
   }
 
-  public void setCard(Card cardModel) {
+  public void setCard(Card cardModel, Game game) {
     if (cardModel != null) {
       card.setImage(ViewUtils.getCardUrl(cardModel, false));
       debugCard.setImage(ViewUtils.getCardUrl(cardModel, true));
+      game.commitEntityState(card, debugCard);
     }
   }
 

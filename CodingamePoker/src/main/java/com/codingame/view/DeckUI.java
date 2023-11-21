@@ -137,7 +137,7 @@ public class DeckUI {
       if (dealPosition.isPlayer()) {
         int showCardIndex = 2 * dealPosition.getId() + dealPosition.getIndex();
         cards[i].setShowCard(showCards[showCardIndex], game);
-        foldCards[i].setCard(board.getCard(dealPosition));
+        foldCards[showCardIndex].setCard(board.getCard(dealPosition), game);
       }
     }
     for (; nextCardIndex < dealPositions.size(); nextCardIndex++) {
