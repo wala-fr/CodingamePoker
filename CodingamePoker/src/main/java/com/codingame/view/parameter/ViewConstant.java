@@ -7,6 +7,8 @@ import com.codingame.view.PlayerUICoordinates;
 public class ViewConstant {
 
   public static final int AVATAR_COLOR = 0xd1d1e0;
+  public static final int AVATAR_ACTIVE_COLOR = 0x5a756f;
+
   public static final int FRAME_DURATION = 800;
 
   public static PlayerUICoordinates[] COORDINATES;
@@ -98,18 +100,23 @@ public class ViewConstant {
 
     DISCARD_CARD_Y = BURNED_CARD_Y;
     DISCARD_CARD_X = BURNED_CARD_X;
+    
+    int tmpY = DELTA_BOARD_SIDE;
 
     LEVEL_X = DELTA_BOARD_SIDE;
-    LEVEL_Y = DELTA_BOARD_SIDE;
+    LEVEL_Y = tmpY;
 
-    GAME_NB_X = LEVEL_X;
-    GAME_NB_Y = LEVEL_Y + LABEL_HEIGHT;
-    
-    TURN_NB_X = LEVEL_X;
-    TURN_NB_Y = GAME_NB_Y + LABEL_HEIGHT;
-
+    tmpY += LABEL_HEIGHT;
     BLIND_X = LEVEL_X;
-    BLIND_Y = TURN_NB_Y + LABEL_HEIGHT;
+    BLIND_Y = tmpY;
+    
+    tmpY += LABEL_HEIGHT;
+    GAME_NB_X = LEVEL_X;
+    GAME_NB_Y = tmpY;
+    
+    tmpY += LABEL_HEIGHT;
+    TURN_NB_X = LEVEL_X;
+    TURN_NB_Y = tmpY;
 
     POT_X = middleX - POT_LABEL_WIDTH;// (POT_LABEL_WIDTH + POT_WIDTH) / 2;
     POT_Y = BOARD_CARD_Y - 110;
@@ -117,7 +124,7 @@ public class ViewConstant {
     TIE_X = POT_X + (ViewConstant.POT_LABEL_WIDTH + ViewConstant.POT_WIDTH + 50);
     TIE_Y = POT_Y;
     
-    NO_ACTION_X = POT_X + POT_LABEL_WIDTH + POT_WIDTH + (ViewConstant.BUTTON_RADIUS + 50);
+    NO_ACTION_X = POT_X - (ViewConstant.BUTTON_RADIUS + 50);
     NO_ACTION_Y = POT_Y + (ViewConstant.BUTTON_RADIUS - 5);
 
     // int sideWidth = 2 * CARD_WIDTH + CARD_DELTA;
@@ -192,7 +199,7 @@ public class ViewConstant {
   public static final int SHOW_WIN_AMOUNT_COEFF = 2;
   
   public static final double MAX_TIME = 0.9;
-  
+
   public static final int CARD_MIN_NB = 4 * 2 + 5 + 3 + 1;
   public static final int TIE_COLOR = 0x4486ea;
   

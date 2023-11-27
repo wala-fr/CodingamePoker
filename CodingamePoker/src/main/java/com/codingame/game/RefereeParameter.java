@@ -5,7 +5,7 @@ public class RefereeParameter {
   public static final int FIRST_ROUND_TIME_OUT = 1000;
   public static final int TIME_OUT = 50;
 
-  public static final int MAX_REFEREE_TURN = 1200;
+  public static final int MAX_REFEREE_TURN = 10000; // NO FRAME LIMIT
   public static final int MAX_TURN = 600;
 
   public static final boolean POSSIBLE_ACTION_INPUT = true;
@@ -20,7 +20,5 @@ public class RefereeParameter {
 
   public static final String WORD_DELIMITER = "_";
   public static final String NONE = "NONE";
-  
-  public static final boolean MULTILE_FRAME_BY_TURN = true;
   
 }

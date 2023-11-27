@@ -65,6 +65,8 @@ public class Board {
 
   private boolean dealCard;
   private int playerNotEliminatedNb;
+  
+  private boolean calculatePlayerWinnings;
 
   public Board(int playerNb, int bbId) {
     players = new ArrayList<>(playerNb);
@@ -311,17 +313,16 @@ public class Board {
     if (isOnlyOneNotFolded()) {
       // only one player still involved
       logger.info("Only one player still involved. All other are folded.");
-      calculatePlayerWinnings();
+      calculatePlayerWinnings = true;
     } else if (isTurnOver()) {
       if (calculateNoMoreCanDoAction()) {
         // no more bet possible due to all-ins
         logger.info("no more bet possible due to all-ins");
         dealAllBoardCards();
-        calculatePlayerWinnings();
+        calculatePlayerWinnings = true;
       } else {
-        // System.err.println("isTurnOver");
         if (isAllBoardCardDealt()) {
-          calculatePlayerWinnings();
+          calculatePlayerWinnings = true;
         } else {
           dealCard = true;
           lastPlayerId = -1;
@@ -511,8 +512,12 @@ public class Board {
     return true;
   }
 
-  private void calculatePlayerWinnings() {
-    deal();
+  public boolean calculatePlayerWinnings() {
+    if (!calculatePlayerWinnings) {
+      return false;
+    }
+    calculatePlayerWinnings = false;
+    deal(); // TODO ????
     int[] winnings = winningCalculator.calculateWinnings();
     for (int i = 0; i < playerNb; i++) {
       PlayerModel player = players.get(i);
@@ -523,6 +528,7 @@ public class Board {
     calculateEliminationRanks();
 
     over = true;
+    return true;
   }
 
   private void assertPlayerWinnings() {

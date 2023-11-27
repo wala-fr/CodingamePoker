@@ -10,8 +10,8 @@ import com.codingame.model.object.Card;
 import com.codingame.model.object.DealPosition;
 import com.codingame.model.object.board.Board;
 import com.codingame.view.data.GlobalViewData;
+import com.codingame.view.object.Frame;
 import com.codingame.view.object.Game;
-import com.codingame.view.object.Phase;
 import com.codingame.view.object.Point;
 import com.codingame.view.parameter.ViewConstant;
 import com.codingame.view.parameter.ViewUtils;
@@ -95,7 +95,7 @@ public class DeckUI {
   }
 
   public void foldPlayerId(int playerId) {
-    if (!game.isAction()) {
+    if (!game.isFrame(Frame.ACTION)) {
       return;
     }
     Board board = game.getBoard();

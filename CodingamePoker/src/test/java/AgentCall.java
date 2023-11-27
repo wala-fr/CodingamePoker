@@ -57,7 +57,7 @@ public class AgentCall {
         possibleActions.add(possibleAction);
       }
 
-      System.out.println(findAction(possibleActions) + ";MESSAGE");
+      System.out.println("CALL" + ";MESSAGE");
     }
   }
   

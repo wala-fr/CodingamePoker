@@ -13,6 +13,7 @@ import com.codingame.model.object.PlayerModel;
 import com.codingame.model.object.board.Board;
 import com.codingame.model.object.enumeration.Position;
 import com.codingame.model.utils.AssertUtils;
+import com.codingame.view.object.Frame;
 import com.codingame.view.object.Game;
 import com.codingame.view.parameter.Color;
 import com.codingame.view.parameter.ViewConstant;
@@ -23,6 +24,7 @@ public class PlayerUI {
 
   private Group avatarGroup;
   private Group labelGroup;
+  private RoundedRectangle playerRectangle;
 
   private Player player;
   private int id;
@@ -50,7 +52,7 @@ public class PlayerUI {
   private void createAvatar(Player player, Game game, PlayerUICoordinates coordinates) {
     avatarGroup = game.getGraphics().createGroup();
 
-    RoundedRectangle playerRectangle = coordinates.getAvatarFrame()
+    playerRectangle = coordinates.getAvatarFrame()
       .createRoundedRectangle(game)
       .setLineWidth(10)
       .setFillColor(ViewConstant.AVATAR_COLOR)
@@ -96,22 +98,29 @@ public class PlayerUI {
 
   void update(Game game) {
     Board board = game.getBoard();
-    PlayerModel player = board.getPlayers().get(id);
+    PlayerModel player = board.getPlayer(id);
     if (!eliminated) {
       AssertUtils.test(player.getTotalBetAmount() <= board.getPot(), player.getTotalBetAmount(),
           board.getPot());
+      setLast(game);
+      updatePosition(game);
       ViewUtils.updateText(game, stack, "$ " + player.getStack(),
           "BET : $ " + player.getTotalBetAmount());
-      if (board.isOver()) {
+      clearWin(game, winHide);
+      if (game.isFrame(Frame.LAST_END_CANCELLED)) {
+        ViewUtils.clearText(game, action);
+        clearWin(game, win);
+      } else if (game.isFrame(Frame.END_HAND)) {
+        ViewUtils.clearText(game, action);
         // add colored win amount at the end of each hand
         int amount = player.getWinAmount();
         boolean winner = amount >= 0;
         String w = ViewUtils.addSpaceBefore((winner ? "+" : "") + amount, 5);
         updateWin(game, win, w, winner);
+        game.getTooltips().setTooltipText(win, ""); // to avoid bug showing it 2 times (winHide +
+                                                    // win)
         updateWin(game, winHide, w, winner);
       } else {
-        // add (eventually colored) winning percent
-        clearWin(game, winHide);
         if (!RefereeParameter.CALCULATE_WIN_PERCENT || !game.getBoard().isCalculateWinChance()) {
           clearWin(game, win);
         } else {
@@ -141,20 +150,9 @@ public class PlayerUI {
           win.setFillColor(sureWin ? ViewConstant.WIN_COLOR
               : sureLose ? ViewConstant.LOSS_COLOR : ViewConstant.LABEL_TEXT_COLOR);
         }
-      }
-      updatePosition(game);
-      if (game.isDeal()) {
-        setLast(board);
-      }
-      if (!game.isEnd()) {
+        ViewUtils.updateText(game, message, this.player.getMessage());
         ViewUtils.updateText(game, action, player.getMessage(board));
-        folded = player.isFolded();
       }
-      if (game.isLastHandCanceled()) {
-        ViewUtils.clearText(game, action);
-      }
-      ViewUtils.updateText(game, message, this.player.getMessage());
-
     }
   }
 
@@ -170,18 +168,24 @@ public class PlayerUI {
 
 
   private void updatePosition(Game game) {
-    Position pos = game.getBoard().getPosition(id);
-    ViewUtils.updateText(game, position, pos.getSmallLabel(), pos.getLabel());
+    if (game.isFrame(Frame.DEAL_PLAYER)) {
+      Position pos = game.getBoard().getPosition(id);
+      ViewUtils.updateText(game, position, pos.getSmallLabel(), pos.getLabel());
+    }
   }
 
-  private void setLast(Board board) {
+  private void setLast(Game game) {
     if (!eliminated) {
-      avatarGroup.setAlpha(this.id == board.getNextPlayerId() ? 1 : 0.5);
+      boolean highlight =
+          this.id == game.getBoard().getNextPlayerId() && game.isFrame(Frame.ACTION);
+      avatarGroup.setAlpha(highlight ? 1 : 0.5);
+      playerRectangle
+        .setFillColor(highlight ? ViewConstant.AVATAR_ACTIVE_COLOR : ViewConstant.AVATAR_COLOR);
     }
   }
 
   public void setEliminated(Game game) {
-    if (game.isEnd()) {
+    if (!game.isFrame(Frame.DEAL_PLAYER)) {
       return;
     }
     PlayerModel player = getPlayer(game);
@@ -214,6 +218,10 @@ public class PlayerUI {
 
   public boolean isFolded() {
     return folded;
+  }
+
+  public void setFolded(boolean folded) {
+    this.folded = folded;
   }
 
   public boolean isEliminated() {

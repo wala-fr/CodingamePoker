@@ -23,10 +23,12 @@ public class InputSender {
   private final ShowDownInfo[] showdownInfos = new ShowDownInfo[RefereeParameter.MAX_TURN + 1];
   private final int[] lastSendHandNbs = new int[4]; // first handNb is 1
   private final boolean[] sendGameInput = new boolean[4]; // if the 4 3 first player fold then the third player won't play in fourth (automatically win)
-
+  private int lastHandRound = 0;
+  
   public void updateRoundInfo(Board board, ActionInfo actionInfo, int turn) {
     RoundInfo roundInfo = new RoundInfo(board, actionInfo, turn);
     roundInfos[turn] = roundInfo;
+    lastHandRound = board.getHandNb();
     logger.debug("updateRoundInfo {} {}", turn, roundInfo);
   }
   
@@ -111,4 +113,9 @@ public class InputSender {
       possibleActions.forEach(a ->  player.sendInputLine2(a.toInputString()));
     }
   }
+
+  public boolean isHandSent(int handNb) {
+    return lastHandRound == handNb;
+  }
+  
 }

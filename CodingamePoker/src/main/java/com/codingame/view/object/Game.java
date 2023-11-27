@@ -37,7 +37,7 @@ public class Game {
 
   private double time;
 
-  private Phase phase;
+  private Frame frame;
 
   private int turn;
 
@@ -90,10 +90,6 @@ public class Game {
     graphics.commitWorldState(time);
   }
 
-  // public void setEndTime() {
-  // time = phase.getEndTime();
-  // }
-
   public void commitWorldState() {
     graphics.commitWorldState(time);
   }
@@ -121,36 +117,28 @@ public class Game {
     return graphics.createGroup();
   }
 
-  public Phase getPhase() {
-    return phase;
-  }
-
-  public boolean isDeal() {
-    return phase == Phase.DEAL;
-  }
-
-  public boolean isEnd() {
-    return phase == Phase.END;
+  public boolean isFrame(Frame frame) {
+    return this.frame == frame;
   }
   
-  public boolean isLastHandCanceled() {
-    return isEnd() && isMaxRound() && !getBoard().isOver();
+  public Frame getFrame() {
+    return frame;
   }
 
-  public boolean isAction() {
-    return phase == Phase.ACTION;
+  public void setFrame(Frame frame) {
+    this.frame = frame;
   }
-
-  public void setPhase(Phase phase) {
-    this.phase = phase;
+  
+  public void resetFrame() {
+    frame = null;
   }
 
   public int getTurn() {
     return turn;
   }
-
-  public void setTurn(int turn) {
-    this.turn = turn;
+  
+  public void incrementTurn() {
+    turn++;
   }
 
   public boolean isFirstRound() {

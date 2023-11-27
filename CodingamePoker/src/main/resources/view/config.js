@@ -59,7 +59,7 @@ export const options = [{
 		'HIDE': false
 	},
 	default: false
-}, {
+/*}, {
 	title: 'PERCENT TIME',
 	get: function() {
 		return apiPoker.options.showPercentTime
@@ -72,7 +72,7 @@ export const options = [{
 		'SHOW': true,
 		'HIDE': false
 	},
-	default: false
+	default: false*/
 },{
 	title: 'FOLDED CARDS',
 	get: function() {

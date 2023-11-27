@@ -16,6 +16,7 @@ import com.codingame.model.object.FiveCardHand;
 import com.codingame.model.object.PlayerModel;
 import com.codingame.model.object.board.Board;
 import com.codingame.model.utils.AssertUtils;
+import com.codingame.view.object.Frame;
 import com.codingame.view.object.Game;
 import com.codingame.view.object.Point;
 import com.codingame.view.parameter.Color;
@@ -71,7 +72,7 @@ public class BoardUI {
 
       gameNb = game.createText();
       createLabelAndText(gameNb, ViewConstant.GAME_NB_X, ViewConstant.GAME_NB_Y, "HAND");
-      
+
       turnNb = game.createText();
       createLabelAndText(turnNb, ViewConstant.TURN_NB_X, ViewConstant.TURN_NB_Y, "ROUND");
 
@@ -226,22 +227,6 @@ public class BoardUI {
 
     deckUI.deal();
 
-    // TODO
-    for (int id = 0; id < playerUIS.length; id++) {
-      PlayerUI playerUI = playerUIS[id];
-      PlayerModel player = board.getPlayer(id);
-      // TODO put if in method
-      if (!playerUI.isFolded() && player.isFolded() && !player.isEliminated()) {
-        deckUI.foldPlayerId(id);
-      }
-      playerUI.update(game);
-    }
-    game.commitWorldState();
-
-    if (game.isEnd()) {
-      highlightWinningCards();
-    }
-
     String potOver = "";
     for (int id = 0; id < playerUIS.length; id++) {
       PlayerUI playerUI = playerUIS[id];
@@ -252,6 +237,24 @@ public class BoardUI {
     }
     ViewUtils.updateText(game, pot, "$ " + board.getPot(),
         potOver.substring(0, potOver.length() - 1));
+    for (int id = 0; id < playerUIS.length; id++) {
+      PlayerUI playerUI = playerUIS[id];
+      playerUI.update(game);
+    }
+    game.commitWorldState();
+
+    for (int id = 0; id < playerUIS.length; id++) {
+      PlayerUI playerUI = playerUIS[id];
+      PlayerModel player = board.getPlayer(id);
+      // TODO put if in method
+      if (!playerUI.isFolded() && player.isFolded() && !player.isEliminated()) {
+        deckUI.foldPlayerId(id);
+      }
+      playerUI.setFolded(player.isFolded());
+    }
+    game.commitWorldState();
+
+    highlightWinningCards();
 
     game.commitWorldState();
   }
@@ -261,7 +264,7 @@ public class BoardUI {
   }
 
   private void updateButtons(Board board) {
-    if (!game.isDeal()) {
+    if (game.isFrame(Frame.END_HAND) || game.isFrame(Frame.LAST_END_CANCELLED)) {
       return;
     }
     Point point = ViewUtils.getPlayerUICoordinates(board, board.getDealerId()).getButton();
@@ -273,41 +276,46 @@ public class BoardUI {
   }
 
   private void highlightWinningCards() {
+    if (!game.isFrame(Frame.END_HAND)) {
+      return;
+    }
     Board board = game.getBoard();
-    if (board.isOver()) {
-      List<Integer> bestPlayers = board.findWinner();
-      AssertUtils.test(!bestPlayers.isEmpty());
-      logger.debug("{}", board.toPlayerStatesString());
-      logger.debug("calculatNotFoldedPlayerNb {}", board.calculatNotFoldedPlayerNb());
-      if (!bestPlayers.isEmpty()
-          && board.getPlayer(bestPlayers.get(0)).getBestPossibleHand() != null) {
-        Set<Card> winCards = new HashSet<>();
-        for (PlayerModel player : board.getPlayers()) {
-          boolean win = bestPlayers.contains(player.getId());
-          if (win) {
-            FiveCardHand bestHand = player.getBestPossibleHand();
-            for (Card card : bestHand.getCards()) {
-              winCards.add(card);
-            }
-          }
-          playerUIS[player.getId()].setWinOrLose(game, win);
-        }
-        deckUI.revealOpponentFoldCard();
-        // highlight players cards
-        for (PlayerModel player : board.getPlayers()) {
-          if (!player.isFolded()) {
-            for (Card card : player.getHand().getCards()) {
-              deckUI.highlightCard(card, winCards.contains(card));
-            }
+    AssertUtils.test(board.isOver());
+    List<Integer> bestPlayers = board.findWinner();
+    AssertUtils.test(!bestPlayers.isEmpty());
+    logger.debug("{}", board.toPlayerStatesString());
+    logger.debug("calculatNotFoldedPlayerNb {}", board.calculatNotFoldedPlayerNb());
+    if (!bestPlayers.isEmpty()
+        && board.getPlayer(bestPlayers.get(0)).getBestPossibleHand() != null) {
+      Set<Card> winCards = new HashSet<>();
+      for (PlayerModel player : board.getPlayers()) {
+        boolean win = bestPlayers.contains(player.getId());
+        if (win) {
+          FiveCardHand bestHand = player.getBestPossibleHand();
+          for (Card card : bestHand.getCards()) {
+            winCards.add(card);
           }
         }
-
-        // highlight board cards
-        for (Card card : board.getBoardCards()) {
-          deckUI.highlightCard(card, winCards.contains(card));
-        }
-        game.commitWorldState(0.2); // so the last action appears before the hand values
+        playerUIS[player.getId()].setWinOrLose(game, win);
       }
+      game.commitWorldState();
+
+      deckUI.revealOpponentFoldCard();
+      // highlight players cards
+      for (PlayerModel player : board.getPlayers()) {
+        if (!player.isFolded()) {
+          for (Card card : player.getHand().getCards()) {
+            deckUI.highlightCard(card, winCards.contains(card));
+          }
+        }
+      }
+
+      // highlight board cards
+      for (Card card : board.getBoardCards()) {
+        deckUI.highlightCard(card, winCards.contains(card));
+      }
+      // TODO still useful with frames ???
+      game.commitWorldState(0.2); // so the last action appears before the hand values
     }
   }
 }

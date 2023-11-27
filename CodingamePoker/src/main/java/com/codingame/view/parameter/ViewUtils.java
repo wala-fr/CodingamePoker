@@ -69,7 +69,7 @@ public class ViewUtils {
   public static void clearText(Game graphics, Text text) {
     updateText(graphics, text, "");
   }
-  
+
   public static void updateText(Game graphics, Text text, int n) {
     updateText(graphics, text, Integer.toString(n));
   }
@@ -85,9 +85,8 @@ public class ViewUtils {
     String old = text.getText();
     if (!str.equals(old)) {
       text.setText(str);
-      graphics.getTooltips().setTooltipText(text, strMouseHover != null ? strMouseHover : str);
-      // graphics.getGraphics().commitEntityState(graphics.getTime(), text);
     }
+    graphics.getTooltips().setTooltipText(text, strMouseHover != null ? strMouseHover : str);
   }
 
   public static PlayerUICoordinates getPlayerUICoordinates(Game graphics, int id) {

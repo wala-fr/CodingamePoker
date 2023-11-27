@@ -1,12 +1,9 @@
 package com.wala.poker.model;
 
 import java.util.Random;
-import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yaml.snakeyaml.scanner.Constant;
 import com.codingame.game.RefereeParameter;
-import com.codingame.gameengine.core.GameManager;
 import com.codingame.model.object.Action;
 import com.codingame.model.object.ActionInfo;
 import com.codingame.model.object.PlayerModel;
@@ -14,8 +11,6 @@ import com.codingame.model.object.board.Board;
 import com.codingame.model.object.enumeration.ActionType;
 import com.codingame.model.utils.ActionUtils;
 import com.codingame.model.utils.RandomUtils;
-import com.codingame.view.object.Game;
-import com.codingame.view.object.Phase;
 
 public class SimulationAllGameTest {
 
@@ -56,6 +51,7 @@ public class SimulationAllGameTest {
         }
       }
       board.endTurn();
+      board.calculatePlayerWinnings();
       board.endTurnView();
       logger.info("isGameOver {}", board.isGameOver());
 

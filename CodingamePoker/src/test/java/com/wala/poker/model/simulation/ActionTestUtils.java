@@ -19,6 +19,7 @@ public class ActionTestUtils {
 
   public static void endTurn(Board board) {
     board.endTurn();
+    board.calculatePlayerWinnings();
     if (!board.isOver()) {
       board.calculateNextPlayer();
     }
